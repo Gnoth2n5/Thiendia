@@ -116,13 +116,24 @@
                         <!-- Deceased Person -->
                         @if($grave->deceased_full_name)
                             <div class="bg-base-200 rounded-lg p-3 mb-3">
-                                <p class="text-xs text-base-content/60 mb-1">Người đã khuất</p>
-                                <p class="font-medium text-sm">{{ $grave->deceased_full_name }}</p>
-                                @if($grave->deceased_birth_date && $grave->deceased_death_date)
-                                    <p class="text-xs text-base-content/60 mt-1">
-                                        {{ $grave->deceased_birth_date->format('d/m/Y') }} - {{ $grave->deceased_death_date->format('d/m/Y') }}
-                                    </p>
-                                @endif
+                                <div class="flex items-center gap-3">
+                                    @if($grave->deceased_photo)
+                                        <div class="avatar">
+                                            <div class="w-12 h-12 rounded-full">
+                                                <img src="{{ Storage::url($grave->deceased_photo) }}" alt="{{ $grave->deceased_full_name }}" class="object-cover" />
+                                            </div>
+                                        </div>
+                                    @endif
+                                    <div class="flex-1">
+                                        <p class="text-xs text-base-content/60 mb-1">Người đã khuất</p>
+                                        <p class="font-medium text-sm">{{ $grave->deceased_full_name }}</p>
+                                        @if($grave->deceased_birth_date && $grave->deceased_death_date)
+                                            <p class="text-xs text-base-content/60 mt-1">
+                                                {{ $grave->deceased_birth_date->format('d/m/Y') }} - {{ $grave->deceased_death_date->format('d/m/Y') }}
+                                            </p>
+                                        @endif
+                                    </div>
+                                </div>
                             </div>
                         @endif
 

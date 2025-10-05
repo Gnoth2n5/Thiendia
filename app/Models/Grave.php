@@ -17,6 +17,8 @@ class Grave extends Model
         'deceased_death_date',
         'deceased_gender',
         'deceased_relationship',
+        'deceased_photo',
+        'grave_photos',
         'burial_date',
         'grave_type',
         'status',
@@ -27,6 +29,7 @@ class Grave extends Model
 
     protected $casts = [
         'contact_info' => 'array',
+        'grave_photos' => 'array',
         'burial_date' => 'date',
         'deceased_birth_date' => 'date',
         'deceased_death_date' => 'date',

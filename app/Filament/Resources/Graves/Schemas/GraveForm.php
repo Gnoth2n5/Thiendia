@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Graves\Schemas;
 
 use App\Models\Cemetery;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
@@ -97,8 +98,39 @@ class GraveForm
                             ->label('Mối quan hệ với chủ lăng mộ')
                             ->maxLength(255)
                             ->placeholder('Ví dụ: cha, mẹ, ông, bà...'),
+
+                        FileUpload::make('deceased_photo')
+                            ->label('Ảnh người đã khuất')
+                            ->image()
+                            ->directory('deceased-photos')
+                            ->visibility('public')
+                            ->imageEditor()
+                            ->imageEditorAspectRatios([
+                                '1:1',
+                                '4:3',
+                            ])
+                            ->maxSize(5120)
+                            ->helperText('Tải lên ảnh người đã khuất (tối đa 5MB)'),
                     ])
                     ->columns(2)
+                    ->collapsible(),
+
+                Section::make('Hình ảnh bia mộ')
+                    ->description('Ảnh trạng thái hiện tại của bia mộ')
+                    ->schema([
+                        FileUpload::make('grave_photos')
+                            ->label('Ảnh bia mộ')
+                            ->image()
+                            ->multiple()
+                            ->directory('grave-photos')
+                            ->visibility('public')
+                            ->imageEditor()
+                            ->reorderable()
+                            ->maxFiles(5)
+                            ->maxSize(5120)
+                            ->helperText('Tải lên tối đa 5 ảnh bia mộ (mỗi ảnh tối đa 5MB)'),
+                    ])
+                    ->columns(1)
                     ->collapsible(),
 
                 Section::make('Thông tin vị trí và liên hệ')
