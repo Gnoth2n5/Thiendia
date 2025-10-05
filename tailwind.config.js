@@ -57,19 +57,19 @@ export default {
         themes: [
             {
                 cemetery: {
-                    primary: "#374151", // Xám đậm trang trọng
-                    secondary: "#6b7280", // Xám trung bình
-                    accent: "#8b5cf6", // Tím thanh lịch
-                    neutral: "#1f2937", // Xám đen
-                    "base-100": "#ffffff", // Nền trắng sạch
-                    "base-200": "#f9fafb", // Xám rất nhạt
-                    "base-300": "#e5e7eb", // Xám nhạt
-                    info: "#3b82f6", // Xanh dương nhạt
-                    success: "#10b981", // Xanh lá
-                    warning: "#f59e0b", // Vàng cam
-                    error: "#ef4444", // Đỏ
+                    primary: "#0f766e", // Xanh ngọc đậm trang trọng
+                    secondary: "#7c3aed", // Tím violet
+                    accent: "#f59e0b", // Vàng amber ấm áp
+                    neutral: "#1e293b", // Xám xanh đậm
+                    "base-100": "#ffffff", // Nền trắng
+                    "base-200": "#f8fafc", // Xám rất nhạt
+                    "base-300": "#e2e8f0", // Xám nhạt
+                    info: "#06b6d4", // Cyan
+                    success: "#059669", // Emerald
+                    warning: "#f59e0b", // Amber
+                    error: "#dc2626", // Đỏ
 
-                    "--rounded-box": "0.75rem",
+                    "--rounded-box": "1rem",
                     "--rounded-btn": "0.5rem",
                     "--rounded-badge": "0.5rem",
                     "--animation-btn": "0.25s",
