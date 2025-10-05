@@ -13,11 +13,19 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // Chạy các seeder theo thứ tự
+        $this->call([
+            CemeterySeeder::class,
+            GraveSeeder::class,
         ]);
+
+        // Tạo user test (nếu chưa có admin user)
+        if (!User::where('email', 'admin@gmail.com')->exists()) {
+            User::factory()->create([
+                'name' => 'Test User',
+                'email' => 'test@example.com',
+                'role' => 'admin',
+            ]);
+        }
     }
 }
