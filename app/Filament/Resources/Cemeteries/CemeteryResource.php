@@ -20,6 +20,12 @@ class CemeteryResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
+    protected static ?string $navigationLabel = 'Nghĩa trang';
+
+    protected static ?string $modelLabel = 'Nghĩa trang';
+
+    protected static ?string $pluralModelLabel = 'Nghĩa trang';
+
     protected static ?int $navigationSort = 1;
 
     public static function form(Schema $schema): Schema

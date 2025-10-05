@@ -4,14 +4,13 @@ namespace App\Filament\Resources\ModificationRequests\Tables;
 
 use App\Models\ModificationRequest;
 use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Notifications\Notification;
-use Filament\Tables\Actions\Action as TableAction;
 use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -120,61 +119,63 @@ class ModificationRequestsTable
                     ]),
             ])
             ->recordActions([
-                ViewAction::make(),
-                EditAction::make(),
+                ActionGroup::make([
+                    ViewAction::make(),
+                    EditAction::make(),
 
-                // Action phê duyệt
-                TableAction::make('approve')
-                    ->label('Phê duyệt')
-                    ->icon('heroicon-o-check-circle')
-                    ->color('success')
-                    ->visible(fn(ModificationRequest $record): bool => $record->status === 'pending')
-                    ->form([
-                        Textarea::make('admin_notes')
-                            ->label('Ghi chú')
-                            ->placeholder('Ghi chú về việc phê duyệt...'),
-                    ])
-                    ->action(function (ModificationRequest $record, array $data): void {
-                        $record->update([
-                            'status' => 'approved',
-                            'admin_notes' => $data['admin_notes'] ?? null,
-                            'processed_by' => auth()->id(),
-                            'processed_at' => now(),
-                        ]);
+                    // Action phê duyệt
+                    Action::make('approve')
+                        ->label('Phê duyệt')
+                        ->icon('heroicon-o-check-circle')
+                        ->color('success')
+                        ->visible(fn(ModificationRequest $record): bool => $record->status === 'pending')
+                        ->form([
+                            Textarea::make('admin_notes')
+                                ->label('Ghi chú')
+                                ->placeholder('Ghi chú về việc phê duyệt...'),
+                        ])
+                        ->action(function (ModificationRequest $record, array $data): void {
+                            $record->update([
+                                'status' => 'approved',
+                                'admin_notes' => $data['admin_notes'] ?? null,
+                                'processed_by' => auth()->id(),
+                                'processed_at' => now(),
+                            ]);
 
-                        Notification::make()
-                            ->title('Đơn yêu cầu đã được phê duyệt')
-                            ->success()
-                            ->send();
-                    })
-                    ->requiresConfirmation(),
+                            Notification::make()
+                                ->title('Đơn yêu cầu đã được phê duyệt')
+                                ->success()
+                                ->send();
+                        })
+                        ->requiresConfirmation(),
 
-                // Action từ chối
-                TableAction::make('reject')
-                    ->label('Từ chối')
-                    ->icon('heroicon-o-x-circle')
-                    ->color('danger')
-                    ->visible(fn(ModificationRequest $record): bool => $record->status === 'pending')
-                    ->form([
-                        Textarea::make('admin_notes')
-                            ->label('Lý do từ chối')
-                            ->required()
-                            ->placeholder('Nhập lý do từ chối đơn yêu cầu...'),
-                    ])
-                    ->action(function (ModificationRequest $record, array $data): void {
-                        $record->update([
-                            'status' => 'rejected',
-                            'admin_notes' => $data['admin_notes'],
-                            'processed_by' => auth()->id(),
-                            'processed_at' => now(),
-                        ]);
+                    // Action từ chối
+                    Action::make('reject')
+                        ->label('Từ chối')
+                        ->icon('heroicon-o-x-circle')
+                        ->color('danger')
+                        ->visible(fn(ModificationRequest $record): bool => $record->status === 'pending')
+                        ->form([
+                            Textarea::make('admin_notes')
+                                ->label('Lý do từ chối')
+                                ->required()
+                                ->placeholder('Nhập lý do từ chối đơn yêu cầu...'),
+                        ])
+                        ->action(function (ModificationRequest $record, array $data): void {
+                            $record->update([
+                                'status' => 'rejected',
+                                'admin_notes' => $data['admin_notes'],
+                                'processed_by' => auth()->id(),
+                                'processed_at' => now(),
+                            ]);
 
-                        Notification::make()
-                            ->title('Đơn yêu cầu đã bị từ chối')
-                            ->warning()
-                            ->send();
-                    })
-                    ->requiresConfirmation(),
+                            Notification::make()
+                                ->title('Đơn yêu cầu đã bị từ chối')
+                                ->warning()
+                                ->send();
+                        })
+                        ->requiresConfirmation(),
+                ]),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
