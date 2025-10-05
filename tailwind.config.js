@@ -1,6 +1,5 @@
-import { defineConfig } from "tailwindcss";
-
-export default defineConfig({
+/** @type {import('tailwindcss').Config} */
+export default {
     content: [
         "./resources/**/*.blade.php",
         "./resources/**/*.js",
@@ -58,26 +57,33 @@ export default defineConfig({
         themes: [
             {
                 cemetery: {
-                    primary: "#2d3748",
-                    secondary: "#4a5568",
-                    accent: "#805ad5",
-                    neutral: "#1a202c",
-                    "base-100": "#f7fafc",
-                    "base-200": "#edf2f7",
-                    "base-300": "#e2e8f0",
-                    info: "#3182ce",
-                    success: "#38a169",
-                    warning: "#d69e2e",
-                    error: "#e53e3e",
+                    primary: "#374151", // Xám đậm trang trọng
+                    secondary: "#6b7280", // Xám trung bình
+                    accent: "#8b5cf6", // Tím thanh lịch
+                    neutral: "#1f2937", // Xám đen
+                    "base-100": "#ffffff", // Nền trắng sạch
+                    "base-200": "#f9fafb", // Xám rất nhạt
+                    "base-300": "#e5e7eb", // Xám nhạt
+                    info: "#3b82f6", // Xanh dương nhạt
+                    success: "#10b981", // Xanh lá
+                    warning: "#f59e0b", // Vàng cam
+                    error: "#ef4444", // Đỏ
+
+                    "--rounded-box": "0.75rem",
+                    "--rounded-btn": "0.5rem",
+                    "--rounded-badge": "0.5rem",
+                    "--animation-btn": "0.25s",
+                    "--animation-input": "0.2s",
+                    "--btn-focus-scale": "0.95",
                 },
             },
         ],
-        darkTheme: "dark",
+        darkTheme: false,
         base: true,
         styled: true,
         utils: true,
         prefix: "",
-        logs: true,
+        logs: false,
         themeRoot: ":root",
     },
-});
+};
