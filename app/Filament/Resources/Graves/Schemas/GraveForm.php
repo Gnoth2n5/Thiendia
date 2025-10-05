@@ -6,10 +6,12 @@ use App\Models\Cemetery;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\KeyValue;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Get;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
@@ -27,13 +29,38 @@ class GraveForm
                             ->options(Cemetery::all()->pluck('name', 'id'))
                             ->required()
                             ->searchable()
-                            ->preload(),
+                            ->preload()
+                            ->live()
+                            ->afterStateUpdated(function ($state, callable $set, $context) {
+                                // Chỉ tự động generate khi tạo mới
+                                if ($context === 'create' && $state) {
+                                    $nextNumber = \App\Models\Grave::where('cemetery_id', $state)->count() + 1;
+                                    $graveNumber = $state . '-' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+                                    $set('grave_number', $graveNumber);
+                                }
+                            }),
+
+                        Placeholder::make('grave_number_preview')
+                            ->label('Số lăng mộ (tự động)')
+                            ->content(function ($get, $record) {
+                                if ($record?->grave_number) {
+                                    return $record->grave_number;
+                                }
+
+                                $cemeteryId = $get('cemetery_id');
+                                if ($cemeteryId) {
+                                    return \App\Models\Grave::generateGraveNumber($cemeteryId);
+                                }
+
+                                return 'Chọn nghĩa trang để xem số lăng mộ';
+                            })
+                            ->visible(fn($context) => $context === 'create'),
 
                         TextInput::make('grave_number')
                             ->label('Số lăng mộ')
-                            ->required()
-                            ->maxLength(255)
-                            ->placeholder('Ví dụ: 1-001, 2-045'),
+                            ->disabled()
+                            ->dehydrated()
+                            ->visible(fn($context) => $context === 'edit'),
 
                         TextInput::make('owner_name')
                             ->label('Tên chủ lăng mộ')

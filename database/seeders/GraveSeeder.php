@@ -30,7 +30,7 @@ class GraveSeeder extends Seeder
 
                 Grave::create([
                     'cemetery_id' => $cemetery->id,
-                    'grave_number' => sprintf('%s-%03d', $cemetery->id, $i),
+                    // grave_number sẽ được tự động generate bởi model
                     'owner_name' => fake('vi_VN')->name(),
                     'deceased_full_name' => $status === 'đã_sử_dụng' ? fake('vi_VN')->name() : null,
                     'deceased_birth_date' => $status === 'đã_sử_dụng' ? $birthDate : null,

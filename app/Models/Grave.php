@@ -38,6 +38,31 @@ class Grave extends Model
     ];
 
     /**
+     * Boot the model.
+     */
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::creating(function ($grave) {
+            if (empty($grave->grave_number) && $grave->cemetery_id) {
+                $grave->grave_number = static::generateGraveNumber($grave->cemetery_id);
+            }
+        });
+    }
+
+    /**
+     * Generate grave number based on cemetery_id.
+     */
+    public static function generateGraveNumber(int $cemeteryId): string
+    {
+        $count = static::where('cemetery_id', $cemeteryId)->count();
+        $nextNumber = $count + 1;
+
+        return $cemeteryId . '-' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+    }
+
+    /**
      * Get the cemetery that owns the grave.
      */
     public function cemetery(): BelongsTo
