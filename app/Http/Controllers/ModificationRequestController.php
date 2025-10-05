@@ -11,10 +11,10 @@ class ModificationRequestController extends Controller
     public function create($graveId)
     {
         $grave = Grave::with('cemetery')->findOrFail($graveId);
-        
+
         return view('modification-request', compact('grave'));
     }
-    
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -27,9 +27,9 @@ class ModificationRequestController extends Controller
             'reason' => 'required|string',
             'requested_data' => 'required|array',
         ]);
-        
+
         $grave = Grave::findOrFail($validated['grave_id']);
-        
+
         // Lưu dữ liệu hiện tại
         $validated['current_data'] = [
             'owner_name' => $grave->owner_name,
@@ -37,9 +37,9 @@ class ModificationRequestController extends Controller
             'burial_date' => $grave->burial_date?->format('Y-m-d'),
             'location_description' => $grave->location_description,
         ];
-        
+
         ModificationRequest::create($validated);
-        
+
         return redirect()->route('home')->with('success', 'Đơn yêu cầu của bạn đã được gửi thành công. Chúng tôi sẽ xem xét và phản hồi trong thời gian sớm nhất.');
     }
 }
