@@ -12,7 +12,11 @@ class Grave extends Model
         'cemetery_id',
         'grave_number',
         'owner_name',
-        'deceased_persons',
+        'deceased_full_name',
+        'deceased_birth_date',
+        'deceased_death_date',
+        'deceased_gender',
+        'deceased_relationship',
         'burial_date',
         'grave_type',
         'status',
@@ -22,9 +26,10 @@ class Grave extends Model
     ];
 
     protected $casts = [
-        'deceased_persons' => 'array',
         'contact_info' => 'array',
         'burial_date' => 'date',
+        'deceased_birth_date' => 'date',
+        'deceased_death_date' => 'date',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];

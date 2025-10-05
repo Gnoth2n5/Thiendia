@@ -13,19 +13,21 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Tạo admin user trước
+        if (!User::where('email', 'admin@gmail.com')->exists()) {
+            User::factory()->create([
+                'name' => 'Admin User',
+                'email' => 'admin@gmail.com',
+                'password' => bcrypt('password'),
+                'role' => 'admin',
+            ]);
+        }
+
         // Chạy các seeder theo thứ tự
         $this->call([
             CemeterySeeder::class,
             GraveSeeder::class,
+            ModificationRequestSeeder::class,
         ]);
-
-        // Tạo user test (nếu chưa có admin user)
-        if (!User::where('email', 'admin@gmail.com')->exists()) {
-            User::factory()->create([
-                'name' => 'Test User',
-                'email' => 'test@example.com',
-                'role' => 'admin',
-            ]);
-        }
     }
 }

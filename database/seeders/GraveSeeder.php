@@ -23,14 +23,23 @@ class GraveSeeder extends Seeder
             for ($i = 1; $i <= $graveCount; $i++) {
                 $graveTypes = ['đất', 'xi_măng', 'đá', 'gỗ', 'khác'];
                 $statuses = ['còn_trống', 'đã_sử_dụng', 'bảo_trì', 'ngừng_sử_dụng'];
+                $status = fake()->randomElement($statuses);
 
-                $grave = Grave::create([
+                $birthDate = fake()->dateTimeBetween('-100 years', '-20 years');
+                $deathDate = fake()->dateTimeBetween($birthDate, 'now');
+
+                Grave::create([
                     'cemetery_id' => $cemetery->id,
                     'grave_number' => sprintf('%s-%03d', $cemetery->id, $i),
                     'owner_name' => fake('vi_VN')->name(),
-                    'burial_date' => fake()->optional(0.7)->dateTimeBetween('-10 years', 'now'),
+                    'deceased_full_name' => $status === 'đã_sử_dụng' ? fake('vi_VN')->name() : null,
+                    'deceased_birth_date' => $status === 'đã_sử_dụng' ? $birthDate : null,
+                    'deceased_death_date' => $status === 'đã_sử_dụng' ? $deathDate : null,
+                    'deceased_gender' => fake()->randomElement(['nam', 'nữ']),
+                    'deceased_relationship' => $status === 'đã_sử_dụng' ? fake()->randomElement(['cha', 'mẹ', 'ông', 'bà', 'anh', 'chị', 'em']) : null,
+                    'burial_date' => $status === 'đã_sử_dụng' ? $deathDate : null,
                     'grave_type' => fake()->randomElement($graveTypes),
-                    'status' => fake()->randomElement($statuses),
+                    'status' => $status,
                     'location_description' => fake()->optional(0.8)->sentence(),
                     'contact_info' => [
                         'phone' => fake()->optional(0.6)->phoneNumber(),
@@ -38,24 +47,6 @@ class GraveSeeder extends Seeder
                     ],
                     'notes' => fake()->optional(0.3)->sentence(),
                 ]);
-
-                // Tạo danh sách người đã khuất cho lăng mộ đã sử dụng
-                if ($grave->status === 'đã_sử_dụng') {
-                    $deceasedCount = rand(1, 3);
-                    $deceasedPersons = [];
-
-                    for ($j = 0; $j < $deceasedCount; $j++) {
-                        $deceasedPersons[] = [
-                            'full_name' => fake('vi_VN')->name(),
-                            'birth_date' => fake()->dateTimeBetween('-80 years', '-20 years'),
-                            'death_date' => fake()->dateTimeBetween('-5 years', 'now'),
-                            'gender' => fake()->randomElement(['nam', 'nữ']),
-                            'relationship' => fake()->randomElement(['cha', 'mẹ', 'ông', 'bà', 'anh', 'chị', 'em']),
-                        ];
-                    }
-
-                    $grave->update(['deceased_persons' => $deceasedPersons]);
-                }
             }
         }
     }

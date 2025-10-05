@@ -28,8 +28,34 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->brandName('Quản lý nghĩa địa')
+            ->brandLogo(asset('images/logo.png'))
+            ->favicon(asset('images/favicon.ico'))
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => [
+                    50 => '#f7fafc',
+                    100 => '#edf2f7',
+                    200 => '#e2e8f0',
+                    300 => '#cbd5e0',
+                    400 => '#a0aec0',
+                    500 => '#718096',
+                    600 => '#4a5568',
+                    700 => '#2d3748',
+                    800 => '#1a202c',
+                    900 => '#171923',
+                ],
+                'gray' => [
+                    50 => '#f7fafc',
+                    100 => '#edf2f7',
+                    200 => '#e2e8f0',
+                    300 => '#cbd5e0',
+                    400 => '#a0aec0',
+                    500 => '#718096',
+                    600 => '#4a5568',
+                    700 => '#2d3748',
+                    800 => '#1a202c',
+                    900 => '#171923',
+                ],
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
@@ -38,8 +64,9 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             ->widgets([
+                \App\Filament\Widgets\StatsOverview::class,
+                \App\Filament\Widgets\RecentModificationRequests::class,
                 AccountWidget::class,
-                FilamentInfoWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,

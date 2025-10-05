@@ -2,6 +2,14 @@
 
 namespace App\Filament\Resources\Graves\Schemas;
 
+use App\Models\Cemetery;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\KeyValue;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
 class GraveForm
@@ -10,7 +18,114 @@ class GraveForm
     {
         return $schema
             ->components([
-                //
+                Section::make('Thông tin cơ bản')
+                    ->description('Thông tin chính về lăng mộ')
+                    ->schema([
+                        Select::make('cemetery_id')
+                            ->label('Nghĩa trang')
+                            ->options(Cemetery::all()->pluck('name', 'id'))
+                            ->required()
+                            ->searchable()
+                            ->preload(),
+
+                        TextInput::make('grave_number')
+                            ->label('Số lăng mộ')
+                            ->required()
+                            ->maxLength(255)
+                            ->placeholder('Ví dụ: 1-001, 2-045'),
+
+                        TextInput::make('owner_name')
+                            ->label('Tên chủ lăng mộ')
+                            ->required()
+                            ->maxLength(255),
+
+                        DatePicker::make('burial_date')
+                            ->label('Ngày an táng')
+                            ->displayFormat('d/m/Y'),
+
+                        Select::make('grave_type')
+                            ->label('Loại lăng mộ')
+                            ->options([
+                                'đất' => 'Lăng mộ đất',
+                                'xi_măng' => 'Lăng mộ xi măng',
+                                'đá' => 'Lăng mộ đá',
+                                'gỗ' => 'Lăng mộ gỗ',
+                                'khác' => 'Loại khác',
+                            ])
+                            ->default('đất')
+                            ->required(),
+
+                        Select::make('status')
+                            ->label('Trạng thái')
+                            ->options([
+                                'còn_trống' => 'Còn trống',
+                                'đã_sử_dụng' => 'Đã sử dụng',
+                                'bảo_trì' => 'Bảo trì',
+                                'ngừng_sử_dụng' => 'Ngừng sử dụng',
+                            ])
+                            ->default('còn_trống')
+                            ->required(),
+                    ])
+                    ->columns(2),
+
+                Section::make('Thông tin người đã khuất')
+                    ->description('Thông tin về người đã được an táng')
+                    ->schema([
+                        TextInput::make('deceased_full_name')
+                            ->label('Họ tên đầy đủ')
+                            ->maxLength(255)
+                            ->placeholder('Họ và tên người đã khuất'),
+
+                        DatePicker::make('deceased_birth_date')
+                            ->label('Ngày sinh')
+                            ->displayFormat('d/m/Y'),
+
+                        DatePicker::make('deceased_death_date')
+                            ->label('Ngày mất')
+                            ->displayFormat('d/m/Y'),
+
+                        Select::make('deceased_gender')
+                            ->label('Giới tính')
+                            ->options([
+                                'nam' => 'Nam',
+                                'nữ' => 'Nữ',
+                                'khác' => 'Khác',
+                            ])
+                            ->default('nam'),
+
+                        TextInput::make('deceased_relationship')
+                            ->label('Mối quan hệ với chủ lăng mộ')
+                            ->maxLength(255)
+                            ->placeholder('Ví dụ: cha, mẹ, ông, bà...'),
+                    ])
+                    ->columns(2)
+                    ->collapsible(),
+
+                Section::make('Thông tin vị trí và liên hệ')
+                    ->schema([
+                        Textarea::make('location_description')
+                            ->label('Mô tả vị trí')
+                            ->rows(3)
+                            ->placeholder('Mô tả vị trí cụ thể trong nghĩa trang...'),
+
+                        KeyValue::make('contact_info')
+                            ->label('Thông tin liên hệ')
+                            ->keyLabel('Loại thông tin')
+                            ->valueLabel('Nội dung')
+                            ->addActionLabel('Thêm thông tin liên hệ')
+                            ->default([
+                                'phone' => '',
+                                'address' => '',
+                                'email' => '',
+                            ]),
+
+                        Textarea::make('notes')
+                            ->label('Ghi chú')
+                            ->rows(3)
+                            ->placeholder('Ghi chú thêm về lăng mộ...'),
+                    ])
+                    ->columns(1),
+
             ]);
     }
 }
