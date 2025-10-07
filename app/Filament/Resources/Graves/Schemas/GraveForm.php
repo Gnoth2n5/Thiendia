@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Graves\Schemas;
 
 use App\Models\Cemetery;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\KeyValue;
@@ -12,15 +13,14 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Get;
-use Filament\Schemas\Components\Section;
-use Filament\Schemas\Schema;
+use Filament\Forms\Form;
 
 class GraveForm
 {
-    public static function configure(Schema $schema): Schema
+    public static function configure(Form $form): Form
     {
-        return $schema
-            ->components([
+        return $form
+            ->schema([
                 Section::make('Thông tin cơ bản')
                     ->description('Thông tin chính về lăng mộ')
                     ->schema([
@@ -30,7 +30,7 @@ class GraveForm
                             ->required()
                             ->searchable()
                             ->preload()
-                            ->live()
+                            ->reactive()
                             ->afterStateUpdated(function ($state, callable $set, $context) {
                                 // Chỉ tự động generate khi tạo mới
                                 if ($context === 'create' && $state) {

@@ -3,12 +3,12 @@
 namespace App\Filament\Resources\ModificationRequests\Tables;
 
 use App\Models\ModificationRequest;
-use Filament\Actions\Action;
-use Filament\Actions\ActionGroup;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
-use Filament\Actions\ViewAction;
+use Filament\Tables\Actions\Action;
+use Filament\Tables\Actions\ActionGroup;
+use Filament\Tables\Actions\BulkActionGroup;
+use Filament\Tables\Actions\DeleteBulkAction;
+use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Actions\ViewAction;
 use Filament\Forms\Components\Textarea;
 use Filament\Notifications\Notification;
 use Filament\Tables\Columns\BadgeColumn;
@@ -118,7 +118,7 @@ class ModificationRequestsTable
                         'khác' => 'Khác',
                     ]),
             ])
-            ->recordActions([
+            ->actions([
                 ActionGroup::make([
                     ViewAction::make(),
                     EditAction::make(),
@@ -177,7 +177,7 @@ class ModificationRequestsTable
                         ->requiresConfirmation(),
                 ]),
             ])
-            ->toolbarActions([
+            ->bulkActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),

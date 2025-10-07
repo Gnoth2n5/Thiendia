@@ -3,7 +3,7 @@
 namespace App\Filament\Widgets;
 
 use App\Models\ModificationRequest;
-use Filament\Actions\BulkActionGroup;
+use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;

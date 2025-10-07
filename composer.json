@@ -13,7 +13,8 @@
         "filament/filament": "^3.2",
         "laravel/framework": "^10.0",
         "laravel/tinker": "^2.8",
-        "spatie/laravel-permission": "^5.11"
+        "spatie/laravel-permission": "^5.11",
+        "laravel/sanctum": "^3.2"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

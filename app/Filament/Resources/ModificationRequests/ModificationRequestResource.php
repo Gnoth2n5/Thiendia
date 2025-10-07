@@ -10,15 +10,14 @@ use App\Filament\Resources\ModificationRequests\Tables\ModificationRequestsTable
 use App\Models\ModificationRequest;
 use BackedEnum;
 use Filament\Resources\Resource;
-use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
 
 class ModificationRequestResource extends Resource
 {
     protected static ?string $model = ModificationRequest::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?string $navigationLabel = 'Đơn yêu cầu';
 
@@ -28,9 +27,9 @@ class ModificationRequestResource extends Resource
 
     protected static ?int $navigationSort = 3;
 
-    public static function form(Schema $schema): Schema
+    public static function form(Form $form): Form
     {
-        return ModificationRequestForm::configure($schema);
+        return ModificationRequestForm::configure($form);
     }
 
     public static function table(Table $table): Table

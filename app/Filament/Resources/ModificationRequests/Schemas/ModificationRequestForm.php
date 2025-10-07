@@ -3,20 +3,20 @@
 namespace App\Filament\Resources\ModificationRequests\Schemas;
 
 use App\Models\Grave;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Schemas\Components\Section;
-use Filament\Schemas\Schema;
+use Filament\Forms\Form;
 
 class ModificationRequestForm
 {
-    public static function configure(Schema $schema): Schema
+    public static function configure(Form $form): Form
     {
-        return $schema
-            ->components([
+        return $form
+            ->schema([
                 Section::make('Thông tin đơn yêu cầu')
                     ->description('Thông tin cơ bản về đơn yêu cầu sửa đổi')
                     ->schema([
