@@ -30,7 +30,7 @@ class CemeteryForm
                                 array_keys(config('ninhbinh_locations'))
                             ))
                             ->searchable()
-                            ->reactive()
+                            ->live()
                             ->afterStateUpdated(fn(callable $set) => $set('commune', null))
                             ->placeholder('Chọn huyện/thành phố'),
 
@@ -38,7 +38,7 @@ class CemeteryForm
                             ->label('Xã/Phường/Thị trấn')
                             ->options(function (callable $get) {
                                 $district = $get('district');
-                                if (!$district) {
+                                if (! $district) {
                                     return [];
                                 }
                                 $communes = config("ninhbinh_locations.{$district}", []);
@@ -46,7 +46,7 @@ class CemeteryForm
                                 return array_combine($communes, $communes);
                             })
                             ->searchable()
-                            ->disabled(fn(callable $get) => !$get('district'))
+                            ->disabled(fn(callable $get) => ! $get('district'))
                             ->placeholder('Chọn xã/phường/thị trấn'),
 
                         Textarea::make('address')

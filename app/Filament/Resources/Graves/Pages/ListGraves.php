@@ -45,7 +45,7 @@ class ListGraves extends ListRecords
                 ])
                 ->action(function (array $data): void {
                     try {
-                        $file = storage_path('app/public/' . $data['file']);
+                        $file = storage_path('app/public/'.$data['file']);
 
                         $import = new GravesImport;
                         Excel::import($import, $file);
@@ -57,7 +57,7 @@ class ListGraves extends ListRecords
                             $errorMessages = [];
 
                             foreach ($failures as $failure) {
-                                $errorMessages[] = "Dòng {$failure->row()}: " . implode(', ', $failure->errors());
+                                $errorMessages[] = "Dòng {$failure->row()}: ".implode(', ', $failure->errors());
                             }
 
                             foreach ($errors as $error) {
@@ -86,7 +86,7 @@ class ListGraves extends ListRecords
                         Notification::make()
                             ->title('Import thất bại')
                             ->danger()
-                            ->body('Có lỗi xảy ra: ' . $e->getMessage())
+                            ->body('Có lỗi xảy ra: '.$e->getMessage())
                             ->persistent()
                             ->send();
                     }

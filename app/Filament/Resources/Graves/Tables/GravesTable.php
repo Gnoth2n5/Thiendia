@@ -6,7 +6,6 @@ use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ViewAction;
-use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -56,7 +55,7 @@ class GravesTable
                     ->limit(25)
                     ->placeholder('Chưa có thông tin'),
 
-                BadgeColumn::make('grave_type')
+                TextColumn::make('grave_type')
                     ->label('Loại')
                     ->formatStateUsing(fn(string $state): string => match ($state) {
                         'đất' => 'Đất',
@@ -66,15 +65,17 @@ class GravesTable
                         'khác' => 'Khác',
                         default => $state,
                     })
-                    ->colors([
-                        'secondary' => 'đất',
-                        'primary' => 'xi_măng',
-                        'success' => 'đá',
-                        'warning' => 'gỗ',
-                        'gray' => 'khác',
-                    ]),
+                    ->badge()
+                    ->color(fn(string $state): string => match ($state) {
+                        'đất' => 'gray',
+                        'xi_măng' => 'primary',
+                        'đá' => 'success',
+                        'gỗ' => 'warning',
+                        'khác' => 'gray',
+                        default => 'gray',
+                    }),
 
-                BadgeColumn::make('status')
+                TextColumn::make('status')
                     ->label('Trạng thái')
                     ->formatStateUsing(fn(string $state): string => match ($state) {
                         'còn_trống' => 'Còn trống',
@@ -83,12 +84,14 @@ class GravesTable
                         'ngừng_sử_dụng' => 'Ngừng sử dụng',
                         default => $state,
                     })
-                    ->colors([
-                        'success' => 'còn_trống',
-                        'primary' => 'đã_sử_dụng',
-                        'warning' => 'bảo_trì',
-                        'danger' => 'ngừng_sử_dụng',
-                    ]),
+                    ->badge()
+                    ->color(fn(string $state): string => match ($state) {
+                        'còn_trống' => 'success',
+                        'đã_sử_dụng' => 'primary',
+                        'bảo_trì' => 'warning',
+                        'ngừng_sử_dụng' => 'danger',
+                        default => 'gray',
+                    }),
 
                 TextColumn::make('burial_date')
                     ->label('Ngày an táng')
