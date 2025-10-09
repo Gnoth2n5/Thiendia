@@ -3,9 +3,9 @@
 namespace App\Filament\Resources\ModificationRequests\Schemas;
 
 use App\Models\Grave;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\KeyValue;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -122,7 +122,7 @@ class ModificationRequestForm
                             ->displayFormat('d/m/Y H:i'),
                     ])
                     ->columns(1)
-                    ->visible(fn($record) => $record && $record->exists),
+                    ->visible(fn ($record) => $record && $record->exists),
             ]);
     }
 }

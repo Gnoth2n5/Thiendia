@@ -22,7 +22,49 @@
 <div class="card bg-base-100 shadow-xl mb-8 border border-base-300">
     <div class="card-body">
         <form action="{{ route('search') }}" method="GET" class="space-y-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text font-medium">Huyện/Thành phố</span>
+                    </label>
+                    <select name="district" id="district" class="select select-bordered w-full" onchange="updateCommunes()">
+                        <option value="">Tất cả huyện/thành phố</option>
+                        @foreach($districts as $district)
+                            <option value="{{ $district }}" {{ request('district') == $district ? 'selected' : '' }}>
+                                {{ $district }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text font-medium">Xã/Phường/Thị trấn</span>
+                    </label>
+                    <select name="commune" id="commune" class="select select-bordered w-full" {{ request('district') ? '' : 'disabled' }}>
+                        <option value="">Tất cả xã/phường</option>
+                        @foreach($communes as $commune)
+                            <option value="{{ $commune }}" {{ request('commune') == $commune ? 'selected' : '' }}>
+                                {{ $commune }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text font-medium">Nghĩa trang</span>
+                    </label>
+                    <select name="cemetery_id" class="select select-bordered w-full">
+                        <option value="">Tất cả nghĩa trang</option>
+                        @foreach($cemeteries as $cemetery)
+                            <option value="{{ $cemetery->id }}" {{ request('cemetery_id') == $cemetery->id ? 'selected' : '' }}>
+                                {{ $cemetery->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                
                 <div class="form-control">
                     <label class="label">
                         <span class="label-text font-medium">Số lăng mộ</span>
@@ -42,20 +84,6 @@
                         <span class="label-text font-medium">Tên người đã khuất</span>
                     </label>
                     <input type="text" name="deceased_name" placeholder="Nhập tên người đã khuất" class="input input-bordered w-full" value="{{ request('deceased_name') }}">
-                </div>
-                
-                <div class="form-control">
-                    <label class="label">
-                        <span class="label-text font-medium">Nghĩa trang</span>
-                    </label>
-                    <select name="cemetery_id" class="select select-bordered w-full">
-                        <option value="">Tất cả nghĩa trang</option>
-                        @foreach($cemeteries as $cemetery)
-                            <option value="{{ $cemetery->id }}" {{ request('cemetery_id') == $cemetery->id ? 'selected' : '' }}>
-                                {{ $cemetery->name }}
-                            </option>
-                        @endforeach
-                    </select>
                 </div>
             </div>
             
@@ -78,7 +106,7 @@
 </div>
 
 <!-- Search Results -->
-@if(request()->hasAny(['grave_number', 'owner_name', 'deceased_name', 'cemetery_id']))
+@if(request()->hasAny(['grave_number', 'owner_name', 'deceased_name', 'cemetery_id', 'district', 'commune']))
     <div class="mb-6">
         <div class="flex items-center justify-between">
             <div>
@@ -196,4 +224,38 @@
     </div>
 @endif
 @endsection
+
+@push('scripts')
+<script>
+const ninhbinhLocations = @json(config('ninhbinh_locations'));
+
+function updateCommunes() {
+    const districtSelect = document.getElementById('district');
+    const communeSelect = document.getElementById('commune');
+    const selectedDistrict = districtSelect.value;
+    
+    // Clear current options
+    communeSelect.innerHTML = '<option value="">Tất cả xã/phường</option>';
+    
+    if (selectedDistrict && ninhbinhLocations[selectedDistrict]) {
+        communeSelect.disabled = false;
+        const communes = ninhbinhLocations[selectedDistrict];
+        
+        communes.forEach(commune => {
+            const option = document.createElement('option');
+            option.value = commune;
+            option.textContent = commune;
+            communeSelect.appendChild(option);
+        });
+    } else {
+        communeSelect.disabled = true;
+    }
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+    updateCommunes();
+});
+</script>
+@endpush
 

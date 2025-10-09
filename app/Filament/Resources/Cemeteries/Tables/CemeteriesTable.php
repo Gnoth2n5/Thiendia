@@ -28,13 +28,27 @@ class CemeteriesTable
                     ->searchable()
                     ->weight('bold'),
 
+                TextColumn::make('district')
+                    ->label('Huyện/Thành phố')
+                    ->sortable()
+                    ->searchable()
+                    ->placeholder('Chưa cập nhật'),
+
+                TextColumn::make('commune')
+                    ->label('Xã/Phường')
+                    ->sortable()
+                    ->searchable()
+                    ->placeholder('Chưa cập nhật'),
+
                 TextColumn::make('address')
-                    ->label('Địa chỉ')
-                    ->limit(50)
+                    ->label('Địa chỉ chi tiết')
+                    ->limit(30)
                     ->tooltip(function (TextColumn $column): ?string {
                         $state = $column->getState();
-                        return strlen($state) > 50 ? $state : null;
-                    }),
+
+                        return strlen($state) > 30 ? $state : null;
+                    })
+                    ->toggleable(),
 
                 TextColumn::make('graves_count')
                     ->label('Số lăng mộ')
@@ -58,6 +72,14 @@ class CemeteriesTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
+                SelectFilter::make('district')
+                    ->label('Huyện/Thành phố')
+                    ->options(array_combine(
+                        array_keys(config('ninhbinh_locations')),
+                        array_keys(config('ninhbinh_locations'))
+                    ))
+                    ->searchable(),
+
                 SelectFilter::make('has_graves')
                     ->label('Có lăng mộ')
                     ->options([
@@ -70,6 +92,7 @@ class CemeteriesTable
                         } elseif ($data['value'] === 'no') {
                             return $query->doesntHave('graves');
                         }
+
                         return $query;
                     }),
             ])

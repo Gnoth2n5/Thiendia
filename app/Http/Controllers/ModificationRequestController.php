@@ -35,13 +35,15 @@ class ModificationRequestController extends Controller
         $requestedData = [];
         foreach ($requestedDataLines as $line) {
             $line = trim($line);
-            if (empty($line)) continue;
+            if (empty($line)) {
+                continue;
+            }
 
             $parts = explode(':', $line, 2);
             if (count($parts) === 2) {
                 $key = trim($parts[0]);
                 $value = trim($parts[1]);
-                if (!empty($key) && !empty($value)) {
+                if (! empty($key) && ! empty($value)) {
                     $requestedData[$key] = $value;
                 }
             }

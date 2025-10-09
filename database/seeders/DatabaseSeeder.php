@@ -14,7 +14,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Tạo admin user trước
-        if (!User::where('email', 'admin@gmail.com')->exists()) {
+        if (! User::where('email', 'admin@gmail.com')->exists()) {
             User::factory()->create([
                 'name' => 'Admin User',
                 'email' => 'admin@gmail.com',
