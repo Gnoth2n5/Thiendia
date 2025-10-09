@@ -36,14 +36,18 @@ class HomeController extends Controller
             $query->where('deceased_full_name', 'like', '%' . $request->deceased_name . '%');
         }
 
-        // Lọc theo huyện
+        // Lọc theo huyện (từ cemetery)
         if ($request->filled('district')) {
-            $query->where('district', $request->district);
+            $query->whereHas('cemetery', function ($q) use ($request) {
+                $q->where('district', $request->district);
+            });
         }
 
-        // Lọc theo xã
+        // Lọc theo xã (từ cemetery)
         if ($request->filled('commune')) {
-            $query->where('commune', $request->commune);
+            $query->whereHas('cemetery', function ($q) use ($request) {
+                $q->where('commune', $request->commune);
+            });
         }
 
         // Lọc theo nghĩa trang

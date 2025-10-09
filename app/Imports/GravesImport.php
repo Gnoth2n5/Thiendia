@@ -55,11 +55,11 @@ class GravesImport implements SkipsOnError, SkipsOnFailure, ToModel, WithStartRo
 
         // Tìm cemetery theo tên
         $cemetery = null;
-        if (! empty($row[0])) {
+        if (!empty($row[0])) {
             $cemetery = Cemetery::where('name', 'like', '%' . $row[0] . '%')->first();
         }
 
-        if (! $cemetery) {
+        if (!$cemetery) {
             return null;
         }
 
@@ -70,8 +70,6 @@ class GravesImport implements SkipsOnError, SkipsOnFailure, ToModel, WithStartRo
 
         return new Grave([
             'cemetery_id' => $cemetery->id,
-            'district' => $row[1] ?? null,
-            'commune' => $row[2] ?? null,
             'owner_name' => $row[3] ?? '',
             'deceased_full_name' => $row[4] ?? null,
             'deceased_birth_date' => $deceasedBirthDate,
