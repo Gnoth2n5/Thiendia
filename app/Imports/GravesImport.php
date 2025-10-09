@@ -10,51 +10,79 @@ use Maatwebsite\Excel\Concerns\SkipsFailures;
 use Maatwebsite\Excel\Concerns\SkipsOnError;
 use Maatwebsite\Excel\Concerns\SkipsOnFailure;
 use Maatwebsite\Excel\Concerns\ToModel;
-use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\WithStartRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
 
-class GravesImport implements SkipsOnError, SkipsOnFailure, ToModel, WithHeadingRow, WithValidation
+class GravesImport implements SkipsOnError, SkipsOnFailure, ToModel, WithStartRow, WithValidation
 {
     use SkipsErrors, SkipsFailures;
 
     /**
+     * Bắt đầu từ row 2 (bỏ qua header).
+     */
+    public function startRow(): int
+    {
+        return 2;
+    }
+
+    /**
+     * Map dữ liệu từ Excel theo thứ tự cột.
+     *
+     * Thứ tự cột:
+     * 0: Tên Nghĩa Trang
+     * 1: Huyện
+     * 2: Xã
+     * 3: Tên Chủ Lăng Mộ
+     * 4: Tên Người Quá Cố
+     * 5: Ngày Sinh
+     * 6: Ngày Mất
+     * 7: Giới Tính
+     * 8: Quan Hệ
+     * 9: Ngày An táng
+     * 10: Loại Mộ
+     * 11: Trạng Thái
+     * 12: Mô Tả Vị Trí
+     * 13: Ghi Chú
+     *
      * @return \Illuminate\Database\Eloquent\Model|null
      */
     public function model(array $row): ?Grave
     {
-        // Tìm cemetery theo tên hoặc ID
-        $cemetery = null;
-        if (!empty($row['cemetery_id'])) {
-            $cemetery = Cemetery::find($row['cemetery_id']);
-        } elseif (!empty($row['cemetery_name'])) {
-            $cemetery = Cemetery::where('name', 'like', '%' . $row['cemetery_name'] . '%')->first();
+        // Bỏ qua row trống
+        if (empty($row[0]) && empty($row[3])) {
+            return null;
         }
 
-        if (!$cemetery) {
+        // Tìm cemetery theo tên
+        $cemetery = null;
+        if (! empty($row[0])) {
+            $cemetery = Cemetery::where('name', 'like', '%' . $row[0] . '%')->first();
+        }
+
+        if (! $cemetery) {
             return null;
         }
 
         // Parse dates
-        $burialDate = $this->parseDate($row['burial_date'] ?? null);
-        $deceasedBirthDate = $this->parseDate($row['deceased_birth_date'] ?? null);
-        $deceasedDeathDate = $this->parseDate($row['deceased_death_date'] ?? null);
+        $burialDate = $this->parseDate($row[9] ?? null);
+        $deceasedBirthDate = $this->parseDate($row[5] ?? null);
+        $deceasedDeathDate = $this->parseDate($row[6] ?? null);
 
         return new Grave([
             'cemetery_id' => $cemetery->id,
-            'district' => $row['district'] ?? null,
-            'commune' => $row['commune'] ?? null,
-            'grave_number' => $row['grave_number'] ?? Grave::generateGraveNumber($cemetery->id),
-            'owner_name' => $row['owner_name'] ?? '',
-            'deceased_full_name' => $row['deceased_full_name'] ?? null,
+            'district' => $row[1] ?? null,
+            'commune' => $row[2] ?? null,
+            'owner_name' => $row[3] ?? '',
+            'deceased_full_name' => $row[4] ?? null,
             'deceased_birth_date' => $deceasedBirthDate,
             'deceased_death_date' => $deceasedDeathDate,
-            'deceased_gender' => $row['deceased_gender'] ?? 'nam',
-            'deceased_relationship' => $row['deceased_relationship'] ?? null,
+            'deceased_gender' => $row[7] ?? 'nam',
+            'deceased_relationship' => $row[8] ?? null,
             'burial_date' => $burialDate,
-            'grave_type' => $row['grave_type'] ?? 'đất',
-            'status' => $row['status'] ?? 'còn_trống',
-            'location_description' => $row['location_description'] ?? null,
-            'notes' => $row['notes'] ?? null,
+            'grave_type' => $row[10] ?? 'đất',
+            'status' => $row[11] ?? 'còn_trống',
+            'location_description' => $row[12] ?? null,
+            'notes' => $row[13] ?? null,
         ]);
     }
 
@@ -86,28 +114,30 @@ class GravesImport implements SkipsOnError, SkipsOnFailure, ToModel, WithHeading
     }
 
     /**
-     * Validation rules
+     * Validation rules theo index cột.
      */
     public function rules(): array
     {
         return [
-            'owner_name' => 'required|string|max:255',
-            'grave_type' => 'nullable|in:đất,xi_măng,đá,gỗ,khác',
-            'status' => 'nullable|in:còn_trống,đã_sử_dụng,bảo_trì,ngừng_sử_dụng',
-            'deceased_gender' => 'nullable|in:nam,nữ,khác',
+            '3' => 'required|string|max:255', // Tên Chủ Lăng Mộ
+            '7' => 'nullable|in:nam,nữ,khác', // Giới Tính
+            '10' => 'nullable|in:đất,xi_măng,đá,gỗ,khác', // Loại Mộ
+            '11' => 'nullable|in:còn_trống,đã_sử_dụng,bảo_trì,ngừng_sử_dụng', // Trạng Thái
         ];
     }
 
     /**
-     * Custom validation messages
+     * Custom validation messages.
      */
     public function customValidationMessages(): array
     {
         return [
-            'owner_name.required' => 'Tên chủ lăng mộ là bắt buộc',
-            'owner_name.string' => 'Tên chủ lăng mộ phải là chuỗi ký tự',
-            'owner_name.max' => 'Tên chủ lăng mộ không được vượt quá 255 ký tự',
+            '3.required' => 'Tên chủ lăng mộ là bắt buộc (cột 4)',
+            '3.string' => 'Tên chủ lăng mộ phải là chuỗi ký tự',
+            '3.max' => 'Tên chủ lăng mộ không được vượt quá 255 ký tự',
+            '7.in' => 'Giới tính phải là: nam, nữ hoặc khác',
+            '10.in' => 'Loại mộ phải là: đất, xi_măng, đá, gỗ hoặc khác',
+            '11.in' => 'Trạng thái phải là: còn_trống, đã_sử_dụng, bảo_trì hoặc ngừng_sử_dụng',
         ];
     }
 }
-
