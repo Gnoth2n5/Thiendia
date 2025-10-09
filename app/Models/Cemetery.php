@@ -9,6 +9,8 @@ class Cemetery extends Model
 {
     protected $fillable = [
         'name',
+        'district',
+        'commune',
         'address',
         'description',
     ];

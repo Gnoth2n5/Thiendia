@@ -8,8 +8,8 @@ use App\Filament\Resources\Cemeteries\Pages\ListCemeteries;
 use App\Filament\Resources\Cemeteries\Schemas\CemeteryForm;
 use App\Filament\Resources\Cemeteries\Tables\CemeteriesTable;
 use App\Models\Cemetery;
-use Filament\Resources\Resource;
 use Filament\Forms\Form;
+use Filament\Resources\Resource;
 use Filament\Tables\Table;
 
 class CemeteryResource extends Resource

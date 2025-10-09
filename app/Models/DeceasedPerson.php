@@ -50,7 +50,7 @@ class DeceasedPerson extends Model
      */
     public function getAgeAtDeathAttribute(): ?int
     {
-        if (!$this->birth_date || !$this->death_date) {
+        if (! $this->birth_date || ! $this->death_date) {
             return null;
         }
 

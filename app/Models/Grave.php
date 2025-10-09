@@ -10,6 +10,8 @@ class Grave extends Model
 {
     protected $fillable = [
         'cemetery_id',
+        'district',
+        'commune',
         'grave_number',
         'owner_name',
         'deceased_full_name',

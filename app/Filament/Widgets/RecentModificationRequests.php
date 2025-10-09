@@ -8,11 +8,10 @@ use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget;
-use Illuminate\Database\Eloquent\Builder;
 
 class RecentModificationRequests extends TableWidget
 {
-    protected int | string | array $columnSpan = 'full';
+    protected int|string|array $columnSpan = 'full';
 
     protected static ?string $heading = 'Đơn yêu cầu sửa đổi gần đây';
 
@@ -40,7 +39,7 @@ class RecentModificationRequests extends TableWidget
 
                 BadgeColumn::make('request_type')
                     ->label('Loại yêu cầu')
-                    ->formatStateUsing(fn(string $state): string => match ($state) {
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
                         'sửa_thông_tin' => 'Sửa thông tin',
                         'thêm_người' => 'Thêm người',
                         'xóa_người' => 'Xóa người',
@@ -58,7 +57,7 @@ class RecentModificationRequests extends TableWidget
 
                 BadgeColumn::make('status')
                     ->label('Trạng thái')
-                    ->formatStateUsing(fn(string $state): string => match ($state) {
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
                         'pending' => 'Chờ xử lý',
                         'approved' => 'Đã phê duyệt',
                         'rejected' => 'Đã từ chối',

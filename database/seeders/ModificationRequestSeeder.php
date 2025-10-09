@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Grave;
 use App\Models\ModificationRequest;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class ModificationRequestSeeder extends Seeder

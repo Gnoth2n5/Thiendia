@@ -3,19 +3,18 @@
 namespace App\Filament\Resources\ModificationRequests\Tables;
 
 use App\Models\ModificationRequest;
+use Filament\Forms\Components\Textarea;
+use Filament\Notifications\Notification;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ViewAction;
-use Filament\Forms\Components\Textarea;
-use Filament\Notifications\Notification;
 use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Model;
 
 class ModificationRequestsTable
 {
@@ -53,7 +52,7 @@ class ModificationRequestsTable
 
                 BadgeColumn::make('request_type')
                     ->label('Loại yêu cầu')
-                    ->formatStateUsing(fn(string $state): string => match ($state) {
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
                         'sửa_thông_tin' => 'Sửa thông tin',
                         'thêm_người' => 'Thêm người',
                         'xóa_người' => 'Xóa người',
@@ -71,7 +70,7 @@ class ModificationRequestsTable
 
                 BadgeColumn::make('status')
                     ->label('Trạng thái')
-                    ->formatStateUsing(fn(string $state): string => match ($state) {
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
                         'pending' => 'Chờ xử lý',
                         'approved' => 'Đã phê duyệt',
                         'rejected' => 'Đã từ chối',
@@ -128,7 +127,7 @@ class ModificationRequestsTable
                         ->label('Phê duyệt')
                         ->icon('heroicon-o-check-circle')
                         ->color('success')
-                        ->visible(fn(ModificationRequest $record): bool => $record->status === 'pending')
+                        ->visible(fn (ModificationRequest $record): bool => $record->status === 'pending')
                         ->form([
                             Textarea::make('admin_notes')
                                 ->label('Ghi chú')
@@ -154,7 +153,7 @@ class ModificationRequestsTable
                         ->label('Từ chối')
                         ->icon('heroicon-o-x-circle')
                         ->color('danger')
-                        ->visible(fn(ModificationRequest $record): bool => $record->status === 'pending')
+                        ->visible(fn (ModificationRequest $record): bool => $record->status === 'pending')
                         ->form([
                             Textarea::make('admin_notes')
                                 ->label('Lý do từ chối')

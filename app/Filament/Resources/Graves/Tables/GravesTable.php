@@ -2,8 +2,6 @@
 
 namespace App\Filament\Resources\Graves\Tables;
 
-use App\Models\Cemetery;
-use App\Models\Grave;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
@@ -30,6 +28,20 @@ class GravesTable
                     ->searchable()
                     ->weight('bold')
                     ->copyable(),
+
+                TextColumn::make('district')
+                    ->label('Huyện')
+                    ->sortable()
+                    ->searchable()
+                    ->placeholder('Chưa cập nhật')
+                    ->toggleable(),
+
+                TextColumn::make('commune')
+                    ->label('Xã/Phường')
+                    ->sortable()
+                    ->searchable()
+                    ->placeholder('Chưa cập nhật')
+                    ->toggleable(),
 
                 TextColumn::make('owner_name')
                     ->label('Chủ lăng mộ')
@@ -91,6 +103,14 @@ class GravesTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
+                SelectFilter::make('district')
+                    ->label('Huyện/Thành phố')
+                    ->options(array_combine(
+                        array_keys(config('ninhbinh_locations')),
+                        array_keys(config('ninhbinh_locations'))
+                    ))
+                    ->searchable(),
+
                 SelectFilter::make('cemetery_id')
                     ->label('Nghĩa trang')
                     ->relationship('cemetery', 'name')
