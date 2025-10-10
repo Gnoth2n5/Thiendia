@@ -17,3 +17,17 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+// API to get communes by district
+Route::get('/communes', function (Request $request) {
+    $district = $request->get('district');
+
+    if (!$district) {
+        return response()->json([]);
+    }
+
+    $locations = config('ninhbinh_locations');
+    $communes = $locations[$district] ?? [];
+
+    return response()->json($communes);
+});

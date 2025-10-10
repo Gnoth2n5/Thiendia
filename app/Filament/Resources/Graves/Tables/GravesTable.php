@@ -28,14 +28,14 @@ class GravesTable
                     ->weight('bold')
                     ->copyable(),
 
-                TextColumn::make('cemetery.district')
+                TextColumn::make('district')
                     ->label('Huyện')
                     ->sortable()
                     ->searchable()
                     ->placeholder('Chưa cập nhật')
                     ->toggleable(),
 
-                TextColumn::make('cemetery.commune')
+                TextColumn::make('commune')
                     ->label('Xã/Phường')
                     ->sortable()
                     ->searchable()
@@ -106,7 +106,7 @@ class GravesTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                SelectFilter::make('cemetery.district')
+                SelectFilter::make('district')
                     ->label('Huyện/Thành phố')
                     ->options(array_combine(
                         array_keys(config('ninhbinh_locations')),
