@@ -231,11 +231,6 @@
                         Trang Chủ
                     </a>
 
-                    <a href="#"
-                        class="flex items-center gap-3 px-4 py-3 text-white font-semibold hover:bg-red-800 transition-colors duration-300">
-                        Giới Thiệu
-                    </a>
-
                     <a href="{{ route('articles.index') }}"
                         class="flex items-center gap-3 px-4 py-3 text-white font-semibold hover:bg-red-800 transition-colors duration-300 {{ request()->routeIs('articles.*') ? 'bg-red-800' : '' }}">
                         Tin Tức – Sự Kiện
