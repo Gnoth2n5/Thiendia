@@ -50,16 +50,27 @@ class GravesImport implements SkipsOnError, SkipsOnFailure, ToModel, WithStartRo
      */
     public function model(array $row): ?Grave
     {
-        // Bỏ qua row trống
-        if (empty($row[0]) && empty($row[2])) {
+        // Bỏ qua row trống - kiểm tra tất cả các cột
+        $isEmpty = true;
+        foreach ($row as $cell) {
+            if (! empty($cell) && trim((string) $cell) !== '') {
+                $isEmpty = false;
+                break;
+            }
+        }
+
+        if ($isEmpty) {
+            return null;
+        }
+
+        // Kiểm tra các trường bắt buộc
+        // Tên Nghĩa Trang (cột 0), Số Lăng Mộ (cột 1), Tên Chủ Lăng Mộ (cột 2)
+        if (empty($row[0]) || empty(trim((string) ($row[1] ?? ''))) || empty(trim((string) ($row[2] ?? '')))) {
             return null;
         }
 
         // Tìm cemetery theo tên
-        $cemetery = null;
-        if (! empty($row[0])) {
-            $cemetery = Cemetery::where('name', 'like', '%'.$row[0].'%')->first();
-        }
+        $cemetery = Cemetery::where('name', 'like', '%' . $row[0] . '%')->first();
 
         if (! $cemetery) {
             return null;
@@ -73,13 +84,15 @@ class GravesImport implements SkipsOnError, SkipsOnFailure, ToModel, WithStartRo
         // Build contact info
         $contactInfo = [];
         if (! empty($row[12])) {
-            $contactInfo['phone'] = $row[12];
+            // Xử lý số điện thoại: đảm bảo giữ số 0 đằng trước
+            $phone = $this->formatPhoneNumber($row[12]);
+            $contactInfo['phone'] = $phone;
         }
         if (! empty($row[13])) {
-            $contactInfo['email'] = $row[13];
+            $contactInfo['email'] = trim($row[13]);
         }
         if (! empty($row[14])) {
-            $contactInfo['address'] = $row[14];
+            $contactInfo['address'] = trim($row[14]);
         }
 
         return new Grave([
@@ -128,13 +141,36 @@ class GravesImport implements SkipsOnError, SkipsOnFailure, ToModel, WithStartRo
     }
 
     /**
+     * Format phone number - đảm bảo giữ số 0 đằng trước
+     */
+    protected function formatPhoneNumber($value): string
+    {
+        if (empty($value)) {
+            return '';
+        }
+
+        // Chuyển thành string và loại bỏ khoảng trắng
+        $phone = trim((string) $value);
+
+        // Nếu là số và không bắt đầu bằng 0, thêm 0 vào đầu
+        if (is_numeric($phone) && ! str_starts_with($phone, '0')) {
+            $phone = '0' . $phone;
+        }
+
+        // Loại bỏ các ký tự không phải số (giữ dấu +)
+        $phone = preg_replace('/[^\d+]/', '', $phone);
+
+        return $phone;
+    }
+
+    /**
      * Validation rules theo index cột.
+     *
+     * Chỉ validate các trường không bắt buộc
      */
     public function rules(): array
     {
         return [
-            '1' => 'required|string|max:255', // Số Lăng Mộ
-            '2' => 'required|string|max:255', // Tên Chủ Lăng Mộ
             '6' => 'nullable|in:nam,nữ,khác', // Giới Tính
             '9' => 'nullable|in:đất,xi_măng,đá,gỗ,khác', // Loại Mộ
             '10' => 'nullable|in:còn_trống,đã_sử_dụng,bảo_trì,ngừng_sử_dụng', // Trạng Thái
@@ -149,12 +185,6 @@ class GravesImport implements SkipsOnError, SkipsOnFailure, ToModel, WithStartRo
     public function customValidationMessages(): array
     {
         return [
-            '1.required' => 'Số lăng mộ là bắt buộc (cột 2)',
-            '1.string' => 'Số lăng mộ phải là chuỗi ký tự',
-            '1.max' => 'Số lăng mộ không được vượt quá 255 ký tự',
-            '2.required' => 'Tên chủ lăng mộ là bắt buộc (cột 3)',
-            '2.string' => 'Tên chủ lăng mộ phải là chuỗi ký tự',
-            '2.max' => 'Tên chủ lăng mộ không được vượt quá 255 ký tự',
             '6.in' => 'Giới tính phải là: nam, nữ hoặc khác',
             '9.in' => 'Loại mộ phải là: đất, xi_măng, đá, gỗ hoặc khác',
             '10.in' => 'Trạng thái phải là: còn_trống, đã_sử_dụng, bảo_trì hoặc ngừng_sử_dụng',
