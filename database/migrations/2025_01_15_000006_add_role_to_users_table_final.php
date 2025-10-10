@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('articles', function (Blueprint $table) {
-            $table->string('featured_image')->nullable()->comment('Ảnh đại diện')->after('content');
+        Schema::table('users', function (Blueprint $table) {
+            $table->enum('role', ['admin', 'user'])->default('user')->after('email')->comment('Vai trò người dùng');
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('articles', function (Blueprint $table) {
-            $table->dropColumn('featured_image');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('role');
         });
     }
 };

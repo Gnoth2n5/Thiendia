@@ -19,8 +19,12 @@ return new class extends Migration
             $table->date('death_date')->nullable()->comment('Ngày mất');
             $table->enum('gender', ['nam', 'nữ', 'khác'])->default('nam')->comment('Giới tính');
             $table->string('relationship')->nullable()->comment('Mối quan hệ với chủ lăng mộ');
+            $table->string('photo')->nullable()->comment('Ảnh người đã khuất');
+            $table->text('biography')->nullable()->comment('Tiểu sử');
             $table->text('notes')->nullable()->comment('Ghi chú');
             $table->timestamps();
+
+            $table->index(['grave_id', 'full_name']);
         });
     }
 

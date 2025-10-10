@@ -14,9 +14,13 @@ return new class extends Migration
         Schema::create('cemeteries', function (Blueprint $table) {
             $table->id();
             $table->string('name')->comment('Tên nghĩa trang');
+            $table->string('district')->nullable()->comment('Quận/Huyện');
+            $table->string('commune')->nullable()->comment('Phường/Xã');
             $table->text('address')->comment('Địa chỉ');
             $table->text('description')->nullable()->comment('Mô tả');
             $table->timestamps();
+
+            $table->index(['district', 'commune']);
         });
     }
 

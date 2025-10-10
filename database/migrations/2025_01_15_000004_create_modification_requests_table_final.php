@@ -29,6 +29,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->index(['status', 'created_at']);
+            $table->index(['grave_id', 'status']);
         });
     }
 
