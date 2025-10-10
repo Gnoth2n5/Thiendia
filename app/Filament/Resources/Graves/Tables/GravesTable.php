@@ -28,19 +28,11 @@ class GravesTable
                     ->weight('bold')
                     ->copyable(),
 
-                TextColumn::make('district')
-                    ->label('Huyện')
+                TextColumn::make('cemetery.name')
+                    ->label('Nghĩa trang')
                     ->sortable()
                     ->searchable()
-                    ->placeholder('Chưa cập nhật')
-                    ->toggleable(),
-
-                TextColumn::make('commune')
-                    ->label('Xã/Phường')
-                    ->sortable()
-                    ->searchable()
-                    ->placeholder('Chưa cập nhật')
-                    ->toggleable(),
+                    ->limit(30),
 
                 TextColumn::make('owner_name')
                     ->label('Chủ lăng mộ')
@@ -57,7 +49,7 @@ class GravesTable
 
                 TextColumn::make('grave_type')
                     ->label('Loại')
-                    ->formatStateUsing(fn(string $state): string => match ($state) {
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
                         'đất' => 'Đất',
                         'xi_măng' => 'Xi măng',
                         'đá' => 'Đá',
@@ -66,7 +58,7 @@ class GravesTable
                         default => $state,
                     })
                     ->badge()
-                    ->color(fn(string $state): string => match ($state) {
+                    ->color(fn (string $state): string => match ($state) {
                         'đất' => 'gray',
                         'xi_măng' => 'primary',
                         'đá' => 'success',
@@ -77,7 +69,7 @@ class GravesTable
 
                 TextColumn::make('status')
                     ->label('Trạng thái')
-                    ->formatStateUsing(fn(string $state): string => match ($state) {
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
                         'còn_trống' => 'Còn trống',
                         'đã_sử_dụng' => 'Đã sử dụng',
                         'bảo_trì' => 'Bảo trì',
@@ -85,7 +77,7 @@ class GravesTable
                         default => $state,
                     })
                     ->badge()
-                    ->color(fn(string $state): string => match ($state) {
+                    ->color(fn (string $state): string => match ($state) {
                         'còn_trống' => 'success',
                         'đã_sử_dụng' => 'primary',
                         'bảo_trì' => 'warning',
@@ -106,14 +98,6 @@ class GravesTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                SelectFilter::make('district')
-                    ->label('Huyện/Thành phố')
-                    ->options(array_combine(
-                        array_keys(config('ninhbinh_locations')),
-                        array_keys(config('ninhbinh_locations'))
-                    ))
-                    ->searchable(),
-
                 SelectFilter::make('cemetery_id')
                     ->label('Nghĩa trang')
                     ->relationship('cemetery', 'name')

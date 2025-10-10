@@ -20,7 +20,6 @@ class GraveForm
         return $form
             ->schema([
                 Section::make('Thông tin cơ bản')
-                    ->description('Thông tin chính về lăng mộ')
                     ->schema([
                         Select::make('cemetery_id')
                             ->label('Nghĩa trang')
@@ -37,7 +36,6 @@ class GraveForm
                                     $set('grave_number', $graveNumber);
                                 }
                             }),
-
 
                         Placeholder::make('grave_number_preview')
                             ->label('Số lăng mộ (tự động)')
@@ -96,7 +94,6 @@ class GraveForm
                     ->columns(2),
 
                 Section::make('Thông tin người đã khuất')
-                    ->description('Thông tin về người đã được an táng')
                     ->schema([
                         TextInput::make('deceased_full_name')
                             ->label('Họ tên đầy đủ')
@@ -132,17 +129,16 @@ class GraveForm
                             ->visibility('public')
                             ->imageEditor()
                             ->imageEditorAspectRatios([
-                                '1:1',
-                                '4:3',
+                                '4:5',
+                                '3:4',
                             ])
-                            ->maxSize(5120)
-                            ->helperText('Tải lên ảnh người đã khuất (tối đa 5MB)'),
+                            ->maxSize(2048)
+                            ->helperText('Ảnh dạng chữ nhật dọc (tối đa 2MB)'),
                     ])
                     ->columns(2)
                     ->collapsible(),
 
                 Section::make('Hình ảnh bia mộ')
-                    ->description('Ảnh trạng thái hiện tại của bia mộ')
                     ->schema([
                         FileUpload::make('grave_photos')
                             ->label('Ảnh bia mộ')
@@ -153,36 +149,46 @@ class GraveForm
                             ->imageEditor()
                             ->reorderable()
                             ->maxFiles(5)
-                            ->maxSize(5120)
-                            ->helperText('Tải lên tối đa 5 ảnh bia mộ (mỗi ảnh tối đa 5MB)'),
+                            ->maxSize(2048)
+                            ->helperText('Tối đa 5 ảnh, mỗi ảnh tối đa 2MB'),
                     ])
                     ->columns(1)
                     ->collapsible(),
 
-                Section::make('Thông tin vị trí và liên hệ')
+                Section::make('Thông tin bổ sung')
                     ->schema([
                         Textarea::make('location_description')
                             ->label('Mô tả vị trí')
-                            ->rows(3)
-                            ->placeholder('Mô tả vị trí cụ thể trong nghĩa trang...'),
-
-                        KeyValue::make('contact_info')
-                            ->label('Thông tin liên hệ')
-                            ->keyLabel('Loại thông tin')
-                            ->valueLabel('Nội dung')
-                            ->addActionLabel('Thêm thông tin liên hệ')
-                            ->default([
-                                'phone' => '',
-                                'address' => '',
-                                'email' => '',
-                            ]),
+                            ->rows(2)
+                            ->placeholder('Ví dụ: Khu A, hàng 3, mộ số 15'),
 
                         Textarea::make('notes')
                             ->label('Ghi chú')
-                            ->rows(3)
+                            ->rows(2)
                             ->placeholder('Ghi chú thêm về lăng mộ...'),
                     ])
-                    ->columns(1),
+                    ->columns(2)
+                    ->collapsible(),
+
+                Section::make('Thông tin liên hệ')
+                    ->schema([
+                        TextInput::make('contact_info.phone')
+                            ->label('Số điện thoại')
+                            ->tel()
+                            ->placeholder('0912345678'),
+
+                        TextInput::make('contact_info.email')
+                            ->label('Email')
+                            ->email()
+                            ->placeholder('email@example.com'),
+
+                        TextInput::make('contact_info.address')
+                            ->label('Địa chỉ liên hệ')
+                            ->placeholder('Địa chỉ để liên lạc')
+                            ->columnSpanFull(),
+                    ])
+                    ->columns(2)
+                    ->collapsible(),
 
             ]);
     }

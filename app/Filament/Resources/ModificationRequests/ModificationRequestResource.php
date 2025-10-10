@@ -2,8 +2,6 @@
 
 namespace App\Filament\Resources\ModificationRequests;
 
-use App\Filament\Resources\ModificationRequests\Pages\CreateModificationRequest;
-use App\Filament\Resources\ModificationRequests\Pages\EditModificationRequest;
 use App\Filament\Resources\ModificationRequests\Pages\ListModificationRequests;
 use App\Filament\Resources\ModificationRequests\Schemas\ModificationRequestForm;
 use App\Filament\Resources\ModificationRequests\Tables\ModificationRequestsTable;
@@ -47,8 +45,12 @@ class ModificationRequestResource extends Resource
     {
         return [
             'index' => ListModificationRequests::route('/'),
-            'create' => CreateModificationRequest::route('/create'),
-            'edit' => EditModificationRequest::route('/{record}/edit'),
+            'view' => Pages\ViewModificationRequest::route('/{record}'),
         ];
+    }
+
+    public static function canCreate(): bool
+    {
+        return false;
     }
 }

@@ -61,7 +61,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- Form -->
         <div class="lg:col-span-2 space-y-6">
-            <form action="{{ route('modification-request.store') }}" method="POST" class="space-y-6">
+            <form action="{{ route('modification-request.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                 @csrf
                 <input type="hidden" name="grave_id" value="{{ $grave->id }}">
 
@@ -183,57 +183,154 @@
             </div>
 
                 <!-- Request Details -->
-                <div class="card bg-base-100 shadow-xl border border-base-300 hover:shadow-2xl transition-shadow">
+                <div class="card bg-gradient-to-br from-white via-slate-50/50 to-green-50/30 shadow-xl border border-green-200/50">
                     <div class="card-body">
                         <div class="flex items-center gap-3 mb-4">
-                            <div class="p-2 bg-warning/10 rounded-lg">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-6 w-6 text-warning">
+                            <div class="p-2 bg-green-500/10 rounded-lg">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-6 w-6 text-green-600">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25ZM6.75 12h.008v.008H6.75V12Zm0 3h.008v.008H6.75V15Zm0 3h.008v.008H6.75V18Z" />
                                 </svg>
                             </div>
-                            <h2 class="text-2xl font-bold text-neutral">Chi tiết yêu cầu</h2>
+                            <h2 class="text-2xl font-bold text-slate-800">Thông tin cần sửa đổi</h2>
+                        </div>
+                        
+                        <div class="alert bg-blue-50 border-blue-200 mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-5 w-5 text-blue-600">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+                            </svg>
+                            <span class="text-sm text-slate-700">Chỉ điền vào các trường bạn muốn sửa đổi. Để trống nếu không thay đổi.</span>
                         </div>
                         
                         <div class="space-y-6">
-                            <div class="form-control w-full">
-                                <label class="block mb-2">
-                                    <span class="text-sm font-semibold text-neutral">Loại yêu cầu <span class="text-error">*</span></span>
-                                </label>
-                                <select name="request_type" class="select select-bordered w-full @error('request_type') select-error @enderror" required>
-                                    <option value="">-- Chọn loại yêu cầu --</option>
-                                    <option value="sửa_thông_tin" {{ old('request_type') === 'sửa_thông_tin' ? 'selected' : '' }}>Sửa thông tin</option>
-                                    <option value="thêm_người" {{ old('request_type') === 'thêm_người' ? 'selected' : '' }}>Thêm người</option>
-                                    <option value="xóa_người" {{ old('request_type') === 'xóa_người' ? 'selected' : '' }}>Xóa người</option>
-                                    <option value="sửa_vị_trí" {{ old('request_type') === 'sửa_vị_trí' ? 'selected' : '' }}>Sửa vị trí</option>
-                                    <option value="khác" {{ old('request_type') === 'khác' ? 'selected' : '' }}>Khác</option>
-                                </select>
-                                @error('request_type')
-                                    <div class="mt-1">
-                                        <span class="text-xs text-error">{{ $message }}</span>
+                            <!-- Thông tin chủ lăng mộ -->
+                            <div class="bg-white rounded-xl p-4 border border-slate-200">
+                                <h3 class="font-bold text-lg mb-4 text-slate-700">Thông tin chủ lăng mộ</h3>
+                                <div class="space-y-4">
+                                    <div class="form-control">
+                                        <label class="label">
+                                            <span class="label-text font-medium">Tên chủ lăng mộ mới</span>
+                                        </label>
+                                        <input type="text" name="new_owner_name" class="input input-bordered w-full" placeholder="Nhập tên mới nếu muốn thay đổi" value="{{ old('new_owner_name') }}">
+                                        <label class="label">
+                                            <span class="label-text-alt text-slate-500">Hiện tại: {{ $grave->owner_name }}</span>
+                                        </label>
                                     </div>
-                                @enderror
-                            </div>
-
-                            <div class="form-control w-full">
-                                <label class="block mb-2">
-                                    <span class="text-sm font-semibold text-neutral">Thông tin cần sửa đổi <span class="text-error">*</span></span>
-                                </label>
-                                <textarea name="requested_data_text" rows="5" class="textarea textarea-bordered w-full @error('requested_data') textarea-error @enderror" placeholder="Ví dụ:&#10;tên: Nguyễn Văn A&#10;ngày_sinh: 15/03/1950&#10;ngày_mất: 20/10/2020" required>{{ old('requested_data_text') }}</textarea>
-                                <div class="mt-2">
-                                    <span class="text-xs text-base-content/60">💡 Mỗi thông tin một dòng, định dạng: <code class="bg-base-200 px-1 rounded">tên_trường: giá trị mới</code></span>
                                 </div>
-                                @error('requested_data')
-                                    <div class="mt-1">
-                                        <span class="text-xs text-error">{{ $message }}</span>
-                                    </div>
-                                @enderror
                             </div>
 
+                            <!-- Thông tin người đã khuất -->
+                            <div class="bg-white rounded-xl p-4 border border-slate-200">
+                                <h3 class="font-bold text-lg mb-4 text-slate-700">Thông tin người đã khuất</h3>
+                                <div class="space-y-4">
+                                    <!-- Ảnh người đã khuất -->
+                                    <div class="form-control">
+                                        <label class="label">
+                                            <span class="label-text font-medium">Ảnh người đã khuất</span>
+                                        </label>
+                                        @if($grave->deceased_photo)
+                                            <div class="mb-3">
+                                                <p class="text-xs text-slate-500 mb-2">Ảnh hiện tại:</p>
+                                                <div class="w-32 h-40 rounded-lg overflow-hidden shadow-md border-2 border-slate-200">
+                                                    <img src="{{ Storage::url($grave->deceased_photo) }}" alt="Ảnh hiện tại" class="w-full h-full object-cover">
+                                                </div>
+                                            </div>
+                                        @endif
+                                        <input type="file" name="new_deceased_photo" class="file-input file-input-bordered w-full" accept="image/*">
+                                        <label class="label">
+                                            <span class="label-text-alt text-slate-500">Chọn ảnh mới nếu muốn thay đổi (JPG, PNG, tối đa 2MB)</span>
+                                        </label>
+                                    </div>
+
+                                    <div class="form-control">
+                                        <label class="label">
+                                            <span class="label-text font-medium">Họ và tên</span>
+                                        </label>
+                                        <input type="text" name="new_deceased_full_name" class="input input-bordered w-full" placeholder="Nhập họ tên mới" value="{{ old('new_deceased_full_name') }}">
+                                        <label class="label">
+                                            <span class="label-text-alt text-slate-500">Hiện tại: {{ $grave->deceased_full_name ?? 'Chưa có' }}</span>
+                                        </label>
+                                    </div>
+
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div class="form-control">
+                                            <label class="label">
+                                                <span class="label-text font-medium">Ngày sinh</span>
+                                            </label>
+                                            <input type="date" name="new_deceased_birth_date" class="input input-bordered w-full" value="{{ old('new_deceased_birth_date') }}">
+                                            <label class="label">
+                                                <span class="label-text-alt text-slate-500">Hiện tại: {{ $grave->deceased_birth_date?->format('d/m/Y') ?? 'Chưa có' }}</span>
+                                            </label>
+                                        </div>
+
+                                        <div class="form-control">
+                                            <label class="label">
+                                                <span class="label-text font-medium">Ngày mất</span>
+                                            </label>
+                                            <input type="date" name="new_deceased_death_date" class="input input-bordered w-full" value="{{ old('new_deceased_death_date') }}">
+                                            <label class="label">
+                                                <span class="label-text-alt text-slate-500">Hiện tại: {{ $grave->deceased_death_date?->format('d/m/Y') ?? 'Chưa có' }}</span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-control">
+                                        <label class="label">
+                                            <span class="label-text font-medium">Giới tính</span>
+                                        </label>
+                                        <select name="new_deceased_gender" class="select select-bordered w-full">
+                                            <option value="">-- Không thay đổi --</option>
+                                            <option value="nam" {{ old('new_deceased_gender') === 'nam' ? 'selected' : '' }}>Nam</option>
+                                            <option value="nữ" {{ old('new_deceased_gender') === 'nữ' ? 'selected' : '' }}>Nữ</option>
+                                        </select>
+                                        <label class="label">
+                                            <span class="label-text-alt text-slate-500">Hiện tại: {{ ucfirst($grave->deceased_gender ?? 'Chưa có') }}</span>
+                                        </label>
+                                    </div>
+
+                                    <div class="form-control">
+                                        <label class="label">
+                                            <span class="label-text font-medium">Quan hệ với chủ lăng mộ</span>
+                                        </label>
+                                        <input type="text" name="new_deceased_relationship" class="input input-bordered w-full" placeholder="Ví dụ: Cha, Mẹ, Vợ, Chồng..." value="{{ old('new_deceased_relationship') }}">
+                                        <label class="label">
+                                            <span class="label-text-alt text-slate-500">Hiện tại: {{ $grave->deceased_relationship ?? 'Chưa có' }}</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Thông tin khác -->
+                            <div class="bg-white rounded-xl p-4 border border-slate-200">
+                                <h3 class="font-bold text-lg mb-4 text-slate-700">Thông tin khác</h3>
+                                <div class="space-y-4">
+                                    <div class="form-control">
+                                        <label class="label">
+                                            <span class="label-text font-medium">Vị trí lăng mộ</span>
+                                        </label>
+                                        <textarea name="new_location_description" rows="2" class="textarea textarea-bordered w-full" placeholder="Mô tả vị trí chi tiết">{{ old('new_location_description') }}</textarea>
+                                        <label class="label">
+                                            <span class="label-text-alt text-slate-500">Hiện tại: {{ $grave->location_description ?? 'Chưa có' }}</span>
+                                        </label>
+                                    </div>
+
+                                    <div class="form-control">
+                                        <label class="label">
+                                            <span class="label-text font-medium">Ghi chú</span>
+                                        </label>
+                                        <textarea name="new_notes" rows="2" class="textarea textarea-bordered w-full" placeholder="Ghi chú bổ sung">{{ old('new_notes') }}</textarea>
+                                        <label class="label">
+                                            <span class="label-text-alt text-slate-500">Hiện tại: {{ Str::limit($grave->notes ?? 'Chưa có', 50) }}</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Lý do yêu cầu -->
                             <div class="form-control w-full">
                                 <label class="block mb-2">
-                                    <span class="text-sm font-semibold text-neutral">Lý do yêu cầu <span class="text-error">*</span></span>
+                                    <span class="text-sm font-semibold text-neutral">Lý do yêu cầu sửa đổi <span class="text-error">*</span></span>
                                 </label>
-                                <textarea name="reason" rows="5" class="textarea textarea-bordered w-full @error('reason') textarea-error @enderror" placeholder="Vui lòng mô tả chi tiết lý do bạn yêu cầu sửa đổi thông tin..." required>{{ old('reason') }}</textarea>
+                                <textarea name="reason" rows="4" class="textarea textarea-bordered w-full @error('reason') textarea-error @enderror" placeholder="Vui lòng mô tả chi tiết lý do bạn yêu cầu sửa đổi thông tin..." required>{{ old('reason') }}</textarea>
                                 @error('reason')
                                     <div class="mt-1">
                                         <span class="text-xs text-error">{{ $message }}</span>
