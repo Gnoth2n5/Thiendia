@@ -14,22 +14,14 @@ class Article extends Model
     protected $fillable = [
         'title',
         'slug',
-        'excerpt',
         'content',
         'featured_image',
         'status',
         'category',
-        'tags',
         'views',
-        'is_featured',
-        'author_id',
-        'published_at',
     ];
 
     protected $casts = [
-        'tags' => 'array',
-        'is_featured' => 'boolean',
-        'published_at' => 'datetime',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
@@ -45,46 +37,22 @@ class Article extends Model
             if (empty($article->slug)) {
                 $article->slug = Str::slug($article->title);
             }
-
-            if ($article->status === 'published' && !$article->published_at) {
-                $article->published_at = now();
-            }
         });
 
         static::updating(function ($article) {
             if ($article->isDirty('title') && empty($article->slug)) {
                 $article->slug = Str::slug($article->title);
             }
-
-            if ($article->isDirty('status') && $article->status === 'published' && !$article->published_at) {
-                $article->published_at = now();
-            }
         });
     }
 
-    /**
-     * Get the author of the article.
-     */
-    public function author(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'author_id');
-    }
 
     /**
      * Scope a query to only include published articles.
      */
     public function scopePublished($query)
     {
-        return $query->where('status', 'published')
-            ->where('published_at', '<=', now());
-    }
-
-    /**
-     * Scope a query to only include featured articles.
-     */
-    public function scopeFeatured($query)
-    {
-        return $query->where('is_featured', true);
+        return $query->where('status', 'published');
     }
 
     /**
@@ -93,6 +61,27 @@ class Article extends Model
     public function scopeByCategory($query, $category)
     {
         return $query->where('category', $category);
+    }
+
+    /**
+     * Get the category label in Vietnamese.
+     */
+    public function getCategoryLabelAttribute(): string
+    {
+        return match ($this->category) {
+            'tin_tuc' => 'Tin tức',
+            'huong_dan' => 'Hướng dẫn',
+            'thong_bao' => 'Thông báo',
+            default => $this->category,
+        };
+    }
+
+    /**
+     * Increment view count.
+     */
+    public function incrementViews(): void
+    {
+        $this->increment('views');
     }
 
     /**
@@ -106,27 +95,5 @@ class Article extends Model
             'archived' => 'Đã lưu trữ',
             default => 'Không xác định'
         };
-    }
-
-    /**
-     * Get the category label.
-     */
-    public function getCategoryLabelAttribute(): string
-    {
-        return match ($this->category) {
-            'tin_tuc' => 'Tin tức',
-            'huong_dan' => 'Hướng dẫn',
-            'thong_bao' => 'Thông báo',
-            'su_kien' => 'Sự kiện',
-            default => 'Không xác định'
-        };
-    }
-
-    /**
-     * Increment the view count.
-     */
-    public function incrementViews(): void
-    {
-        $this->increment('views');
     }
 }

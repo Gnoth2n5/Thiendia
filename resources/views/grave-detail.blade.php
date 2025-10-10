@@ -7,47 +7,50 @@
 <div class="text-sm breadcrumbs mb-6">
     <ul>
         <li>
-            <a href="{{ route('home') }}" class="text-primary hover:underline">Trang chủ</a>
+            <a href="{{ route('home') }}" class="text-green-600 hover:underline">Trang chủ</a>
         </li>
         <li>
-            <a href="{{ route('search') }}" class="text-primary hover:underline">Tìm kiếm</a>
+            <a href="{{ route('search') }}" class="text-green-600 hover:underline">Tìm kiếm</a>
         </li>
         <li class="text-base-content/60">{{ $grave->grave_number }}</li>
     </ul>
 </div>
 
 <!-- Page Header -->
-<div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
-    <div class="flex items-start gap-4">
-        <div class="p-3 bg-primary/10 rounded-xl">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-8 w-8 text-primary">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21" />
-            </svg>
-        </div>
-        <div>
-            <div class="flex items-center gap-2 mb-2">
-                <h1 class="text-3xl font-bold text-neutral">Lăng mộ {{ $grave->grave_number }}</h1>
-                <div class="badge {{ $grave->status === 'đã_sử_dụng' ? 'badge-success' : 'badge-ghost' }} badge-lg">
-                    {{ $grave->status_label }}
-                </div>
+<div class="mb-8">
+    <div class="text-center mb-8">
+        <div class="relative inline-block mb-6">
+            <div class="absolute inset-0 bg-gradient-to-r from-green-400 to-blue-500 rounded-full blur-xl opacity-30 animate-pulse"></div>
+            <div class="relative p-4 bg-gradient-to-br from-green-500 to-blue-600 rounded-full">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-12 w-12 text-white">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21" />
+                </svg>
             </div>
-            <p class="text-base-content/70">{{ $grave->cemetery->name }}</p>
         </div>
+        <div class="flex items-center justify-center gap-3 mb-2">
+            <h1 class="text-4xl font-bold bg-gradient-to-r from-green-700 via-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                Lăng mộ {{ $grave->grave_number }}
+            </h1>
+            <div class="badge {{ $grave->status === 'đã_sử_dụng' ? 'badge-success' : 'badge-ghost' }} badge-lg">
+                {{ $grave->status_label }}
+            </div>
+        </div>
+        <p class="text-lg text-slate-600 mb-6">{{ $grave->cemetery->name }}</p>
+        
+        <a href="{{ route('modification-request.create', $grave->id) }}" class="relative inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-5 w-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+            </svg>
+            Yêu cầu sửa đổi
+        </a>
     </div>
-    
-    <a href="{{ route('modification-request.create', $grave->id) }}" class="btn btn-accent gap-2">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-5 w-5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
-        </svg>
-        Yêu cầu sửa đổi
-    </a>
 </div>
 
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
     <!-- Main Content -->
     <div class="lg:col-span-2 space-y-6">
         <!-- Basic Information -->
-        <div class="card bg-base-100 shadow-lg border border-base-300">
+        <div class="card bg-gradient-to-br from-white via-slate-50/50 to-green-50/30 shadow-xl border border-green-200/50">
             <div class="card-body">
                 <h2 class="card-title text-xl mb-4">Thông tin cơ bản</h2>
                 
@@ -83,62 +86,65 @@
 
         <!-- Deceased Person Information -->
         @if($grave->deceased_full_name)
-            <div class="card bg-base-100 shadow-lg border border-base-300">
+            <div class="card bg-gradient-to-br from-white via-slate-50/50 to-green-50/30 shadow-xl border border-green-200/50">
                 <div class="card-body">
                     <h2 class="card-title text-xl mb-4">Thông tin người đã khuất</h2>
                     
                     <div class="space-y-4">
-                        <div class="p-4 bg-gradient-to-br from-base-200 to-base-300 rounded-xl">
-                            <div class="flex items-center gap-4 mb-4">
+                        <div class="p-6 bg-gradient-to-br from-base-200 to-base-300 rounded-xl">
+                            <div class="flex items-start gap-6 mb-6">
                                 @if($grave->deceased_photo)
-                                    <div class="avatar">
-                                        <div class="w-20 h-20 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-                                            <img src="{{ Storage::url($grave->deceased_photo) }}" alt="{{ $grave->deceased_full_name }}" class="object-cover" />
+                                    <div class="flex-shrink-0">
+                                        <div class="w-32 h-40 rounded-xl overflow-hidden shadow-xl ring-4 ring-white/50">
+                                            <img src="{{ Storage::url($grave->deceased_photo) }}" alt="{{ $grave->deceased_full_name }}" class="w-full h-full object-cover" />
                                         </div>
                                     </div>
                                 @else
-                                    <div class="avatar placeholder">
-                                        <div class="bg-neutral text-neutral-content rounded-full w-20 h-20">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-10 w-10">
+                                    <div class="flex-shrink-0">
+                                        <div class="w-32 h-40 bg-gradient-to-br from-slate-200 to-slate-300 rounded-xl flex items-center justify-center shadow-xl ring-4 ring-white/50">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-16 w-16 text-slate-400">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
                                             </svg>
                                         </div>
                                     </div>
                                 @endif
-                                <div>
-                                    <p class="font-bold text-xl">{{ $grave->deceased_full_name }}</p>
+                                <div class="flex-1">
+                                    <p class="font-bold text-2xl mb-2">{{ $grave->deceased_full_name }}</p>
                                     @if($grave->deceased_relationship)
-                                        <p class="text-sm text-base-content/70">{{ $grave->deceased_relationship }} của chủ lăng mộ</p>
+                                        <p class="text-sm text-base-content/70 mb-3">{{ $grave->deceased_relationship }} của chủ lăng mộ</p>
+                                    @endif
+                                    @if($grave->deceased_gender)
+                                        <div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-white/50 mb-2">
+                                            {{ ucfirst($grave->deceased_gender) }}
+                                        </div>
                                     @endif
                                 </div>
                             </div>
 
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 @if($grave->deceased_birth_date)
-                                    <div>
+                                    <div class="bg-white/50 rounded-lg p-3">
                                         <p class="text-xs text-base-content/60 mb-1">Ngày sinh</p>
-                                        <p class="font-medium">{{ $grave->deceased_birth_date->format('d/m/Y') }}</p>
+                                        <p class="font-bold text-lg">{{ $grave->deceased_birth_date->format('d/m/Y') }}</p>
                                     </div>
                                 @endif
                                 
                                 @if($grave->deceased_death_date)
-                                    <div>
+                                    <div class="bg-white/50 rounded-lg p-3">
                                         <p class="text-xs text-base-content/60 mb-1">Ngày mất</p>
-                                        <p class="font-medium">{{ $grave->deceased_death_date->format('d/m/Y') }}</p>
+                                        <p class="font-bold text-lg">{{ $grave->deceased_death_date->format('d/m/Y') }}</p>
                                     </div>
                                 @endif
-                                
-                                <div>
-                                    <p class="text-xs text-base-content/60 mb-1">Giới tính</p>
-                                    <p class="font-medium">{{ ucfirst($grave->deceased_gender) }}</p>
-                                </div>
                             </div>
 
                             @if($grave->deceased_birth_date && $grave->deceased_death_date)
-                                <div class="mt-4 pt-4 border-t border-base-content/10">
-                                    <p class="text-sm text-base-content/70">
-                                        Hưởng thọ: {{ $grave->deceased_birth_date->diffInYears($grave->deceased_death_date) }} tuổi
-                                    </p>
+                                <div class="mt-4 pt-4 border-t border-white/50">
+                                    <div class="flex items-center gap-2">
+                                        
+                                        <p class="text-sm font-bold text-slate-700">
+                                            Hưởng thọ: <span class="text-lg font-bold text-green-700">{{ $grave->deceased_birth_date->diffInYears($grave->deceased_death_date) }}</span> tuổi
+                                        </p>
+                                    </div>
                                 </div>
                             @endif
                         </div>
@@ -149,7 +155,7 @@
 
         <!-- Location & Notes -->
         @if($grave->location_description || $grave->notes)
-            <div class="card bg-base-100 shadow-lg border border-base-300">
+            <div class="card bg-gradient-to-br from-white via-slate-50/50 to-green-50/30 shadow-xl border border-green-200/50">
                 <div class="card-body">
                     <h2 class="card-title text-xl mb-4">Thông tin bổ sung</h2>
                     
@@ -183,7 +189,7 @@
 
         <!-- Grave Photos -->
         @if($grave->grave_photos && count($grave->grave_photos) > 0)
-            <div class="card bg-base-100 shadow-lg border border-base-300">
+            <div class="card bg-gradient-to-br from-white via-slate-50/50 to-green-50/30 shadow-xl border border-green-200/50">
                 <div class="card-body">
                     <h2 class="card-title text-xl mb-4">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-6 w-6 text-primary">
@@ -208,7 +214,7 @@
     <!-- Sidebar -->
     <div class="space-y-6">
         <!-- Cemetery Info -->
-        <div class="card bg-base-100 shadow-lg border border-base-300">
+        <div class="card bg-gradient-to-br from-white via-slate-50/50 to-green-50/30 shadow-xl border border-green-200/50">
             <div class="card-body">
                 <h3 class="font-bold text-lg mb-4">Nghĩa trang</h3>
                 
@@ -244,7 +250,7 @@
 
         <!-- Contact Info -->
         @if($grave->contact_info && count(array_filter($grave->contact_info)) > 0)
-            <div class="card bg-base-100 shadow-lg border border-base-300">
+            <div class="card bg-gradient-to-br from-white via-slate-50/50 to-green-50/30 shadow-xl border border-green-200/50">
                 <div class="card-body">
                     <h3 class="font-bold text-lg mb-4">Thông tin liên hệ</h3>
                     
@@ -278,13 +284,13 @@
         @endif
 
         <!-- Quick Actions -->
-        <div class="card bg-primary/5 border border-primary/20">
+        <div class="card bg-gradient-to-br from-green-50 to-blue-50 border border-green-200/50 shadow-lg">
             <div class="card-body">
-                <h3 class="font-bold text-lg mb-3">Cần hỗ trợ?</h3>
-                <p class="text-sm text-base-content/70 mb-4">
+                <h3 class="font-bold text-lg mb-3 text-slate-800">Cần hỗ trợ?</h3>
+                <p class="text-sm text-slate-600 mb-4">
                     Nếu bạn phát hiện thông tin không chính xác hoặc cần cập nhật, vui lòng gửi yêu cầu sửa đổi.
                 </p>
-                <a href="{{ route('modification-request.create', $grave->id) }}" class="btn btn-primary w-full gap-2">
+                <a href="{{ route('modification-request.create', $grave->id) }}" class="relative inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 w-full">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-5 w-5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
                     </svg>

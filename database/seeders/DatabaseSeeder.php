@@ -27,6 +27,8 @@ class DatabaseSeeder extends Seeder
         $this->call([
             CemeterySeeder::class,
             GraveSeeder::class,
+            DeceasedPersonSeeder::class,
+            ArticleSeeder::class,
             ModificationRequestSeeder::class,
         ]);
     }

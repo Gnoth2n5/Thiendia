@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class DeceasedPerson extends Model
 {
+    protected $table = 'deceased_persons';
+
     protected $fillable = [
         'grave_id',
         'full_name',
@@ -14,6 +16,8 @@ class DeceasedPerson extends Model
         'death_date',
         'gender',
         'relationship',
+        'photo',
+        'biography',
         'notes',
     ];
 

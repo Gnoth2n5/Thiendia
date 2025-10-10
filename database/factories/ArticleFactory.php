@@ -23,16 +23,11 @@ class ArticleFactory extends Factory
         return [
             'title' => $title,
             'slug' => Str::slug($title),
-            'excerpt' => $this->faker->paragraph(2),
             'content' => $this->faker->paragraphs(8, true),
             'featured_image' => 'https://picsum.photos/800/600?random=' . $this->faker->numberBetween(1, 1000),
-            'status' => $this->faker->randomElement(['draft', 'published', 'archived']),
-            'category' => $this->faker->randomElement(['tin_tuc', 'huong_dan', 'thong_bao', 'su_kien']),
-            'tags' => $this->faker->words(3),
+            'status' => $this->faker->randomElement(['draft', 'published']),
+            'category' => $this->faker->randomElement(['tin_tuc', 'huong_dan', 'thong_bao']),
             'views' => $this->faker->numberBetween(0, 1000),
-            'is_featured' => $this->faker->boolean(20), // 20% chance of being featured
-            'author_id' => User::factory(),
-            'published_at' => $this->faker->optional(0.8)->dateTimeBetween('-1 year', 'now'),
         ];
     }
 
@@ -43,17 +38,6 @@ class ArticleFactory extends Factory
     {
         return $this->state(fn(array $attributes) => [
             'status' => 'published',
-            'published_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
-        ]);
-    }
-
-    /**
-     * Indicate that the article is featured.
-     */
-    public function featured(): static
-    {
-        return $this->state(fn(array $attributes) => [
-            'is_featured' => true,
         ]);
     }
 

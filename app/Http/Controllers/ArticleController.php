@@ -12,9 +12,8 @@ class ArticleController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Article::with('author')
-            ->published()
-            ->orderBy('published_at', 'desc');
+        $query = Article::published()
+            ->orderBy('created_at', 'desc');
 
         // Filter by category
         if ($request->filled('category')) {
@@ -26,16 +25,15 @@ class ArticleController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'like', "%{$search}%")
-                    ->orWhere('excerpt', 'like', "%{$search}%")
                     ->orWhere('content', 'like', "%{$search}%");
             });
         }
 
         $articles = $query->paginate(12);
-        $featuredArticles = Article::with('author')
-            ->published()
-            ->featured()
-            ->orderBy('published_at', 'desc')
+
+        // Get recent articles as featured (since we removed is_featured)
+        $featuredArticles = Article::published()
+            ->orderBy('created_at', 'desc')
             ->limit(3)
             ->get();
 
@@ -43,7 +41,6 @@ class ArticleController extends Controller
             'tin_tuc' => 'Tin tức',
             'huong_dan' => 'Hướng dẫn',
             'thong_bao' => 'Thông báo',
-            'su_kien' => 'Sự kiện',
         ];
 
         return view('articles.index', compact('articles', 'featuredArticles', 'categories'));
@@ -54,20 +51,18 @@ class ArticleController extends Controller
      */
     public function show(string $slug)
     {
-        $article = Article::with('author')
-            ->published()
+        $article = Article::published()
             ->where('slug', $slug)
             ->firstOrFail();
 
         // Increment view count
-        $article->incrementViews();
+        $article->increment('views');
 
         // Get related articles (same category, excluding current article)
-        $relatedArticles = Article::with('author')
-            ->published()
+        $relatedArticles = Article::published()
             ->where('category', $article->category)
             ->where('id', '!=', $article->id)
-            ->orderBy('published_at', 'desc')
+            ->orderBy('created_at', 'desc')
             ->limit(4)
             ->get();
 
@@ -83,17 +78,15 @@ class ArticleController extends Controller
             'tin_tuc' => 'Tin tức',
             'huong_dan' => 'Hướng dẫn',
             'thong_bao' => 'Thông báo',
-            'su_kien' => 'Sự kiện',
         ];
 
         if (!array_key_exists($category, $categories)) {
             abort(404);
         }
 
-        $articles = Article::with('author')
-            ->published()
+        $articles = Article::published()
             ->byCategory($category)
-            ->orderBy('published_at', 'desc')
+            ->orderBy('created_at', 'desc')
             ->paginate(12);
 
         return view('articles.category', compact('articles', 'category', 'categories'));

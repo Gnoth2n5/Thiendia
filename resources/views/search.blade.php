@@ -5,22 +5,33 @@
 @section('content')
 <!-- Page Header -->
 <div class="mb-8">
-    <div class="flex items-center gap-3 mb-4">
-        <div class="p-2 bg-primary/10 rounded-lg">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-6 w-6 text-primary">
-                <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-            </svg>
+    <div class="text-center mb-8">
+        <div class="relative inline-block mb-6">
+            <div class="absolute inset-0 bg-gradient-to-r from-green-400 to-blue-500 rounded-full blur-xl opacity-30 animate-pulse"></div>
+            <div class="relative p-4 bg-gradient-to-br from-green-500 to-blue-600 rounded-full">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-12 w-12 text-white">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                </svg>
+            </div>
         </div>
-        <div>
-            <h1 class="text-3xl font-bold text-neutral">Tìm kiếm lăng mộ</h1>
-            <p class="text-base-content/60">Nhập thông tin để tra cứu</p>
-        </div>
+        <h1 class="text-4xl font-bold bg-gradient-to-r from-green-700 via-blue-600 to-indigo-600 bg-clip-text text-transparent mb-4">
+            Tìm kiếm lăng mộ
+        </h1>
+        <p class="text-lg text-slate-600 max-w-2xl mx-auto">
+            Nhập thông tin để tra cứu lăng mộ tại các nghĩa trang Ninh Bình
+        </p>
     </div>
 </div>
 
 <!-- Search Form -->
-<div class="card bg-base-100 shadow-xl mb-8 border border-base-300">
+<div class="card bg-gradient-to-br from-white via-slate-50/50 to-green-50/30 shadow-xl mb-8 border border-green-200/50">
     <div class="card-body">
+        <h2 class="card-title text-2xl text-slate-800 mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-6 w-6 text-green-600">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z" />
+            </svg>
+            Bộ lọc tìm kiếm
+        </h2>
         <form action="{{ route('search') }}" method="GET" class="space-y-4">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div class="form-control">
@@ -88,13 +99,13 @@
             </div>
             
             <div class="flex gap-3 justify-end">
-                <a href="{{ route('search') }}" class="btn btn-ghost">
+                <a href="{{ route('search') }}" class="btn btn-ghost gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-5 w-5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
                     </svg>
                     Xóa bộ lọc
                 </a>
-                <button type="submit" class="btn btn-primary gap-2">
+                <button type="submit" class="relative inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-5 w-5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
                     </svg>
@@ -120,8 +131,10 @@
     @if($graves->count() > 0)
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
             @foreach($graves as $grave)
-                <div class="card bg-base-100 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 border border-base-300">
-                    <div class="card-body">
+                <div class="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 bg-gradient-to-br from-white via-slate-50/50 to-green-50/30 border border-green-200/50">
+                    <!-- Background Effects -->
+                    <div class="absolute inset-0 bg-gradient-to-br from-green-100/20 to-blue-100/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <div class="relative card-body">
                         <!-- Header -->
                         <div class="flex items-start justify-between mb-3">
                             <div class="flex-1">
@@ -144,21 +157,24 @@
 
                         <!-- Deceased Person -->
                         @if($grave->deceased_full_name)
-                            <div class="bg-base-200 rounded-lg p-3 mb-3">
-                                <div class="flex items-center gap-3">
+                            <div class="bg-gradient-to-br from-base-200 to-base-300 rounded-xl p-4 mb-3">
+                                <div class="flex items-start gap-4">
                                     @if($grave->deceased_photo)
-                                        <div class="avatar">
-                                            <div class="w-12 h-12 rounded-full">
-                                                <img src="{{ Storage::url($grave->deceased_photo) }}" alt="{{ $grave->deceased_full_name }}" class="object-cover" />
+                                        <div class="flex-shrink-0">
+                                            <div class="w-20 h-24 rounded-lg overflow-hidden shadow-md ring-2 ring-primary/20">
+                                                <img src="{{ Storage::url($grave->deceased_photo) }}" alt="{{ $grave->deceased_full_name }}" class="w-full h-full object-cover" />
                                             </div>
                                         </div>
                                     @endif
-                                    <div class="flex-1">
+                                    <div class="flex-1 min-w-0">
                                         <p class="text-xs text-base-content/60 mb-1">Người đã khuất</p>
-                                        <p class="font-medium text-sm">{{ $grave->deceased_full_name }}</p>
+                                        <p class="font-bold text-sm mb-1">{{ $grave->deceased_full_name }}</p>
                                         @if($grave->deceased_birth_date && $grave->deceased_death_date)
-                                            <p class="text-xs text-base-content/60 mt-1">
-                                                {{ $grave->deceased_birth_date->format('d/m/Y') }} - {{ $grave->deceased_death_date->format('d/m/Y') }}
+                                            <p class="text-xs text-base-content/70 mb-1">
+                                                <span class="font-medium">Sinh:</span> {{ $grave->deceased_birth_date->format('d/m/Y') }}
+                                            </p>
+                                            <p class="text-xs text-base-content/70">
+                                                <span class="font-medium">Mất:</span> {{ $grave->deceased_death_date->format('d/m/Y') }}
                                             </p>
                                         @endif
                                     </div>
@@ -184,7 +200,7 @@
 
                         <!-- Actions -->
                         <div class="flex justify-end">
-                            <a href="{{ route('grave.show', $grave->id) }}" class="btn btn-primary btn-sm gap-2">
+                            <a href="{{ route('grave.show', $grave->id) }}" class="relative inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 text-sm">
                                 Xem chi tiết
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-4 w-4">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
