@@ -57,6 +57,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the articles authored by this user.
+     */
+    public function articles(): HasMany
+    {
+        return $this->hasMany(Article::class, 'author_id');
+    }
+
+    /**
      * Check if user is admin.
      */
     public function isAdmin(): bool

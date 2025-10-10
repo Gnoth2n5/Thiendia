@@ -3,274 +3,341 @@
 @section('title', 'Trang chủ - Quản lý Nghĩa Địa')
 
 @section('content')
-<!-- Hero Section -->
-<div class="relative overflow-hidden rounded-2xl shadow-2xl mb-12" style="background: linear-gradient(135deg, #0f766e 0%, #115e59 50%, #134e4a 100%);">
-    <div class="absolute inset-0 opacity-10">
-        <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" stroke-width="1"/></pattern></defs><rect width="100%" height="100%" fill="url(#grid)"/></svg>
-    </div>
-    <div class="absolute top-0 right-0 w-1/2 h-full opacity-5">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="white" class="w-full h-full">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21" />
-        </svg>
-    </div>
-    <div class="relative hero min-h-[450px]">
-        <div class="hero-content text-center text-white py-16">
-            <div class="max-w-3xl">
-                <div class="inline-block p-4 bg-white/10 backdrop-blur-md rounded-2xl mb-6 shadow-xl border border-white/20">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-16 w-16 text-amber-300">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21" />
-                    </svg>
-                </div>
-                <h1 class="mb-6 text-5xl font-bold leading-tight drop-shadow-lg">
-                    Hệ thống Tra cứu Thông tin<br/>
-                    <span class="text-amber-300">Lăng Mộ & Nghĩa Địa</span>
-                </h1>
-                <p class="mb-8 text-lg text-white/95 max-w-2xl mx-auto leading-relaxed drop-shadow">
-                    Tra cứu thông tin lăng mộ nhanh chóng, chính xác. Hỗ trợ tìm kiếm theo nhiều tiêu chí, 
-                    giúp bạn dễ dàng tìm thấy thông tin người thân.
+        <!-- Quick Search Section -->
+        <div class="mb-12">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl md:text-4xl font-bold text-neutral mb-4">
+                    Tra cứu thông tin lăng mộ
+                </h2>
+                <p class="text-lg text-base-content/70 max-w-3xl mx-auto">
+                    Tìm kiếm thông tin về người thân đã khuất một cách nhanh chóng và chính xác
                 </p>
-                <div class="flex gap-4 justify-center flex-wrap">
-                    <a href="{{ route('search') }}" class="btn btn-accent btn-lg gap-2 shadow-2xl hover:shadow-amber-500/50 transition-all hover:scale-105">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-6 w-6">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-                        </svg>
-                        Tra cứu ngay
-                    </a>
-                    <a href="#guide" class="btn btn-outline btn-lg gap-2 text-white border-white/40 hover:bg-white/15 hover:border-white/60 backdrop-blur">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-6 w-6">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
-                        </svg>
-                        Hướng dẫn
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Stats -->
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-    <div class="card shadow-xl hover:shadow-2xl transition-all hover:-translate-y-1 relative overflow-hidden" style="background: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%);">
-        <div class="absolute top-0 right-0 w-32 h-32 opacity-10">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" class="w-full h-full">
-                <path d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21" />
-            </svg>
-        </div>
-        <div class="card-body text-white relative z-10">
-            <div class="flex justify-between items-start">
-                <div>
-                    <h3 class="text-sm font-medium text-white/80 mb-1">Nghĩa trang</h3>
-                    <p class="text-5xl font-bold mb-1 drop-shadow-lg">{{ $cemeteries->count() }}</p>
-                    <p class="text-sm text-white/90">Đang quản lý</p>
-                </div>
-                <div class="p-3 bg-white/20 backdrop-blur rounded-xl">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-10 w-10">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21" />
-                    </svg>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="card shadow-xl hover:shadow-2xl transition-all hover:-translate-y-1 relative overflow-hidden" style="background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);">
-        <div class="absolute top-0 right-0 w-32 h-32 opacity-10">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" class="w-full h-full">
-                <path d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
-            </svg>
-        </div>
-        <div class="card-body text-white relative z-10">
-            <div class="flex justify-between items-start">
-                <div>
-                    <h3 class="text-sm font-medium text-white/80 mb-1">Lăng mộ</h3>
-                    <p class="text-5xl font-bold mb-1 drop-shadow-lg">{{ number_format($totalGraves) }}</p>
-                    <p class="text-sm text-white/90">Tổng số trong hệ thống</p>
-                </div>
-                <div class="p-3 bg-white/20 backdrop-blur rounded-xl">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-10 w-10">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
-                    </svg>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="card shadow-xl hover:shadow-2xl transition-all hover:-translate-y-1 relative overflow-hidden" style="background: linear-gradient(135deg, #059669 0%, #10b981 100%);">
-        <div class="absolute top-0 right-0 w-32 h-32 opacity-10">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" class="w-full h-full">
-                <path d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-            </svg>
-        </div>
-        <div class="card-body text-white relative z-10">
-            <div class="flex justify-between items-start">
-                <div>
-                    <h3 class="text-sm font-medium text-white/80 mb-1">Đã sử dụng</h3>
-                    <p class="text-5xl font-bold mb-1 drop-shadow-lg">{{ number_format($occupiedGraves) }}</p>
-                    <p class="text-sm text-white/90">{{ $totalGraves > 0 ? round(($occupiedGraves / $totalGraves) * 100, 1) : 0 }}% tổng số</p>
-                </div>
-                <div class="p-3 bg-white/20 backdrop-blur rounded-xl">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-10 w-10">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                    </svg>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Quick Search -->
-<div class="card bg-gradient-to-br from-white to-teal-50/50 shadow-xl mb-12 border-2 border-teal-100">
-    <div class="card-body">
-        <div class="flex items-center gap-3 mb-6">
-            <div class="p-3 bg-gradient-to-br from-teal-500 to-teal-600 rounded-xl shadow-lg">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-6 w-6 text-white">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-                </svg>
-            </div>
-            <div>
-                <h2 class="text-2xl font-bold bg-gradient-to-r from-teal-700 to-teal-600 bg-clip-text text-transparent">Tra cứu nhanh</h2>
-                <p class="text-sm text-base-content/70">Tìm kiếm thông tin lăng mộ theo nhiều tiêu chí</p>
-            </div>
-        </div>
-        
-        <form action="{{ route('search') }}" method="GET" class="space-y-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <div class="form-control">
-                    <label class="label">
-                        <span class="label-text font-medium">Huyện/Thành phố</span>
-                    </label>
-                    <select name="district" id="district" class="select select-bordered w-full" onchange="updateCommunes()">
-                        <option value="">Tất cả huyện/thành phố</option>
-                        @foreach(['Bình Lục', 'Thanh Liêm', 'Lý Nhân', 'Nam Trực', 'Vụ Bản', 'Ý Yên', 'Trực Ninh', 'Xuân Trường', 'Hải Hậu', 'Giao Thủy', 'Nghĩa Hưng', 'Gia Viễn', 'Nho Quan', 'Yên Khánh', 'Yên Mô', 'Kim Sơn', 'Thành phố Phủ Lý', 'Thành phố Nam Định', 'Thành phố Hoa Lư', 'Thành phố Tam Điệp'] as $district)
-                            <option value="{{ $district }}" {{ request('district') == $district ? 'selected' : '' }}>
-                                {{ $district }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div class="form-control">
-                    <label class="label">
-                        <span class="label-text font-medium">Xã/Phường/Thị trấn</span>
-                    </label>
-                    <select name="commune" id="commune" class="select select-bordered w-full" {{ request('district') ? '' : 'disabled' }}>
-                        <option value="">Tất cả xã/phường</option>
-                        @if(request('district'))
-                            @php
-                                $communes = config("ninhbinh_locations." . request('district'), []);
-                            @endphp
-                            @foreach($communes as $commune)
-                                <option value="{{ $commune }}" {{ request('commune') == $commune ? 'selected' : '' }}>
-                                    {{ $commune }}
-                                </option>
-                            @endforeach
-                        @endif
-                    </select>
-                </div>
-
-                <div class="form-control">
-                    <label class="label">
-                        <span class="label-text font-medium">Nghĩa trang</span>
-                    </label>
-                    <select name="cemetery_id" class="select select-bordered w-full">
-                        <option value="">Tất cả nghĩa trang</option>
-                        @foreach($cemeteries as $cemetery)
-                            <option value="{{ $cemetery->id }}" {{ request('cemetery_id') == $cemetery->id ? 'selected' : '' }}>
-                                {{ $cemetery->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-                
-                <div class="form-control">
-                    <label class="label">
-                        <span class="label-text font-medium">Số lăng mộ</span>
-                    </label>
-                    <input type="text" name="grave_number" placeholder="Ví dụ: 1-001" class="input input-bordered w-full" value="{{ request('grave_number') }}">
-                </div>
-                
-                <div class="form-control">
-                    <label class="label">
-                        <span class="label-text font-medium">Tên chủ lăng mộ</span>
-                    </label>
-                    <input type="text" name="owner_name" placeholder="Nhập tên chủ lăng mộ" class="input input-bordered w-full" value="{{ request('owner_name') }}">
-                </div>
-                
-                <div class="form-control">
-                    <label class="label">
-                        <span class="label-text font-medium">Tên người đã khuất</span>
-                    </label>
-                    <input type="text" name="deceased_name" placeholder="Nhập tên người đã khuất" class="input input-bordered w-full" value="{{ request('deceased_name') }}">
-                </div>
             </div>
             
-            <div class="flex justify-end">
-                <button type="submit" class="btn btn-primary btn-lg gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-5 w-5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-                    </svg>
-                    Tìm kiếm
-                </button>
+            <!-- Quick Search Form -->
+            <div class="card bg-base-100 shadow-xl border border-base-300 max-w-4xl mx-auto">
+                <div class="card-body">
+                    <form method="GET" action="{{ route('search') }}" class="space-y-6">
+                        <!-- Search Inputs Row -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Grave Number -->
+                            <div class="form-control">
+                                <label class="label" for="grave_number">
+                                    <span class="label-text font-semibold">Số lăng mộ</span>
+                                </label>
+                                <input type="text" 
+                                       name="grave_number" 
+                                       id="grave_number"
+                                       placeholder="Nhập số lăng mộ..." 
+                                       class="input input-bordered w-full"
+                                       value="{{ request('grave_number') }}">
+                            </div>
+                            
+                            <!-- Owner Name -->
+                            <div class="form-control">
+                                <label class="label" for="owner_name">
+                                    <span class="label-text font-semibold">Tên chủ lăng mộ</span>
+                                </label>
+                                <input type="text" 
+                                       name="owner_name" 
+                                       id="owner_name"
+                                       placeholder="Nhập tên chủ lăng mộ..." 
+                                       class="input input-bordered w-full"
+                                       value="{{ request('owner_name') }}">
+                            </div>
+                        </div>
+                        
+                        <!-- Second Row -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Deceased Name -->
+                            <div class="form-control">
+                                <label class="label" for="deceased_name">
+                                    <span class="label-text font-semibold">Tên người đã khuất</span>
+                                </label>
+                                <input type="text" 
+                                       name="deceased_name" 
+                                       id="deceased_name"
+                                       placeholder="Nhập tên người đã khuất..." 
+                                       class="input input-bordered w-full"
+                                       value="{{ request('deceased_name') }}">
+                            </div>
+                            
+                            <!-- District -->
+                            <div class="form-control">
+                                <label class="label" for="district">
+                                    <span class="label-text font-semibold">Huyện/Thành phố</span>
+                                </label>
+                                <select name="district" id="district" class="select select-bordered w-full">
+                                    <option value="">Tất cả huyện/thành phố</option>
+                                    @foreach(['Bình Lục', 'Thanh Liêm', 'Lý Nhân', 'Nam Trực', 'Vụ Bản', 'Ý Yên', 'Trực Ninh', 'Xuân Trường', 'Hải Hậu', 'Giao Thủy', 'Nghĩa Hưng', 'Gia Viễn', 'Nho Quan', 'Yên Khánh', 'Yên Mô', 'Kim Sơn', 'Thành phố Phủ Lý', 'Thành phố Nam Định', 'Thành phố Hoa Lư', 'Thành phố Tam Điệp'] as $district)
+                                        <option value="{{ $district }}" {{ request('district') == $district ? 'selected' : '' }}>
+                                            {{ $district }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Third Row -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Commune -->
+                            <div class="form-control">
+                                <label class="label" for="commune">
+                                    <span class="label-text font-semibold">Xã/Phường</span>
+                                </label>
+                                <select name="commune" id="commune" class="select select-bordered w-full">
+                                    <option value="">Tất cả xã/phường</option>
+                                    @if(request('district'))
+                                        @php
+                                            $communes = config("ninhbinh_locations.{$request->district}", []);
+                                        @endphp
+                                        @foreach($communes as $commune)
+                                            <option value="{{ $commune }}" {{ request('commune') == $commune ? 'selected' : '' }}>
+                                                {{ $commune }}
+                                            </option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                            </div>
+                            
+                            <!-- Cemetery -->
+                            <div class="form-control">
+                                <label class="label" for="cemetery_id">
+                                    <span class="label-text font-semibold">Nghĩa trang</span>
+                                </label>
+                                <select name="cemetery_id" id="cemetery_id" class="select select-bordered w-full">
+                                    <option value="">Tất cả nghĩa trang</option>
+                                    @foreach($cemeteries as $cemetery)
+                                        <option value="{{ $cemetery->id }}" {{ request('cemetery_id') == $cemetery->id ? 'selected' : '' }}>
+                                            {{ $cemetery->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Search Button -->
+                        <div class="flex justify-center pt-4">
+                            <button type="submit" class="btn btn-primary btn-lg px-12 gap-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-6 w-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                                </svg>
+                                Tìm kiếm
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-        </form>
-    </div>
-</div>
+        </div>
 
-<!-- Cemeteries List -->
-<div class="mb-12">
-    <div class="flex items-center justify-between mb-6">
-        <div class="flex items-center gap-3">
-            <div class="p-3 bg-gradient-to-br from-violet-500 to-violet-600 rounded-xl shadow-lg">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-6 w-6 text-white">
+        <!-- Latest Articles Section -->
+        <div class="mb-20">
+            <div class="text-center mb-12">
+                <div class="relative inline-block mb-6">
+                    <div class="absolute inset-0 bg-gradient-to-r from-green-400 to-blue-500 rounded-2xl blur-lg opacity-30 scale-110"></div>
+                    <div class="relative p-4 bg-gradient-to-br from-green-500 to-blue-600 rounded-2xl shadow-xl">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-10 w-10 text-white">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                        </svg>
+                    </div>
+                </div>
+                
+                <h2 class="text-4xl font-bold bg-gradient-to-r from-green-700 via-blue-600 to-indigo-600 bg-clip-text text-transparent mb-4">
+                    Tin tức & Bài viết mới
+                </h2>
+                <p class="text-lg text-slate-600 max-w-2xl mx-auto">
+                    Cập nhật những thông tin mới nhất về hệ thống quản lý nghĩa địa
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                @php
+                    $latestArticles = \App\Models\Article::with('author')
+                        ->published()
+                        ->orderBy('published_at', 'desc')
+                        ->limit(6)
+                        ->get();
+                @endphp
+                
+                @foreach($latestArticles as $article)
+                    <div class="group relative overflow-hidden rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 bg-gradient-to-br from-white via-slate-50/50 to-green-50/30 border border-green-200/50">
+                        <!-- Background Effects -->
+                        <div class="absolute inset-0 bg-gradient-to-br from-green-100/20 to-blue-100/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        <div class="absolute -top-10 -right-10 w-32 h-32 bg-green-500/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
+                        <div class="absolute -bottom-10 -left-10 w-24 h-24 bg-blue-500/10 rounded-full blur-xl group-hover:scale-125 transition-transform duration-700"></div>
+                        
+                        <div class="relative p-6">
+                            <!-- Featured Image -->
+                            @if($article->featured_image)
+                                <div class="mb-4 rounded-2xl overflow-hidden">
+                                    <img src="{{ $article->featured_image }}" alt="{{ $article->title }}" class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500">
+                                </div>
+                            @endif
+                            
+                            <!-- Category Badge -->
+                            <div class="mb-4">
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-green-500 to-blue-500 text-white">
+                                    @switch($article->category)
+                                        @case('tin_tuc')
+                                            📰 Tin tức
+                                            @break
+                                        @case('huong_dan')
+                                            📖 Hướng dẫn
+                                            @break
+                                        @case('thong_bao')
+                                            📢 Thông báo
+                                            @break
+                                        @case('su_kien')
+                                            🎉 Sự kiện
+                                            @break
+                                        @default
+                                            📄 Bài viết
+                                    @endswitch
+                                </span>
+                                @if($article->is_featured)
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-yellow-500 to-orange-500 text-white ml-2">
+                                        ⭐ Nổi bật
+                                    </span>
+                                @endif
+                            </div>
+                            
+                            <!-- Title -->
+                            <h3 class="text-lg font-bold text-slate-800 group-hover:text-green-700 transition-colors duration-300 mb-3 line-clamp-2">
+                                {{ $article->title }}
+                            </h3>
+                            
+                            <!-- Excerpt -->
+                            <p class="text-sm text-slate-600 mb-4 line-clamp-3 leading-relaxed">
+                                {{ $article->excerpt }}
+                            </p>
+                            
+                            <!-- Meta Info -->
+                            <div class="flex items-center justify-between text-xs text-slate-500 mb-4">
+                                <div class="flex items-center gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-4 w-4">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 0 1 0 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a2.999 2.999 0 0 1 0-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375Z" />
+                                    </svg>
+                                    {{ $article->author->name ?? 'Admin' }}
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-4 w-4">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                    </svg>
+                                    {{ $article->published_at ? $article->published_at->format('d/m/Y') : 'Chưa xuất bản' }}
+                                </div>
+                            </div>
+                            
+                            <!-- Action Button -->
+                            <a href="{{ route('articles.show', $article->slug) }}" class="group/btn relative w-full inline-flex items-center justify-center px-4 py-3 bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 transform">
+                                <div class="absolute inset-0 bg-gradient-to-r from-green-500 to-blue-500 rounded-2xl blur opacity-0 group-hover/btn:opacity-75 transition-opacity duration-300"></div>
+                                <div class="relative flex items-center gap-2">
+                                    <span>Đọc tiếp</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-4 w-4 group-hover/btn:translate-x-1 transition-transform duration-300">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                                    </svg>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+            
+            <!-- View All Button -->
+            <div class="text-center mt-12">
+                <a href="{{ route('articles.index') }}" class="group relative inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white font-bold text-lg rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 transform">
+                    <div class="absolute inset-0 bg-gradient-to-r from-green-500 to-blue-500 rounded-2xl blur opacity-0 group-hover:opacity-75 transition-opacity duration-300"></div>
+                    <div class="relative flex items-center gap-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-6 w-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                        </svg>
+                        Xem tất cả bài viết
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-5 w-5 group-hover:translate-x-1 transition-transform duration-300">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                        </svg>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+<!-- Cemeteries List Section -->
+<div class="mb-20">
+    <div class="text-center mb-12">
+        <div class="relative inline-block mb-6">
+            <div class="absolute inset-0 bg-gradient-to-r from-violet-400 to-purple-500 rounded-2xl blur-lg opacity-30 scale-110"></div>
+            <div class="relative p-4 bg-gradient-to-br from-violet-500 to-purple-600 rounded-2xl shadow-xl">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-10 w-10 text-white">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21" />
                 </svg>
             </div>
-            <div>
-                <h2 class="text-2xl font-bold bg-gradient-to-r from-violet-700 to-violet-600 bg-clip-text text-transparent">Danh sách Nghĩa trang</h2>
-                <p class="text-sm text-base-content/70">{{ $cemeteries->count() }} nghĩa trang đang quản lý</p>
-            </div>
         </div>
+        
+        <h2 class="text-4xl font-bold bg-gradient-to-r from-violet-700 via-purple-600 to-indigo-600 bg-clip-text text-transparent mb-4">
+            Danh sách Nghĩa trang
+        </h2>
+        <p class="text-lg text-slate-600 max-w-2xl mx-auto">
+            {{ $cemeteries->count() }} nghĩa trang đang được quản lý trong hệ thống
+        </p>
     </div>
     
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         @foreach($cemeteries as $cemetery)
-            <div class="card bg-gradient-to-br from-white to-violet-50/30 shadow-lg hover:shadow-2xl transition-all hover:-translate-y-2 border-2 border-violet-100 group">
-                <div class="card-body">
-                    <div class="flex items-start gap-3 mb-3">
-                        <div class="p-2 bg-gradient-to-br from-amber-400 to-amber-500 rounded-xl shadow-md group-hover:scale-110 transition-transform shrink-0">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-6 w-6 text-white">
+            <div class="group relative overflow-hidden rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 bg-gradient-to-br from-white via-slate-50/50 to-violet-50/30 border border-violet-200/50">
+                <!-- Background Effects -->
+                <div class="absolute inset-0 bg-gradient-to-br from-violet-100/20 to-purple-100/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div class="absolute -top-10 -right-10 w-32 h-32 bg-violet-500/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
+                <div class="absolute -bottom-10 -left-10 w-24 h-24 bg-purple-500/10 rounded-full blur-xl group-hover:scale-125 transition-transform duration-700"></div>
+                
+                <div class="relative p-8">
+                    <!-- Header -->
+                    <div class="flex items-start gap-4 mb-6">
+                        <div class="p-3 bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl shadow-lg group-hover:scale-110 transition-transform duration-300 shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-7 w-7 text-white">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
                             </svg>
                         </div>
                         <div class="flex-1">
-                            <h3 class="font-bold text-lg text-neutral group-hover:text-teal-700 transition-colors">{{ $cemetery->name }}</h3>
-                            <p class="text-sm text-base-content/70 mt-1">{{ $cemetery->address }}</p>
+                            <h3 class="font-bold text-xl text-slate-800 group-hover:text-violet-700 transition-colors duration-300 mb-2">{{ $cemetery->name }}</h3>
+                            <p class="text-sm text-slate-600 flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-4 w-4 text-slate-400">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+                                </svg>
+                                {{ $cemetery->address }}
+                            </p>
                         </div>
                     </div>
                     
+                    <!-- Description -->
                     @if($cemetery->description)
-                        <p class="text-sm text-base-content/80 line-clamp-2 mb-3">{{ $cemetery->description }}</p>
+                        <p class="text-sm text-slate-600 line-clamp-3 mb-6 leading-relaxed">{{ $cemetery->description }}</p>
                     @endif
                     
-                    <div class="divider my-2"></div>
-                    
-                    <div class="flex justify-between items-center">
-                        <div class="flex items-center gap-2">
-                            <div class="badge badge-primary gap-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-3 w-3">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
-                                </svg>
-                                {{ $cemetery->graves_count }}
+                    <!-- Stats -->
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="flex items-center gap-3">
+                            <div class="px-4 py-2 bg-gradient-to-r from-violet-500 to-purple-500 text-white rounded-xl shadow-lg">
+                                <div class="flex items-center gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-4 w-4">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
+                                    </svg>
+                                    <span class="font-bold text-lg">{{ $cemetery->graves_count }}</span>
+                                </div>
                             </div>
-                            <span class="text-xs text-base-content/60">lăng mộ</span>
+                            <span class="text-sm text-slate-500 font-medium">lăng mộ</span>
                         </div>
-                        <a href="{{ route('search', ['cemetery_id' => $cemetery->id]) }}" class="btn btn-primary btn-sm gap-2 group-hover:btn-accent transition-colors">
-                            Xem
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-4 w-4 group-hover:translate-x-1 transition-transform">
+                    </div>
+                    
+                    <!-- Action Button -->
+                    <a href="{{ route('search', ['cemetery_id' => $cemetery->id]) }}" class="group/btn relative w-full inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 transform">
+                        <div class="absolute inset-0 bg-gradient-to-r from-violet-500 to-purple-500 rounded-2xl blur opacity-0 group-hover/btn:opacity-75 transition-opacity duration-300"></div>
+                        <div class="relative flex items-center gap-3">
+                            <span>Xem chi tiết</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-5 w-5 group-hover/btn:translate-x-1 transition-transform duration-300">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
                             </svg>
-                        </a>
-                    </div>
+                        </div>
+                    </a>
                 </div>
             </div>
         @endforeach
@@ -278,39 +345,5 @@
 </div>
 @endsection
 
-@push('scripts')
-<script>
-function updateCommunes() {
-    const districtSelect = document.getElementById('district');
-    const communeSelect = document.getElementById('commune');
-    
-    // Clear commune options
-    communeSelect.innerHTML = '<option value="">Tất cả xã/phường</option>';
-    
-    if (districtSelect.value) {
-        // Enable commune select
-        communeSelect.disabled = false;
-        
-        // Get communes for selected district from config
-        const districts = @json(config('ninhbinh_locations'));
-        const communes = districts[districtSelect.value] || [];
-        
-        // Add commune options
-        communes.forEach(commune => {
-            const option = document.createElement('option');
-            option.value = commune;
-            option.textContent = commune;
-            communeSelect.appendChild(option);
-        });
-    } else {
-        // Disable commune select
-        communeSelect.disabled = true;
-    }
-}
+{{-- Temporarily disabled JavaScript to test form submission --}}
 
-// Initialize on page load
-document.addEventListener('DOMContentLoaded', function() {
-    updateCommunes();
-});
-</script>
-@endpush

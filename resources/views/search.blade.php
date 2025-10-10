@@ -27,7 +27,7 @@
                     <label class="label">
                         <span class="label-text font-medium">Huyện/Thành phố</span>
                     </label>
-                    <select name="district" id="district" class="select select-bordered w-full" onchange="updateCommunes()">
+                    <select name="district" id="district" class="select select-bordered w-full">
                         <option value="">Tất cả huyện/thành phố</option>
                         @foreach($districts as $district)
                             <option value="{{ $district }}" {{ request('district') == $district ? 'selected' : '' }}>
@@ -106,15 +106,16 @@
 </div>
 
 <!-- Search Results -->
-@if(request()->hasAny(['grave_number', 'owner_name', 'deceased_name', 'cemetery_id', 'district', 'commune']))
-    <div class="mb-6">
-        <div class="flex items-center justify-between">
-            <div>
-                <h2 class="text-xl font-bold text-neutral">Kết quả tìm kiếm</h2>
-                <p class="text-sm text-base-content/60">Tìm thấy {{ $graves->total() }} lăng mộ</p>
+<div class="search-results-content">
+    @if(request()->hasAny(['grave_number', 'owner_name', 'deceased_name', 'cemetery_id', 'district', 'commune']))
+        <div class="mb-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-xl font-bold text-neutral">Kết quả tìm kiếm</h2>
+                    <p class="text-sm text-base-content/60 search-result-count">Tìm thấy {{ $graves->total() }} lăng mộ</p>
+                </div>
             </div>
         </div>
-    </div>
 
     @if($graves->count() > 0)
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
@@ -211,51 +212,21 @@
             </div>
         </div>
     @endif
-@else
-    <!-- Empty State -->
-    <div class="card bg-base-100 shadow-lg border border-base-300">
-        <div class="card-body text-center py-16">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-16 w-16 mx-auto text-primary/50 mb-4">
-                <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-            </svg>
-            <h3 class="text-xl font-bold text-neutral mb-2">Bắt đầu tìm kiếm</h3>
-            <p class="text-base-content/60">Nhập thông tin vào form phía trên để tra cứu lăng mộ</p>
+    @else
+        <!-- Empty State -->
+        <div class="card bg-base-100 shadow-lg border border-base-300">
+            <div class="card-body text-center py-16">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-16 w-16 mx-auto text-primary/50 mb-4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                </svg>
+                <h3 class="text-xl font-bold text-neutral mb-2">Bắt đầu tìm kiếm</h3>
+                <p class="text-base-content/60">Nhập thông tin vào form phía trên để tra cứu lăng mộ</p>
+            </div>
         </div>
-    </div>
-@endif
+    @endif
+</div>
 @endsection
 
-@push('scripts')
-<script>
-const ninhbinhLocations = @json(config('ninhbinh_locations'));
+{{-- Temporarily disabled JavaScript to test form submission --}}
 
-function updateCommunes() {
-    const districtSelect = document.getElementById('district');
-    const communeSelect = document.getElementById('commune');
-    const selectedDistrict = districtSelect.value;
-    
-    // Clear current options
-    communeSelect.innerHTML = '<option value="">Tất cả xã/phường</option>';
-    
-    if (selectedDistrict && ninhbinhLocations[selectedDistrict]) {
-        communeSelect.disabled = false;
-        const communes = ninhbinhLocations[selectedDistrict];
-        
-        communes.forEach(commune => {
-            const option = document.createElement('option');
-            option.value = commune;
-            option.textContent = commune;
-            communeSelect.appendChild(option);
-        });
-    } else {
-        communeSelect.disabled = true;
-    }
-}
-
-// Initialize on page load
-document.addEventListener('DOMContentLoaded', function() {
-    updateCommunes();
-});
-</script>
-@endpush
 
