@@ -158,7 +158,7 @@
                         Trang Chủ
                     </a>
 
-                    <div class="relative group">
+                    {{-- <div class="relative group">
                         <a href="#"
                             class="px-4 py-2 text-white font-semibold hover:bg-red-700 transition-colors duration-300 rounded flex items-center gap-1">
                             Giới Thiệu
@@ -168,7 +168,7 @@
                             </svg>
                         </a>
 
-                    </div>
+                    </div> --}}
 
                     <div class="relative group">
                         <a href="{{ route('articles.index') }}"
