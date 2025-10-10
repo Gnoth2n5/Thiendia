@@ -95,8 +95,15 @@
                             <div class="flex items-start gap-6 mb-6">
                                 @if($grave->deceased_photo)
                                     <div class="flex-shrink-0">
-                                        <div class="w-32 h-40 rounded-xl overflow-hidden shadow-xl ring-4 ring-white/50">
-                                            <img src="{{ Storage::url($grave->deceased_photo) }}" alt="{{ $grave->deceased_full_name }}" class="w-full h-full object-cover" />
+                                        <div class="w-32 h-40 rounded-xl overflow-hidden shadow-xl ring-4 ring-white/50 cursor-pointer group relative" onclick="openImageModal('{{ Storage::url($grave->deceased_photo) }}')">
+                                            <img src="{{ Storage::url($grave->deceased_photo) }}" alt="{{ $grave->deceased_full_name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                                            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-300 flex items-center justify-center">
+                                                <div class="bg-white/20 backdrop-blur-sm rounded-full p-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform group-hover:scale-110">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-5 w-5 text-white">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                                                    </svg>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 @else
@@ -199,10 +206,16 @@
                     </h2>
                     
                     <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                        @foreach($grave->grave_photos as $photo)
-                            <div class="relative group">
-                                <img src="{{ Storage::url($photo) }}" alt="Ảnh bia mộ" class="w-full h-48 object-cover rounded-lg shadow-md group-hover:shadow-xl transition-shadow cursor-pointer" onclick="openImageModal('{{ Storage::url($photo) }}')" />
-                                <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors rounded-lg"></div>
+                        @foreach($grave->grave_photos as $index => $photo)
+                            <div class="relative group cursor-pointer" onclick="openImageModal('{{ Storage::url($photo) }}')">
+                                <img src="{{ Storage::url($photo) }}" alt="Ảnh bia mộ" class="w-full h-48 object-cover rounded-lg shadow-md group-hover:shadow-xl transition-all duration-300 group-hover:scale-105" />
+                                <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-300 rounded-lg flex items-center justify-center">
+                                    <div class="bg-white/20 backdrop-blur-sm rounded-full p-3 opacity-0 group-hover:opacity-100 transition-all duration-300 transform group-hover:scale-110">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-6 w-6 text-white">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                                        </svg>
+                                    </div>
+                                </div>
                             </div>
                         @endforeach
                     </div>
@@ -314,22 +327,185 @@
 </div>
 
 <!-- Image Modal -->
-<div id="imageModal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4" onclick="closeImageModal()">
-    <div class="relative max-w-4xl w-full">
-        <button onclick="closeImageModal()" class="absolute -top-10 right-0 text-white hover:text-gray-300">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8">
+<div id="imageModal" class="fixed inset-0 bg-black/90 hidden z-50 flex items-center justify-center p-4" onclick="closeImageModal()">
+    <div class="relative max-w-6xl w-full max-h-[90vh]">
+        <!-- Close Button -->
+        <button onclick="closeImageModal()" class="absolute -top-12 right-0 text-white hover:text-gray-300 transition-colors z-10">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-10 h-10">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
             </svg>
         </button>
-        <img id="modalImage" src="" alt="Ảnh phóng to" class="w-full h-auto rounded-lg shadow-2xl" onclick="event.stopPropagation()" />
+        
+        <!-- Navigation Arrows -->
+        <button id="prevBtn" onclick="event.stopPropagation(); navigateImage(-1);" class="absolute left-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-300 transition-colors z-10 bg-black/50 rounded-full p-2">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+            </svg>
+        </button>
+        
+        <button id="nextBtn" onclick="event.stopPropagation(); navigateImage(1);" class="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-300 transition-colors z-10 bg-black/50 rounded-full p-2">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+            </svg>
+        </button>
+        
+        <!-- Image Container -->
+        <div class="relative bg-white rounded-xl overflow-hidden shadow-2xl" onclick="event.stopPropagation()">
+            <img id="modalImage" src="" alt="Ảnh phóng to" class="w-full h-auto max-h-[80vh] object-contain" />
+            
+            <!-- Image Info -->
+            <div id="imageInfo" class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4 text-white">
+                <p id="imageTitle" class="font-semibold text-lg"></p>
+                <p id="imageDescription" class="text-sm opacity-90"></p>
+            </div>
+        </div>
+        
+        <!-- Thumbnail Navigation -->
+        <div id="thumbnailContainer" class="flex gap-2 mt-4 justify-center overflow-x-auto max-w-full">
+            <!-- Thumbnails will be populated by JavaScript -->
+        </div>
     </div>
 </div>
 
 <script>
-    function openImageModal(imageUrl) {
-        document.getElementById('modalImage').src = imageUrl;
+    let currentImageIndex = 0;
+    let allImages = [];
+
+    // Collect all images when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM loaded, collecting images...');
+        
+        // Deceased person photo
+        @if($grave->deceased_photo)
+            allImages.push({
+                url: '{{ Storage::url($grave->deceased_photo) }}',
+                title: '{{ $grave->deceased_full_name }}',
+                description: 'Ảnh người đã khuất'
+            });
+        @endif
+
+        // Grave photos
+        @if($grave->grave_photos && count($grave->grave_photos) > 0)
+            @foreach($grave->grave_photos as $index => $photo)
+                allImages.push({
+                    url: '{{ Storage::url($photo) }}',
+                    title: 'Hình ảnh bia mộ',
+                    description: 'Ảnh {{ $index + 1 }} trong {{ count($grave->grave_photos) }} ảnh'
+                });
+            @endforeach
+        @endif
+        
+        console.log('Collected images:', allImages);
+    });
+
+    function openImageModal(imageUrl, title = '', description = '') {
+        console.log('Opening modal for:', imageUrl);
+        console.log('All images:', allImages);
+        
+        // Fallback: if allImages is empty, just show the clicked image
+        if (allImages.length === 0) {
+            console.log('No images collected, showing fallback modal');
+            document.getElementById('modalImage').src = imageUrl;
+            document.getElementById('imageTitle').textContent = title || 'Hình ảnh';
+            document.getElementById('imageDescription').textContent = description || '';
+            document.getElementById('imageModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            return;
+        }
+        
+        // Find the index of the clicked image
+        currentImageIndex = allImages.findIndex(img => img.url === imageUrl);
+        if (currentImageIndex === -1) {
+            console.log('Image not found in array, using index 0');
+            currentImageIndex = 0;
+        }
+        
+        console.log('Current image index:', currentImageIndex);
+
+        updateModalImage();
+        updateThumbnails();
+        updateNavigationButtons();
+        
         document.getElementById('imageModal').classList.remove('hidden');
         document.body.style.overflow = 'hidden';
+    }
+
+    function updateModalImage() {
+        console.log('Updating modal image, index:', currentImageIndex);
+        const image = allImages[currentImageIndex];
+        
+        if (!image) {
+            console.log('No image found at index:', currentImageIndex);
+            return;
+        }
+        
+        console.log('Updating to image:', image);
+
+        const modalImage = document.getElementById('modalImage');
+        const imageTitle = document.getElementById('imageTitle');
+        const imageDescription = document.getElementById('imageDescription');
+        
+        if (modalImage) modalImage.src = image.url;
+        if (imageTitle) imageTitle.textContent = image.title;
+        if (imageDescription) imageDescription.textContent = image.description;
+    }
+
+    function updateThumbnails() {
+        const container = document.getElementById('thumbnailContainer');
+        container.innerHTML = '';
+
+        allImages.forEach((image, index) => {
+            const thumbnail = document.createElement('div');
+            thumbnail.className = `w-16 h-16 rounded-lg overflow-hidden cursor-pointer border-2 transition-all ${
+                index === currentImageIndex ? 'border-white' : 'border-transparent opacity-60'
+            }`;
+            thumbnail.onclick = () => {
+                currentImageIndex = index;
+                updateModalImage();
+                updateThumbnails();
+                updateNavigationButtons();
+            };
+
+            const img = document.createElement('img');
+            img.src = image.url;
+            img.alt = image.title;
+            img.className = 'w-full h-full object-cover';
+            
+            thumbnail.appendChild(img);
+            container.appendChild(thumbnail);
+        });
+    }
+
+    function updateNavigationButtons() {
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        
+        prevBtn.style.display = allImages.length > 1 ? 'block' : 'none';
+        nextBtn.style.display = allImages.length > 1 ? 'block' : 'none';
+    }
+
+    function navigateImage(direction) {
+        console.log('Navigate image:', direction);
+        console.log('Current index before:', currentImageIndex);
+        console.log('Total images:', allImages.length);
+        
+        if (allImages.length <= 1) {
+            console.log('Only 1 image, navigation disabled');
+            return;
+        }
+        
+        currentImageIndex += direction;
+        
+        if (currentImageIndex >= allImages.length) {
+            currentImageIndex = 0;
+        } else if (currentImageIndex < 0) {
+            currentImageIndex = allImages.length - 1;
+        }
+        
+        console.log('Current index after:', currentImageIndex);
+        
+        updateModalImage();
+        updateThumbnails();
     }
 
     function closeImageModal() {
@@ -337,10 +513,36 @@
         document.body.style.overflow = 'auto';
     }
 
-    // Close modal with Escape key
+    // Test function to check if navigation works
+    function testNavigation() {
+        console.log('Testing navigation...');
+        console.log('All images:', allImages);
+        console.log('Current index:', currentImageIndex);
+        
+        if (allImages.length > 1) {
+            console.log('Testing next image...');
+            navigateImage(1);
+        }
+    }
+
+    // Keyboard navigation
     document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            closeImageModal();
+        if (document.getElementById('imageModal').classList.contains('hidden')) return;
+        
+        console.log('Key pressed:', e.key);
+        
+        switch(e.key) {
+            case 'Escape':
+                closeImageModal();
+                break;
+            case 'ArrowLeft':
+                console.log('Left arrow pressed');
+                navigateImage(-1);
+                break;
+            case 'ArrowRight':
+                console.log('Right arrow pressed');
+                navigateImage(1);
+                break;
         }
     });
 </script>
