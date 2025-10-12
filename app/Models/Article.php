@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 
 class Article extends Model
@@ -46,7 +45,6 @@ class Article extends Model
         });
     }
 
-
     /**
      * Scope a query to only include published articles.
      */
@@ -72,7 +70,9 @@ class Article extends Model
             'tin_tuc' => 'Tin tức',
             'huong_dan' => 'Hướng dẫn',
             'thong_bao' => 'Thông báo',
-            default => $this->category,
+            'su_kien' => 'Sự kiện',
+            null => 'Chưa phân loại',
+            default => (string) $this->category,
         };
     }
 

@@ -36,29 +36,11 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div class="form-control">
                     <label class="label">
-                        <span class="label-text font-medium">Huyện/Thành phố</span>
-                    </label>
-                    <select name="district" id="district" class="select select-bordered w-full">
-                        <option value="">Tất cả huyện/thành phố</option>
-                        @foreach($districts as $district)
-                            <option value="{{ $district }}" {{ request('district') == $district ? 'selected' : '' }}>
-                                {{ $district }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div class="form-control">
-                    <label class="label">
                         <span class="label-text font-medium">Xã/Phường/Thị trấn</span>
                     </label>
-                    <select name="commune" id="commune" class="select select-bordered w-full" {{ request('district') ? '' : 'disabled' }}>
+                    <select name="commune" id="commune" class="select select-bordered w-full">
                         <option value="">Tất cả xã/phường</option>
-                        @foreach($communes as $commune)
-                            <option value="{{ $commune }}" {{ request('commune') == $commune ? 'selected' : '' }}>
-                                {{ $commune }}
-                            </option>
-                        @endforeach
+                        {{-- Danh sách sẽ được load từ API bằng JavaScript --}}
                     </select>
                 </div>
 
@@ -66,13 +48,9 @@
                     <label class="label">
                         <span class="label-text font-medium">Nghĩa trang</span>
                     </label>
-                    <select name="cemetery_id" class="select select-bordered w-full">
+                    <select name="cemetery_id" id="cemetery_id" class="select select-bordered w-full">
                         <option value="">Tất cả nghĩa trang</option>
-                        @foreach($cemeteries as $cemetery)
-                            <option value="{{ $cemetery->id }}" {{ request('cemetery_id') == $cemetery->id ? 'selected' : '' }}>
-                                {{ $cemetery->name }}
-                            </option>
-                        @endforeach
+                        {{-- Danh sách sẽ được filter theo xã/phường bằng JavaScript --}}
                     </select>
                 </div>
                 
@@ -243,6 +221,91 @@
 </div>
 @endsection
 
-{{-- Temporarily disabled JavaScript to test form submission --}}
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const communeSelect = document.getElementById('commune');
+    const cemeterySelect = document.getElementById('cemetery_id');
+    const selectedCommune = '{{ request("commune") }}';
+    const selectedCemetery = '{{ request("cemetery_id") }}';
+    
+    // Lấy danh sách nghĩa trang từ server (bao gồm cả commune)
+    const allCemeteries = @json($cemeteries->map(function($c) {
+        return [
+            'id' => $c->id,
+            'name' => $c->name,
+            'commune' => $c->commune
+        ];
+    }));
+
+    // Load danh sách xã/phường từ API khi trang load
+    fetch('/api/communes')
+        .then(response => response.json())
+        .then(result => {
+            if (result.success && result.data) {
+                // Xóa các option cũ (trừ option đầu tiên)
+                communeSelect.innerHTML = '<option value="">Tất cả xã/phường</option>';
+                
+                // Thêm các option mới từ API
+                result.data.forEach(commune => {
+                    const option = document.createElement('option');
+                    option.value = commune;
+                    option.textContent = commune;
+                    
+                    // Giữ lại selection nếu có
+                    if (commune === selectedCommune) {
+                        option.selected = true;
+                    }
+                    
+                    communeSelect.appendChild(option);
+                });
+                
+                console.log(`Loaded ${result.data.length} communes from API`);
+                
+                // Load nghĩa trang ban đầu
+                filterCemeteries(selectedCommune);
+            }
+        })
+        .catch(error => {
+            console.error('Error loading communes:', error);
+            // Nếu lỗi, vẫn load tất cả nghĩa trang
+            filterCemeteries('');
+        });
+
+    // Hàm filter nghĩa trang theo xã/phường
+    function filterCemeteries(commune) {
+        // Reset dropdown nghĩa trang
+        cemeterySelect.innerHTML = '<option value="">Tất cả nghĩa trang</option>';
+        
+        // Lọc nghĩa trang
+        let filteredCemeteries = allCemeteries;
+        if (commune) {
+            filteredCemeteries = allCemeteries.filter(c => c.commune === commune);
+        }
+        
+        // Thêm các option
+        filteredCemeteries.forEach(cemetery => {
+            const option = document.createElement('option');
+            option.value = cemetery.id;
+            option.textContent = cemetery.name;
+            
+            // Giữ lại selection nếu có
+            if (cemetery.id == selectedCemetery) {
+                option.selected = true;
+            }
+            
+            cemeterySelect.appendChild(option);
+        });
+        
+        console.log(`Filtered ${filteredCemeteries.length} cemeteries for commune: ${commune || 'all'}`);
+    }
+
+    // Xử lý khi chọn xã/phường
+    communeSelect.addEventListener('change', function() {
+        filterCemeteries(this.value);
+    });
+});
+</script>
+@endpush
 
 

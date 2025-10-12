@@ -36,14 +36,7 @@ class HomeController extends Controller
             $query->where('deceased_full_name', 'like', '%' . $request->deceased_name . '%');
         }
 
-        // Lọc theo huyện (từ cemetery)
-        if ($request->filled('district')) {
-            $query->whereHas('cemetery', function ($q) use ($request) {
-                $q->where('district', $request->district);
-            });
-        }
-
-        // Lọc theo xã (từ cemetery)
+        // Lọc theo xã/phường (từ cemetery)
         if ($request->filled('commune')) {
             $query->whereHas('cemetery', function ($q) use ($request) {
                 $q->where('commune', $request->commune);
@@ -57,14 +50,8 @@ class HomeController extends Controller
 
         $graves = $query->paginate(12);
         $cemeteries = Cemetery::all();
-        $districts = array_keys(config('ninhbinh_locations'));
-        $communes = [];
 
-        if ($request->filled('district')) {
-            $communes = config("ninhbinh_locations.{$request->district}", []);
-        }
-
-        return view('search', compact('graves', 'cemeteries', 'districts', 'communes'));
+        return view('search', compact('graves', 'cemeteries'));
     }
 
     public function show($id)
