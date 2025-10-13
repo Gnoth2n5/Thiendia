@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Filament\Resources\Cemeteries\Pages;
+namespace App\Filament\Resources\CemeteryResource\Pages;
 
-use App\Filament\Resources\Cemeteries\CemeteryResource;
-use Filament\Actions\CreateAction;
+use App\Filament\Resources\CemeteryResource;
+use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
 class ListCemeteries extends ListRecords
@@ -13,7 +13,8 @@ class ListCemeteries extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            Actions\CreateAction::make()
+                ->label('Thêm nghĩa trang'),
         ];
     }
 }
