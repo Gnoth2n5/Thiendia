@@ -52,13 +52,10 @@
                     <label class="label">
                         <span class="label-text font-medium">Xã/Phường/Thị trấn</span>
                     </label>
-                    <select name="commune" id="commune" class="select select-bordered w-full" {{ request('district') ? '' : 'disabled' }}>
+                    <select name="commune" id="commune" class="select select-bordered w-full" 
+                            {{ request('district') ? '' : 'disabled' }}
+                            data-selected="{{ request('commune') }}">
                         <option value="">Tất cả xã/phường</option>
-                        @foreach($communes as $commune)
-                            <option value="{{ $commune }}" {{ request('commune') == $commune ? 'selected' : '' }}>
-                                {{ $commune }}
-                            </option>
-                        @endforeach
                     </select>
                 </div>
 
@@ -66,13 +63,9 @@
                     <label class="label">
                         <span class="label-text font-medium">Nghĩa trang</span>
                     </label>
-                    <select name="cemetery_id" class="select select-bordered w-full">
+                    <select name="cemetery_id" id="cemetery_id" class="select select-bordered w-full"
+                            data-selected="{{ request('cemetery_id') }}">
                         <option value="">Tất cả nghĩa trang</option>
-                        @foreach($cemeteries as $cemetery)
-                            <option value="{{ $cemetery->id }}" {{ request('cemetery_id') == $cemetery->id ? 'selected' : '' }}>
-                                {{ $cemetery->name }}
-                            </option>
-                        @endforeach
                     </select>
                 </div>
                 

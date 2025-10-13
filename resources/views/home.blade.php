@@ -85,18 +85,10 @@
                                 <label class="label" for="commune">
                                     <span class="label-text font-semibold">Xã/Phường</span>
                                 </label>
-                                <select name="commune" id="commune" class="select select-bordered w-full">
+                                <select name="commune" id="commune" class="select select-bordered w-full" 
+                                        {{ request('district') ? '' : 'disabled' }}
+                                        data-selected="{{ request('commune') }}">
                                     <option value="">Tất cả xã/phường</option>
-                                    @if(request('district'))
-                                        @php
-                                            $communes = config("ninhbinh_locations.{$request->district}", []);
-                                        @endphp
-                                        @foreach($communes as $commune)
-                                            <option value="{{ $commune }}" {{ request('commune') == $commune ? 'selected' : '' }}>
-                                                {{ $commune }}
-                                            </option>
-                                        @endforeach
-                                    @endif
                                 </select>
                             </div>
                             
@@ -105,13 +97,9 @@
                                 <label class="label" for="cemetery_id">
                                     <span class="label-text font-semibold">Nghĩa trang</span>
                                 </label>
-                                <select name="cemetery_id" id="cemetery_id" class="select select-bordered w-full">
+                                <select name="cemetery_id" id="cemetery_id" class="select select-bordered w-full"
+                                        data-selected="{{ request('cemetery_id') }}">
                                     <option value="">Tất cả nghĩa trang</option>
-                                    @foreach($cemeteries as $cemetery)
-                                        <option value="{{ $cemetery->id }}" {{ request('cemetery_id') == $cemetery->id ? 'selected' : '' }}>
-                                            {{ $cemetery->name }}
-                                        </option>
-                                    @endforeach
                                 </select>
                             </div>
                         </div>
