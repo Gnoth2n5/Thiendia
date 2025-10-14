@@ -1,7 +1,7 @@
 <!-- Simple Map Picker for Filament -->
-<div class="space-y-4" x-data="mapPicker()" x-init="initMap()">
+<div style="display: flex; flex-direction: column; gap: 16px;" x-data="mapPicker()" x-init="initMap()">
     <!-- Instructions -->
-    <p class="text-sm text-gray-600 dark:text-gray-400">
+    <p style="font-size: 14px; color: #6b7280; margin-bottom: 16px;">
         Tìm kiếm địa điểm hoặc click vào bản đồ để chọn vị trí của lăng mộ. Tọa độ sẽ tự động cập nhật vào các trường bên dưới.
     </p>
     
@@ -55,14 +55,16 @@
     </div>
     
     <!-- Search Results -->
-    <div x-show="searchResults.length > 0" class="mb-4 max-h-40 overflow-y-auto border border-gray-200 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700">
+    <div x-show="searchResults.length > 0" style="margin-bottom: 16px; max-height: 160px; overflow-y: auto; border: 1px solid #e5e7eb; border-radius: 6px; background: white;">
         <template x-for="result in searchResults" :key="result.place_id">
             <div 
                 @click="selectSearchResult(result)"
-                class="p-3 hover:bg-gray-50 dark:hover:bg-gray-600 cursor-pointer border-b border-gray-100 dark:border-gray-600 last:border-b-0"
+                style="padding: 12px; cursor: pointer; border-bottom: 1px solid #f3f4f6; transition: background-color 0.2s;"
+                onmouseover="this.style.backgroundColor='#f9fafb'"
+                onmouseout="this.style.backgroundColor='transparent'"
             >
-                <p class="font-medium text-sm" x-text="result.display_name"></p>
-                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1" x-text="`Lat: ${result.lat.toFixed(6)}, Lng: ${result.lon.toFixed(6)}`"></p>
+                <p style="font-weight: 500; font-size: 14px; margin: 0;" x-text="result.display_name"></p>
+                <p style="font-size: 12px; color: #6b7280; margin: 4px 0 0 0;" x-text="`Lat: ${result.lat.toFixed(6)}, Lng: ${result.lon.toFixed(6)}`"></p>
             </div>
         </template>
     </div>
@@ -73,7 +75,7 @@
     <div x-ref="mapContainer" style="height: 400px; width: 100%; border: 1px solid #d1d5db; border-radius: 0.5rem;"></div>
     
     <!-- Coordinates Display -->
-    <div x-text="coordsDisplay" style="margin-top: 10px; padding: 10px; background: #f0f0f0; border-radius: 5px;">
+    <div x-text="coordsDisplay" style="margin-top: 16px; padding: 12px; background: #f3f4f6; border-radius: 8px; font-size: 14px; color: #374151;">
         Click vào bản đồ để chọn vị trí và lấy tọa độ.
     </div>
 </div>
