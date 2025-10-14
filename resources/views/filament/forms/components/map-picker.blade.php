@@ -67,10 +67,10 @@
         </template>
     </div>
     
-    <!-- Filament will render its own inputs for latitude/longitude in the form section -->
-    
-    <!-- Map Container -->
-    <div x-ref="mapContainer" style="height: 400px; width: 100%; border: 1px solid #d1d5db; border-radius: 0.5rem;"></div>
+    <!-- Map Container with wire:ignore to prevent Livewire from re-rendering -->
+    <div wire:ignore>
+        <div x-ref="mapContainer" style="height: 400px; width: 100%; border: 1px solid #d1d5db; border-radius: 0.5rem;"></div>
+    </div>
     
     <!-- Coordinates Display -->
     <div x-text="coordsDisplay" style="margin-top: 10px; padding: 10px; background: #f0f0f0; border-radius: 5px;">
@@ -87,6 +87,7 @@ function mapPicker() {
         searchQuery: '',
         searchResults: [],
         isSearching: false,
+        watchersInitialized: false,
         
         initMap() {
             // Wait for Leaflet to be available
@@ -115,6 +116,12 @@ function mapPicker() {
                     this.updateCoordinates(e.latlng.lat, e.latlng.lng);
                 });
                 
+                // Setup watchers for coordinate input changes
+                this.setupInputWatchers();
+                
+                // Listen for Livewire updates
+                this.setupLivewireListeners();
+                
                 console.log('Map initialized successfully');
                 
             } catch (error) {
@@ -122,15 +129,81 @@ function mapPicker() {
             }
         },
         
-        loadExistingCoordinates() {
-            const latInput = document.getElementById('data.latitude') 
+        setupInputWatchers() {
+            if (this.watchersInitialized) return;
+            
+            const checkAndWatch = () => {
+                const latInput = this.getLatInput();
+                const lngInput = this.getLngInput();
+                
+                if (latInput && lngInput) {
+                    // Watch for manual input changes
+                    latInput.addEventListener('change', () => this.syncFromInputs());
+                    lngInput.addEventListener('change', () => this.syncFromInputs());
+                    
+                    this.watchersInitialized = true;
+                    console.log('Input watchers initialized');
+                } else {
+                    // Retry if inputs not found yet
+                    setTimeout(checkAndWatch, 100);
+                }
+            };
+            
+            checkAndWatch();
+        },
+        
+        setupLivewireListeners() {
+            // Listen for Livewire finished updating
+            document.addEventListener('livewire:init', () => {
+                Livewire.hook('morph.updated', () => {
+                    // Re-sync coordinates after Livewire updates
+                    setTimeout(() => this.syncFromInputs(), 100);
+                });
+            });
+            
+            // Also listen for commit event (after save)
+            document.addEventListener('livewire:commit', () => {
+                setTimeout(() => this.syncFromInputs(), 100);
+            });
+        },
+        
+        syncFromInputs() {
+            const latInput = this.getLatInput();
+            const lngInput = this.getLngInput();
+            
+            if (latInput && lngInput && latInput.value && lngInput.value) {
+                const lat = parseFloat(latInput.value);
+                const lng = parseFloat(lngInput.value);
+                
+                if (!isNaN(lat) && !isNaN(lng) && lat !== 0 && lng !== 0) {
+                    // Update map without triggering input updates (prevent loop)
+                    this.coordsDisplay = `Vị trí đã chọn: Latitude = ${lat.toFixed(8)}, Longitude = ${lng.toFixed(8)}`;
+                    
+                    if (this.map) {
+                        this.map.setView([lat, lng], 15);
+                        this.addMarker(lat, lng);
+                    }
+                }
+            }
+        },
+        
+        getLatInput() {
+            return document.getElementById('data.latitude') 
                 || document.querySelector('#data\\.latitude') 
                 || document.querySelector('input[name="data.latitude"]') 
                 || document.querySelector('input[name="latitude"]');
-            const lngInput = document.getElementById('data.longitude') 
+        },
+        
+        getLngInput() {
+            return document.getElementById('data.longitude') 
                 || document.querySelector('#data\\.longitude') 
                 || document.querySelector('input[name="data.longitude"]') 
                 || document.querySelector('input[name="longitude"]');
+        },
+        
+        loadExistingCoordinates() {
+            const latInput = this.getLatInput();
+            const lngInput = this.getLngInput();
             
             if (latInput && lngInput && latInput.value && lngInput.value) {
                 const lat = parseFloat(latInput.value);
@@ -139,6 +212,7 @@ function mapPicker() {
                 if (!isNaN(lat) && !isNaN(lng) && lat !== 0 && lng !== 0) {
                     this.map.setView([lat, lng], 15);
                     this.addMarker(lat, lng);
+                    this.coordsDisplay = `Vị trí đã chọn: Latitude = ${lat.toFixed(8)}, Longitude = ${lng.toFixed(8)}`;
                 }
             }
         },
@@ -151,14 +225,8 @@ function mapPicker() {
             this.coordsDisplay = `Vị trí đã chọn: Latitude = ${latStr}, Longitude = ${lngStr}`;
             
             // Update Filament inputs
-            const latInput = document.getElementById('data.latitude') 
-                || document.querySelector('#data\\.latitude') 
-                || document.querySelector('input[name="data.latitude"]') 
-                || document.querySelector('input[name="latitude"]');
-            const lngInput = document.getElementById('data.longitude') 
-                || document.querySelector('#data\\.longitude') 
-                || document.querySelector('input[name="data.longitude"]') 
-                || document.querySelector('input[name="longitude"]');
+            const latInput = this.getLatInput();
+            const lngInput = this.getLngInput();
             
             if (latInput) {
                 latInput.value = latStr;
