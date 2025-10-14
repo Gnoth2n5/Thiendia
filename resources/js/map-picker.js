@@ -11,9 +11,37 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let currentMarker = null;
 
-    // Load existing coordinates
-    const latInput = document.querySelector('input[name="data.latitude"]');
-    const lngInput = document.querySelector('input[name="data.longitude"]');
+    // Load existing coordinates - Try multiple selectors
+    let latInput = document.querySelector('input[name="data.latitude"]');
+    let lngInput = document.querySelector('input[name="data.longitude"]');
+
+    // Fallback selectors if first ones don't work
+    if (!latInput) {
+        latInput = document.querySelector('input[name="latitude"]');
+    }
+    if (!lngInput) {
+        lngInput = document.querySelector('input[name="longitude"]');
+    }
+
+    // Another fallback - by placeholder text
+    if (!latInput) {
+        const inputs = document.querySelectorAll('input[type="number"]');
+        inputs.forEach((input) => {
+            if (input.placeholder && input.placeholder.includes("20.250600")) {
+                latInput = input;
+            }
+        });
+    }
+    if (!lngInput) {
+        const inputs = document.querySelectorAll('input[type="number"]');
+        inputs.forEach((input) => {
+            if (input.placeholder && input.placeholder.includes("105.974500")) {
+                lngInput = input;
+            }
+        });
+    }
+
+    console.log("Found inputs:", { latInput, lngInput });
 
     if (latInput && lngInput && latInput.value && lngInput.value) {
         const lat = parseFloat(latInput.value);
@@ -44,20 +72,74 @@ document.addEventListener("DOMContentLoaded", function () {
                 "Vị trí đã chọn: Latitude = " + lat + ", Longitude = " + lng;
         }
 
+        // Set flag to prevent infinite loop
+        if (window.setMapUpdatingFlag) {
+            window.setMapUpdatingFlag(true);
+        }
+
         // Update form inputs
         if (latInput) {
             latInput.value = lat;
-            // Trigger change event for Filament
+            console.log("Updated latitude input:", latInput.value);
+
+            // Trigger multiple events for Filament compatibility
             latInput.dispatchEvent(new Event("input", { bubbles: true }));
             latInput.dispatchEvent(new Event("change", { bubbles: true }));
+            latInput.dispatchEvent(new Event("blur", { bubbles: true }));
+
+            // Try Livewire update if available
+            if (window.Livewire) {
+                latInput.dispatchEvent(
+                    new Event("livewire:input", { bubbles: true })
+                );
+
+                // Try to find Livewire component and update directly
+                const wireComponent = latInput.closest("[wire\\:id]");
+                if (wireComponent) {
+                    const wireId = wireComponent.getAttribute("wire:id");
+                    if (wireId && window.Livewire.find(wireId)) {
+                        window.Livewire.find(wireId).set("data.latitude", lat);
+                    }
+                }
+            }
+        } else {
+            console.log("Latitude input not found!");
         }
 
         if (lngInput) {
             lngInput.value = lng;
-            // Trigger change event for Filament
+            console.log("Updated longitude input:", lngInput.value);
+
+            // Trigger multiple events for Filament compatibility
             lngInput.dispatchEvent(new Event("input", { bubbles: true }));
             lngInput.dispatchEvent(new Event("change", { bubbles: true }));
+            lngInput.dispatchEvent(new Event("blur", { bubbles: true }));
+
+            // Try Livewire update if available
+            if (window.Livewire) {
+                lngInput.dispatchEvent(
+                    new Event("livewire:input", { bubbles: true })
+                );
+
+                // Try to find Livewire component and update directly
+                const wireComponent = lngInput.closest("[wire\\:id]");
+                if (wireComponent) {
+                    const wireId = wireComponent.getAttribute("wire:id");
+                    if (wireId && window.Livewire.find(wireId)) {
+                        window.Livewire.find(wireId).set("data.longitude", lng);
+                    }
+                }
+            }
+        } else {
+            console.log("Longitude input not found!");
         }
+
+        // Reset flag after updating
+        setTimeout(() => {
+            if (window.setMapUpdatingFlag) {
+                window.setMapUpdatingFlag(false);
+            }
+        }, 100);
 
         // Remove old marker and add new one
         if (currentMarker) {
@@ -72,10 +154,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Watch for changes in input fields to update map
     if (latInput && lngInput) {
+        let isUpdatingFromMap = false; // Flag to prevent infinite loop
+
         latInput.addEventListener("input", function () {
+            if (isUpdatingFromMap) return; // Skip if update is from map click
+
             const newLat = parseFloat(latInput.value);
             const newLng = parseFloat(lngInput.value);
-            if (!isNaN(newLat) && !isNaN(newLng)) {
+            if (
+                !isNaN(newLat) &&
+                !isNaN(newLng) &&
+                newLat !== 0 &&
+                newLng !== 0
+            ) {
                 const newLatLng = [newLat, newLng];
 
                 if (currentMarker) {
@@ -102,9 +193,16 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         lngInput.addEventListener("input", function () {
+            if (isUpdatingFromMap) return; // Skip if update is from map click
+
             const newLat = parseFloat(latInput.value);
             const newLng = parseFloat(lngInput.value);
-            if (!isNaN(newLat) && !isNaN(newLng)) {
+            if (
+                !isNaN(newLat) &&
+                !isNaN(newLng) &&
+                newLat !== 0 &&
+                newLng !== 0
+            ) {
                 const newLatLng = [newLat, newLng];
 
                 if (currentMarker) {
@@ -129,5 +227,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 map.setView(newLatLng, map.getZoom());
             }
         });
+
+        // Set flag when updating from map
+        window.setMapUpdatingFlag = function (updating) {
+            isUpdatingFromMap = updating;
+        };
     }
 });

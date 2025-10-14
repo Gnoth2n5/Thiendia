@@ -119,9 +119,6 @@
         
         <!-- Leaflet JS for Map Picker -->
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-        
-        <!-- Map Picker Script -->
-        @vite('resources/js/map-picker.js')
 
         {{ \Filament\Support\Facades\FilamentView::renderHook('panels::scripts.after') }}
 

@@ -32,7 +32,7 @@ class GraveForm
                                 // Chỉ tự động generate khi tạo mới
                                 if ($context === 'create' && $state) {
                                     $nextNumber = \App\Models\Grave::where('cemetery_id', $state)->count() + 1;
-                                    $graveNumber = $state.'-'.str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+                                    $graveNumber = $state . '-' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
                                     $set('grave_number', $graveNumber);
                                 }
                             }),
@@ -51,13 +51,13 @@ class GraveForm
 
                                 return 'Chọn nghĩa trang để xem số lăng mộ';
                             })
-                            ->visible(fn ($context) => $context === 'create'),
+                            ->visible(fn($context) => $context === 'create'),
 
                         TextInput::make('grave_number')
                             ->label('Số lăng mộ')
                             ->disabled()
                             ->dehydrated()
-                            ->visible(fn ($context) => $context === 'edit'),
+                            ->visible(fn($context) => $context === 'edit'),
 
                         TextInput::make('owner_name')
                             ->label('Tên chủ lăng mộ')
@@ -177,7 +177,6 @@ class GraveForm
                             ->numeric()
                             ->step(0.00000001)
                             ->placeholder('20.250600')
-                            ->live()
                             ->helperText('Tọa độ vĩ độ GPS'),
 
                         TextInput::make('longitude')
@@ -185,7 +184,6 @@ class GraveForm
                             ->numeric()
                             ->step(0.00000001)
                             ->placeholder('105.974500')
-                            ->live()
                             ->helperText('Tọa độ kinh độ GPS'),
 
                         ViewField::make('map_picker')
