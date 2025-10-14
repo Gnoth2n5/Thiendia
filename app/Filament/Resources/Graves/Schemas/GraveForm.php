@@ -5,12 +5,12 @@ namespace App\Filament\Resources\Graves\Schemas;
 use App\Models\Cemetery;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\ViewField;
 use Filament\Forms\Form;
 
 class GraveForm
@@ -166,6 +166,30 @@ class GraveForm
                             ->label('Ghi chú')
                             ->rows(2)
                             ->placeholder('Ghi chú thêm về lăng mộ...'),
+                    ])
+                    ->columns(2)
+                    ->collapsible(),
+
+                Section::make('Vị trí trên bản đồ')
+                    ->schema([
+                        TextInput::make('latitude')
+                            ->label('Vĩ độ (Latitude)')
+                            ->numeric()
+                            ->step(0.00000001)
+                            ->placeholder('20.250600')
+                            ->helperText('Tọa độ vĩ độ GPS'),
+
+                        TextInput::make('longitude')
+                            ->label('Kinh độ (Longitude)')
+                            ->numeric()
+                            ->step(0.00000001)
+                            ->placeholder('105.974500')
+                            ->helperText('Tọa độ kinh độ GPS'),
+
+                        ViewField::make('map_picker')
+                            ->view('filament.forms.components.map-picker')
+                            ->columnSpanFull()
+                            ->dehydrated(false),
                     ])
                     ->columns(2)
                     ->collapsible(),

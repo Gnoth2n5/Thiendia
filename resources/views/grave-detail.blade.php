@@ -194,6 +194,41 @@
             </div>
         @endif
 
+        <!-- Map Location -->
+        @if($grave->latitude && $grave->longitude)
+            <div class="card bg-gradient-to-br from-white via-slate-50/50 to-green-50/30 shadow-xl border border-green-200/50">
+                <div class="card-body">
+                    <h2 class="card-title text-xl mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-6 w-6 text-primary">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 6.75V15m6-6v8.25m.503 3.498 4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 0 0-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0Z" />
+                        </svg>
+                        Vị trí trên bản đồ
+                    </h2>
+                    
+                    <div id="grave-map" class="w-full rounded-lg shadow-md relative z-10" style="height: 400px;"></div>
+                    
+                    <div class="mt-4 flex flex-wrap gap-4 text-sm text-base-content/70">
+                        <div class="flex items-center gap-2">
+                            <span class="font-medium">Vĩ độ:</span>
+                            <span class="font-mono">{{ $grave->latitude }}</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="font-medium">Kinh độ:</span>
+                            <span class="font-mono">{{ $grave->longitude }}</span>
+                        </div>
+                        <a href="https://www.google.com/maps?q={{ $grave->latitude }},{{ $grave->longitude }}" 
+                           target="_blank"
+                           class="inline-flex items-center gap-1 text-primary hover:text-primary-focus transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-4 w-4">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                            </svg>
+                            Mở trong Google Maps
+                        </a>
+                    </div>
+                </div>
+            </div>
+        @endif
+
         <!-- Grave Photos -->
         @if($grave->grave_photos && count($grave->grave_photos) > 0)
             <div class="card bg-gradient-to-br from-white via-slate-50/50 to-green-50/30 shadow-xl border border-green-200/50">
@@ -545,6 +580,69 @@
                 break;
         }
     });
+
+    // Initialize map if coordinates exist
+    @if($grave->latitude && $grave->longitude)
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add CSS to fix z-index issues
+            const style = document.createElement('style');
+            style.textContent = `
+                #grave-map {
+                    position: relative !important;
+                    z-index: 1 !important;
+                }
+                #grave-map .leaflet-container {
+                    position: relative !important;
+                    z-index: 1 !important;
+                }
+                #grave-map .leaflet-control-container {
+                    z-index: 10 !important;
+                }
+                #grave-map .leaflet-popup {
+                    z-index: 1000 !important;
+                }
+                #grave-map .leaflet-popup-content-wrapper {
+                    z-index: 1000 !important;
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // Create map
+            const graveMap = L.map('grave-map', {
+                zoomControl: true,
+                attributionControl: true,
+                scrollWheelZoom: true,
+                doubleClickZoom: true,
+                boxZoom: false,
+                dragging: true,
+                keyboard: true,
+                touchZoom: true
+            }).setView([{{ $grave->latitude }}, {{ $grave->longitude }}], 15);
+            
+            // Add OpenStreetMap tiles
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                maxZoom: 19
+            }).addTo(graveMap);
+            
+            // Add marker for grave location
+            const marker = L.marker([{{ $grave->latitude }}, {{ $grave->longitude }}]).addTo(graveMap);
+            
+            // Add popup with grave information
+            marker.bindPopup(`
+                <div class="text-center">
+                    <p class="font-bold text-lg mb-2">{{ $grave->grave_number }}</p>
+                    <p class="text-sm mb-1">{{ $grave->cemetery->name }}</p>
+                    @if($grave->location_description)
+                        <p class="text-xs text-gray-600 mt-2">{{ $grave->location_description }}</p>
+                    @endif
+                </div>
+            `).openPopup();
+            
+            // Ensure map doesn't overflow container
+            graveMap.invalidateSize();
+        });
+    @endif
 </script>
 @endsection
 
