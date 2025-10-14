@@ -23,6 +23,8 @@ class Grave extends Model
         'grave_type',
         'status',
         'location_description',
+        'latitude',
+        'longitude',
         'contact_info',
         'notes',
     ];
@@ -33,6 +35,8 @@ class Grave extends Model
         'burial_date' => 'date',
         'deceased_birth_date' => 'date',
         'deceased_death_date' => 'date',
+        'latitude' => 'float',
+        'longitude' => 'float',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
@@ -59,7 +63,7 @@ class Grave extends Model
         $count = static::where('cemetery_id', $cemeteryId)->count();
         $nextNumber = $count + 1;
 
-        return $cemeteryId . '-' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+        return $cemeteryId.'-'.str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
     }
 
     /**
