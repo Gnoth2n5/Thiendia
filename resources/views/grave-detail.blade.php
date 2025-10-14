@@ -205,7 +205,7 @@
                         Vị trí trên bản đồ
                     </h2>
                     
-                    <div id="grave-map" class="w-full rounded-lg shadow-md" style="height: 400px;"></div>
+                    <div id="grave-map" class="w-full rounded-lg shadow-md relative z-10" style="height: 400px;"></div>
                     
                     <div class="mt-4 flex flex-wrap gap-4 text-sm text-base-content/70">
                         <div class="flex items-center gap-2">
@@ -584,8 +584,40 @@
     // Initialize map if coordinates exist
     @if($grave->latitude && $grave->longitude)
         document.addEventListener('DOMContentLoaded', function() {
+            // Add CSS to fix z-index issues
+            const style = document.createElement('style');
+            style.textContent = `
+                #grave-map {
+                    position: relative !important;
+                    z-index: 1 !important;
+                }
+                #grave-map .leaflet-container {
+                    position: relative !important;
+                    z-index: 1 !important;
+                }
+                #grave-map .leaflet-control-container {
+                    z-index: 10 !important;
+                }
+                #grave-map .leaflet-popup {
+                    z-index: 1000 !important;
+                }
+                #grave-map .leaflet-popup-content-wrapper {
+                    z-index: 1000 !important;
+                }
+            `;
+            document.head.appendChild(style);
+            
             // Create map
-            const graveMap = L.map('grave-map').setView([{{ $grave->latitude }}, {{ $grave->longitude }}], 15);
+            const graveMap = L.map('grave-map', {
+                zoomControl: true,
+                attributionControl: true,
+                scrollWheelZoom: true,
+                doubleClickZoom: true,
+                boxZoom: false,
+                dragging: true,
+                keyboard: true,
+                touchZoom: true
+            }).setView([{{ $grave->latitude }}, {{ $grave->longitude }}], 15);
             
             // Add OpenStreetMap tiles
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -606,6 +638,9 @@
                     @endif
                 </div>
             `).openPopup();
+            
+            // Ensure map doesn't overflow container
+            graveMap.invalidateSize();
         });
     @endif
 </script>
