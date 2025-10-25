@@ -74,10 +74,13 @@ class GraveSeeder extends Seeder
                     'deceased_death_date' => $status === 'đã_sử_dụng' ? $deathDate : null,
                     'deceased_gender' => fake()->randomElement(['nam', 'nữ']),
                     'deceased_relationship' => $status === 'đã_sử_dụng' ? fake()->randomElement($relationships) : null,
-                    'deceased_photo' => $status === 'đã_sử_dụng' ? fake()->optional(0.7)->imageUrl(200, 200, 'people') : null,
+                    'deceased_photo' => $status === 'đã_sử_dụng' ? fake()->optional(0.7)->randomElement([
+                        'https://i.pravatar.cc/200?img=' . rand(1, 70),
+                        'https://randomuser.me/api/portraits/' . fake()->randomElement(['men', 'women']) . '/' . rand(1, 99) . '.jpg'
+                    ]) : null,
                     'grave_photos' => $status === 'đã_sử_dụng' ? [
-                        fake()->imageUrl(800, 600, 'graves'),
-                        fake()->imageUrl(800, 600, 'graves')
+                        'https://picsum.photos/800/600?random=' . rand(1, 1000),
+                        'https://picsum.photos/800/600?random=' . rand(1, 1000)
                     ] : null,
                     'burial_date' => $status === 'đã_sử_dụng' ? $deathDate : null,
                     'grave_type' => fake()->randomElement($graveTypes),

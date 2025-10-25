@@ -177,7 +177,7 @@
                                                 <div class="flex-shrink-0">
                                                     <div
                                                         class="w-20 h-24 rounded-lg overflow-hidden shadow-md ring-2 ring-primary/20">
-                                                        <img src="{{ Storage::url($grave->deceased_photo) }}"
+                                                        <img src="{{ Str::startsWith($grave->deceased_photo, ['http://', 'https://']) ? $grave->deceased_photo : Storage::url($grave->deceased_photo) }}"
                                                             alt="{{ $grave->deceased_full_name }}"
                                                             class="w-full h-full object-cover" />
                                                     </div>

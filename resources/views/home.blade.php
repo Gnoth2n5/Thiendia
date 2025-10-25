@@ -190,7 +190,7 @@
                 Tin tức & Bài viết mới
             </h2>
             <p class="text-lg text-slate-600 max-w-2xl mx-auto">
-                Cập nhật những thông tin mới nhất về hệ thống quản lý nghĩa địa
+                Cập nhật những thông tin mới nhất về hệ thống tra cứu thông tin liệt sĩ
             </p>
         </div>
 
