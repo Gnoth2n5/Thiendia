@@ -1,6 +1,67 @@
 @extends('layouts.app')
 
-@section('title', 'Trang chủ - Tra cứu liệt sĩ tỉnh Ninh Bình')
+@section('title', 'Hệ thống Tra cứu Thông tin Liệt sĩ Tỉnh Ninh Bình Trực tuyến - Tìm kiếm Lăng mộ Nhanh chóng')
+
+@section('description',
+    'Hệ thống tra cứu thông tin liệt sĩ tỉnh Ninh Bình trực tuyến. Tìm kiếm lăng mộ nhanh chóng,
+    chính xác và tiện lợi. Quản lý dữ liệu nghĩa trang khoa học, minh bạch và hiện đại với công nghệ bản đồ số tiên tiến.')
+
+    @push('structured-data')
+        <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Hệ thống Tra cứu Thông tin Liệt sĩ Tỉnh Ninh Bình",
+  "description": "Hệ thống tra cứu thông tin liệt sĩ tỉnh Ninh Bình trực tuyến. Tìm kiếm lăng mộ nhanh chóng, chính xác và tiện lợi.",
+  "url": "{{ url('/') }}",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "{{ url('/search') }}?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Hệ thống Tra cứu Liệt sĩ Ninh Bình",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Ninh Bình",
+      "addressCountry": "VN"
+    },
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": "0123-456-789",
+      "contactType": "customer service",
+      "availableLanguage": "Vietnamese"
+    }
+  },
+  "inLanguage": "vi",
+  "keywords": "tra cứu liệt sĩ, nghĩa trang Ninh Bình, tìm kiếm lăng mộ, quản lý nghĩa địa"
+}
+</script>
+
+        <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": "Dịch vụ Tra cứu Thông tin Liệt sĩ",
+  "description": "Dịch vụ tra cứu thông tin liệt sĩ và quản lý nghĩa trang trực tuyến",
+  "provider": {
+    "@type": "Organization",
+    "name": "Hệ thống Tra cứu Liệt sĩ Ninh Bình"
+  },
+  "areaServed": {
+    "@type": "Place",
+    "name": "Ninh Bình, Việt Nam"
+  },
+  "serviceType": "Tra cứu thông tin nghĩa trang",
+  "availableChannel": {
+    "@type": "ServiceChannel",
+    "serviceUrl": "{{ url('/') }}",
+    "serviceSmsNumber": "0123-456-789"
+  }
+}
+</script>
+    @endpush
 
 @section('content')
     <!-- Quick Search Section -->
@@ -343,7 +404,7 @@
                 <div
                     class="absolute inset-0 bg-gradient-to-r from-violet-400 to-purple-500 rounded-2xl blur-lg opacity-30 scale-110">
                 </div>
-                <div class="relative p-4 bg-gradient-to-br from-violet-500 to-purple-600 rounded-2xl shadow-xl">
+                <div class="relative p-4 bg-gradient-to-br from-purple-500 to-red-500 rounded-2xl shadow-xl">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
                         stroke="currentColor" class="h-10 w-10 text-white">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -352,8 +413,7 @@
                 </div>
             </div>
 
-            <h2
-                class="text-4xl font-bold bg-gradient-to-r from-violet-700 via-purple-600 to-indigo-600 bg-clip-text text-transparent mb-4">
+            <h2 class="text-4xl font-bold bg-gradient-to-r text-red-600 mb-4">
                 Danh sách Nghĩa trang
             </h2>
             <p class="text-lg text-slate-600 max-w-2xl mx-auto">
@@ -391,7 +451,7 @@
                             </div>
                             <div class="flex-1">
                                 <h3
-                                    class="font-bold text-xl text-slate-800 group-hover:text-violet-700 transition-colors duration-300 mb-2">
+                                    class="font-bold text-xl text-slate-800 group-hover:text-red-700 transition-colors duration-300 mb-2">
                                     {{ $cemetery->name }}</h3>
                                 <p class="text-sm text-slate-600 flex items-center gap-2">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -416,7 +476,7 @@
                         <div class="flex items-center justify-between mb-6">
                             <div class="flex items-center gap-3">
                                 <div
-                                    class="px-4 py-2 bg-gradient-to-r from-violet-500 to-purple-500 text-white rounded-xl shadow-lg">
+                                    class="px-4 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl shadow-lg">
                                     <div class="flex items-center gap-2">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                             stroke-width="2" stroke="currentColor" class="h-4 w-4">
@@ -432,9 +492,9 @@
 
                         <!-- Action Button -->
                         <a href="{{ route('search', ['cemetery_id' => $cemetery->id]) }}"
-                            class="group/btn relative w-full inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 transform">
+                            class="group/btn relative w-full inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 transform">
                             <div
-                                class="absolute inset-0 bg-gradient-to-r from-violet-500 to-purple-500 rounded-2xl blur opacity-0 group-hover/btn:opacity-75 transition-opacity duration-300">
+                                class="absolute inset-0 bg-gradient-to-r from-red-500 to-red-600 rounded-2xl blur opacity-0 group-hover/btn:opacity-75 transition-opacity duration-300">
                             </div>
                             <div class="relative flex items-center gap-3">
                                 <span>Xem chi tiết</span>
@@ -448,6 +508,76 @@
                     </div>
                 </div>
             @endforeach
+        </div>
+    </div>
+
+    <!-- SEO Content Section -->
+    <div>
+        <div class="max-w-6xl mx-auto">
+            <div class="bg-white rounded-3xl shadow-xl border border-gray-200 p-8 md:p-12">
+                <h1 class="text-2xl md:text-4xl font-bold text-gray-800 mb-6 text-center xl:mx-28">
+                    HỆ THỐNG TRA CỨU THÔNG TIN LIỆT SĨ TỈNH NINH BÌNH TRỰC TUYẾN
+                </h1>
+                <p class="text-xl text-gray-600 text-center mb-8">
+                    Tra cứu thông tin lăng mộ nhanh chóng, chính xác và tiện lợi
+                </p>
+
+                <div class="prose prose-lg max-w-none">
+                    <p class="text-lg text-gray-700 leading-relaxed mb-6">
+                        Hệ thống Tra cứu thông tin liệt sĩ tỉnh Ninh Bình là nền tảng trực tuyến giúp người dân dễ dàng tra
+                        cứu thông tin người thân đã khuất, xác định vị trí lăng mộ và quản lý dữ liệu nghĩa trang một cách
+                        khoa học, minh bạch và hiện đại. Với công nghệ bản đồ số tiên tiến, người dùng có thể tìm kiếm thông
+                        tin chính xác chỉ bằng vài thao tác đơn giản.
+                    </p>
+
+                    <h2 class="text-3xl font-bold text-gray-800 mb-6">Giới thiệu hệ thống</h2>
+                    <p class="text-lg text-gray-700 leading-relaxed mb-6">
+                        Hệ thống được xây dựng nhằm số hóa dữ liệu nghĩa địa, phục vụ công tác quản lý, tra cứu và bảo tồn
+                        thông tin người đã khuất. Đây là giải pháp tối ưu cho các địa phương, ban quản lý nghĩa trang, cũng
+                        như thân nhân có nhu cầu tìm kiếm và cập nhật thông tin mộ phần.
+                    </p>
+
+                    <h2 class="text-3xl font-bold text-gray-800 mb-6">Tính năng nổi bật</h2>
+                    <ul class="list-disc list-inside text-lg text-gray-700 leading-relaxed mb-6 space-y-2">
+                        <li>Tra cứu thông tin người đã khuất: Nhập tên, năm sinh, năm mất hoặc khu vực chôn cất để tìm kiếm
+                            dễ dàng.</li>
+                        <li>Xác định vị trí lăng mộ trên bản đồ số: Hỗ trợ định vị nhanh chóng, chính xác từng ô mộ.</li>
+                        <li>Quản lý dữ liệu nghĩa trang: Cập nhật, chỉnh sửa thông tin mộ phần, phân khu, hàng, lô dễ dàng.
+                        </li>
+                        <li>Tích hợp hình ảnh và hồ sơ điện tử: Giúp lưu trữ và bảo tồn thông tin lâu dài.</li>
+                        <li>Báo cáo thống kê thông minh: Hỗ trợ cơ quan quản lý tổng hợp số liệu và lập kế hoạch hiệu quả.
+                        </li>
+                    </ul>
+
+                    <h2 class="text-3xl font-bold text-gray-800 mb-6">Lợi ích mang lại</h2>
+                    <ul class="list-disc list-inside text-lg text-gray-700 leading-relaxed mb-6 space-y-2">
+                        <li>Đối với người dân: Dễ dàng tìm kiếm thông tin người thân mà không cần đến trực tiếp nghĩa trang.
+                        </li>
+                        <li>Đối với ban quản lý nghĩa trang: Tiết kiệm thời gian, giảm sai sót và quản lý tập trung, chuyên
+                            nghiệp.</li>
+                        <li>Đối với chính quyền địa phương: Góp phần vào công cuộc chuyển đổi số, nâng cao hiệu quả quản lý
+                            dân cư và di sản văn hóa tâm linh.</li>
+                    </ul>
+
+                    <h2 class="text-3xl font-bold text-gray-800 mb-6">Tầm nhìn và sứ mệnh</h2>
+                    <p class="text-lg text-gray-700 leading-relaxed mb-6">
+                        Chúng tôi hướng tới mục tiêu xây dựng hệ thống tra cứu và quản lý nghĩa địa toàn diện, góp phần gìn
+                        giữ giá trị văn hóa truyền thống và tạo thuận tiện cho người dân trong hành trình tưởng nhớ tổ tiên.
+                    </p>
+
+                    <h2 class="text-3xl font-bold text-gray-800 mb-6">Liên hệ</h2>
+                    <p class="text-lg text-gray-700 leading-relaxed mb-6">
+                        Nếu bạn là ban quản lý nghĩa trang, chính quyền địa phương hoặc người dân muốn sử dụng hệ thống, hãy
+                        liên hệ với chúng tôi để được tư vấn và hỗ trợ triển khai:
+                    </p>
+                    <ul class="list-disc list-inside text-lg text-gray-700 leading-relaxed">
+                        <li>📍 Địa chỉ: Ninh Bình, Việt Nam</li>
+                        <li>📞 Hotline: 0123 456 789</li>
+                        <li>🌐 Website: tenmiencuaban.vn</li>
+                        <li>✉️ Email: lienhe@tenmiencuaban.vn</li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
 @endsection

@@ -5,6 +5,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Tra cứu liệt sĩ tỉnh Ninh Bình')</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="@yield('description', 'Hệ thống tra cứu thông tin liệt sĩ tỉnh Ninh Bình trực tuyến. Tìm kiếm lăng mộ nhanh chóng, chính xác và tiện lợi. Quản lý dữ liệu nghĩa trang khoa học, minh bạch và hiện đại.')">
+    <meta name="keywords"
+        content="tra cứu liệt sĩ, nghĩa trang Ninh Bình, tìm kiếm lăng mộ, quản lý nghĩa địa, hệ thống tra cứu trực tuyến, bản đồ số nghĩa trang">
+    <meta name="author" content="Hệ thống Tra cứu Liệt sĩ Ninh Bình">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="vi">
+    <meta name="geo.region" content="VN-18">
+    <meta name="geo.placename" content="Ninh Bình, Việt Nam">
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="@yield('title', 'Tra cứu liệt sĩ tỉnh Ninh Bình')">
+    <meta property="og:description" content="@yield('description', 'Hệ thống tra cứu thông tin liệt sĩ tỉnh Ninh Bình trực tuyến. Tìm kiếm lăng mộ nhanh chóng, chính xác và tiện lợi.')">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:site_name" content="Hệ thống Tra cứu Liệt sĩ Ninh Bình">
+    <meta property="og:locale" content="vi_VN">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="@yield('title', 'Tra cứu liệt sĩ tỉnh Ninh Bình')">
+    <meta name="twitter:description" content="@yield('description', 'Hệ thống tra cứu thông tin liệt sĩ tỉnh Ninh Bình trực tuyến. Tìm kiếm lăng mộ nhanh chóng, chính xác và tiện lợi.')">
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
@@ -20,6 +44,7 @@
     </style>
 
     @stack('styles')
+    @stack('structured-data')
 </head>
 
 <body class="bg-base-200 min-h-screen">
@@ -133,8 +158,8 @@
                         class="mobile-menu-button inline-flex items-center justify-center p-2 rounded text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white transition-all duration-300"
                         aria-controls="mobile-menu" aria-expanded="false">
                         <span class="sr-only">Mở menu chính</span>
-                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                            stroke-width="2" stroke="currentColor" aria-hidden="true">
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round"
                                 d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
                         </svg>
