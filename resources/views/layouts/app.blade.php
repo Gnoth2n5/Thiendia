@@ -4,21 +4,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Quản lý Nghĩa Địa')</title>
+    <title>@yield('title', 'Tra cứu liệt sĩ tỉnh Ninh Bình')</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="@yield('description', 'Hệ thống tra cứu thông tin liệt sĩ tỉnh Ninh Bình trực tuyến. Tìm kiếm lăng mộ nhanh chóng, chính xác và tiện lợi. Quản lý dữ liệu nghĩa trang khoa học, minh bạch và hiện đại.')">
+    <meta name="keywords"
+        content="tra cứu liệt sĩ, nghĩa trang Ninh Bình, tìm kiếm lăng mộ, quản lý nghĩa địa, hệ thống tra cứu trực tuyến, bản đồ số nghĩa trang">
+    <meta name="author" content="Hệ thống Tra cứu Liệt sĩ Ninh Bình">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="vi">
+    <meta name="geo.region" content="VN-18">
+    <meta name="geo.placename" content="Ninh Bình, Việt Nam">
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="@yield('title', 'Tra cứu liệt sĩ tỉnh Ninh Bình')">
+    <meta property="og:description" content="@yield('description', 'Hệ thống tra cứu thông tin liệt sĩ tỉnh Ninh Bình trực tuyến. Tìm kiếm lăng mộ nhanh chóng, chính xác và tiện lợi.')">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:site_name" content="Hệ thống Tra cứu Liệt sĩ Ninh Bình">
+    <meta property="og:locale" content="vi_VN">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="@yield('title', 'Tra cứu liệt sĩ tỉnh Ninh Bình')">
+    <meta name="twitter:description" content="@yield('description', 'Hệ thống tra cứu thông tin liệt sĩ tỉnh Ninh Bình trực tuyến. Tìm kiếm lăng mộ nhanh chóng, chính xác và tiện lợi.')">
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    
+
+    <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
+
     <!-- Leaflet CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" 
-        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" 
-        crossorigin="" />
-    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
     <style>
         body {
             font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
     </style>
-    
+
     @stack('styles')
+    @stack('structured-data')
 </head>
 
 <body class="bg-base-200 min-h-screen">
@@ -49,92 +75,6 @@
         </div>
     </div>
 
-    <!-- Navigation -->
-    <!-- Hero Banner -->
-    <div class="relative h-96 md:h-[500px] overflow-hidden">
-        <!-- Background Image -->
-        <div class="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900">
-            <!-- Cemetery/Architecture Background Pattern -->
-            <div class="absolute inset-0 opacity-20">
-                <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600">
-                    <!-- Temple/Lantern Architecture -->
-                    <g fill="none" stroke="#ffffff" stroke-width="2" opacity="0.3">
-                        <!-- Main building structure -->
-                        <rect x="400" y="200" width="400" height="300" rx="10" />
-                        <!-- Roof tiers -->
-                        <rect x="420" y="180" width="360" height="40" rx="5" />
-                        <rect x="440" y="160" width="320" height="30" rx="5" />
-                        <rect x="460" y="140" width="280" height="25" rx="5" />
-                        <!-- Pillars -->
-                        <rect x="450" y="220" width="20" height="200" />
-                        <rect x="500" y="220" width="20" height="200" />
-                        <rect x="680" y="220" width="20" height="200" />
-                        <rect x="730" y="220" width="20" height="200" />
-                        <!-- Lanterns -->
-                        <circle cx="460" cy="100" r="15" fill="#fbbf24" />
-                        <circle cx="520" cy="100" r="15" fill="#fbbf24" />
-                        <circle cx="680" cy="100" r="15" fill="#fbbf24" />
-                        <circle cx="740" cy="100" r="15" fill="#fbbf24" />
-                    </g>
-                    <!-- Memorial elements -->
-                    <g fill="#ffffff" opacity="0.2">
-                        <circle cx="200" cy="400" r="30" />
-                        <circle cx="1000" cy="350" r="25" />
-                        <circle cx="150" cy="300" r="20" />
-                    </g>
-                </svg>
-            </div>
-
-            <!-- Overlay gradient -->
-            <div class="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/50"></div>
-        </div>
-
-        <!-- Main Title -->
-        <div class="relative z-10 h-full flex items-center justify-center">
-            <div class="text-center text-white px-4">
-                <h1 class="text-4xl md:text-6xl lg:text-7xl font-black mb-4 drop-shadow-2xl">
-                    <span class="block text-white">Hệ Thống Quản Lý</span>
-                    <span class="block text-red-400 font-bold">Nghĩa Địa & Lăng Mộ</span>
-                </h1>
-                <p class="text-lg md:text-xl text-gray-200 max-w-3xl mx-auto leading-relaxed drop-shadow-lg">
-                    Tra cứu thông tin lăng mộ, quản lý nghĩa địa một cách hiệu quả và trang trọng
-                </p>
-
-                <!-- Action Buttons -->
-                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mt-8">
-                    <a href="{{ route('search') }}"
-                        class="group px-8 py-4 bg-red-600 hover:bg-red-700 rounded-lg shadow-xl hover:shadow-red-500/50 transition-all duration-300 hover:scale-105 transform">
-                        <div class="flex items-center gap-3 text-white font-bold text-lg">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                                stroke="currentColor" class="h-6 w-6">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-                            </svg>
-                            Tra cứu ngay
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                stroke-width="2" stroke="currentColor"
-                                class="h-5 w-5 group-hover:translate-x-1 transition-transform duration-300">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
-                            </svg>
-                        </div>
-                    </a>
-
-                    <a href="{{ route('articles.index') }}"
-                        class="group px-8 py-4 bg-white/10 backdrop-blur-xl rounded-lg border border-white/30 hover:bg-white/20 hover:border-white/50 transition-all duration-300 hover:scale-105 transform">
-                        <div class="flex items-center gap-3 text-white font-semibold text-lg">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                stroke-width="2" stroke="currentColor" class="h-6 w-6">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
-                            </svg>
-                            Tin tức & Bài viết
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Navigation Bar -->
     <nav class="bg-red-600 shadow-lg sticky top-0 z-50">
         <div class="container mx-auto px-4">
@@ -145,16 +85,12 @@
                         class="group flex items-center gap-3 hover:scale-105 transition-transform duration-300">
                         <div class="relative">
                             <div class="relative p-2 bg-white/20 rounded-lg">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                    stroke-width="2" stroke="currentColor" class="h-6 w-6 text-white">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21" />
-                                </svg>
+                                <img src="{{ asset('images/logo.png') }}" alt="Logo" class="w-10 h-10">
                             </div>
                         </div>
                         <div class="hidden sm:block text-white">
-                            <div class="text-lg font-bold">Hệ thống Quản lý</div>
-                            <div class="text-sm opacity-90">Nghĩa Địa & Lăng Mộ</div>
+                            <div class="text-lg font-bold">Hệ thống Tra cứu liệt sĩ</div>
+                            <div class="text-sm opacity-90">Tỉnh Ninh Bình</div>
                         </div>
                     </a>
                 </div>
@@ -182,8 +118,8 @@
                         <a href="{{ route('articles.index') }}"
                             class="px-4 py-2 text-white font-semibold hover:bg-red-700 transition-colors duration-300 rounded flex items-center gap-1 {{ request()->routeIs('articles.*') ? 'bg-red-700' : '' }}">
                             Tin Tức – Sự Kiện
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                stroke-width="2" stroke="currentColor" class="h-4 w-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                stroke="currentColor" class="h-4 w-4">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
                             </svg>
                         </a>
@@ -308,15 +244,11 @@
                     <div class="flex items-center gap-3 mb-4">
                         <div class="avatar placeholder">
                             <div class="bg-accent text-accent-content rounded-lg w-12">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                    stroke-width="2" stroke="currentColor" class="h-7 w-7">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21" />
-                                </svg>
+                                <img src="{{ asset('images/logo.png') }}" alt="Logo" class="w-10 h-10">
                             </div>
                         </div>
                         <div>
-                            <h3 class="text-lg font-bold">Hệ thống Quản lý Nghĩa Địa</h3>
+                            <h3 class="text-lg font-bold">Hệ thống Tra cứu liệt sĩ tỉnh Ninh Bình</h3>
                             <p class="text-sm opacity-80">Tra cứu thông tin trực tuyến</p>
                         </div>
                     </div>
@@ -375,7 +307,7 @@
         <div class="border-t border-base-300/20">
             <div class="container mx-auto px-4 py-6">
                 <div class="flex flex-col md:flex-row justify-between items-center gap-4 text-sm opacity-80">
-                    <p>© {{ date('Y') }} Hệ thống Quản lý Nghĩa Địa. All rights reserved.</p>
+                    <p>© {{ date('Y') }} Hệ thống Tra cứu liệt sĩ tỉnh Ninh Bình. All rights reserved.</p>
                     <div class="flex gap-6">
                         <a href="#" class="hover:text-accent transition-colors">Chính sách bảo mật</a>
                         <a href="#" class="hover:text-accent transition-colors">Điều khoản sử dụng</a>
@@ -386,9 +318,8 @@
     </footer>
 
     <!-- Leaflet JS -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" 
-        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" 
-        crossorigin=""></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
     @stack('scripts')
 

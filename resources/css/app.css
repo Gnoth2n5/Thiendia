@@ -16,3 +16,7 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
+
+.btn-error {
+    @apply bg-red-600 text-white;
+}
