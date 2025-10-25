@@ -32,8 +32,7 @@
                 </div>
             </div>
             <div class="flex items-center justify-center gap-3 mb-2">
-                <h1
-                    class="text-4xl font-bold bg-gradient-to-r from-green-700 via-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                <h1 class="text-4xl font-bold bg-gradient-to-r from-purple-700 to-red-600 bg-clip-text text-transparent">
                     Lăng mộ {{ $grave->grave_number }}
                 </h1>
                 <div class="badge {{ $grave->status === 'đã_sử_dụng' ? 'badge-success' : 'badge-ghost' }} badge-lg">

@@ -65,3 +65,39 @@ Route::get('/cemeteries', function (Request $request) {
         ];
     }));
 });
+
+// API to get grave details
+Route::get('/graves/{id}', function ($id) {
+    $grave = \App\Models\Grave::with('cemetery')->findOrFail($id);
+
+    return response()->json([
+        'id' => $grave->id,
+        'grave_number' => $grave->grave_number,
+        'owner_name' => $grave->owner_name,
+        'grave_type' => $grave->grave_type,
+        'grave_type_label' => $grave->grave_type_label,
+        'status' => $grave->status,
+        'status_label' => $grave->status_label,
+        'burial_date' => $grave->burial_date?->format('d/m/Y'),
+        'deceased_full_name' => $grave->deceased_full_name,
+        'deceased_relationship' => $grave->deceased_relationship,
+        'deceased_gender' => $grave->deceased_gender,
+        'deceased_birth_date' => $grave->deceased_birth_date?->format('d/m/Y'),
+        'deceased_death_date' => $grave->deceased_death_date?->format('d/m/Y'),
+        'deceased_photo' => $grave->deceased_photo ? \Storage::url($grave->deceased_photo) : null,
+        'grave_photos' => $grave->grave_photos ? array_map(fn ($photo) => \Storage::url($photo), $grave->grave_photos) : [],
+        'location_description' => $grave->location_description,
+        'notes' => $grave->notes,
+        'latitude' => $grave->latitude,
+        'longitude' => $grave->longitude,
+        'contact_info' => $grave->contact_info,
+        'cemetery' => [
+            'id' => $grave->cemetery->id,
+            'name' => $grave->cemetery->name,
+            'address' => $grave->cemetery->address,
+            'district' => $grave->cemetery->district,
+            'commune' => $grave->cemetery->commune,
+            'description' => $grave->cemetery->description,
+        ],
+    ]);
+});
