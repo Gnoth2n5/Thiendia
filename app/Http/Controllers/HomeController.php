@@ -21,7 +21,7 @@ class HomeController extends Controller
 
     public function search(Request $request)
     {
-        $query = Grave::with('cemetery');
+        $query = Grave::with('cemetery', 'plot');
 
         // Tìm kiếm theo tên người quản lý mộ
         if ($request->filled('caretaker_name')) {

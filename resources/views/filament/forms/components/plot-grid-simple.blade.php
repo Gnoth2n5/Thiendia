@@ -116,39 +116,47 @@
             </div>
         </div>
 
-        <!-- Selected Plot Info -->
+        <!-- Plot Info Panel - Combined Selected & Hovered -->
         <div 
-            x-show="selectedPlotId"
-            class="p-4 bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-500 rounded-lg"
+            class="p-4 rounded-lg border-2 transition-all"
+            style="min-height: 120px;"
+            :style="selectedPlotId || hoveredPlot ? 'background-color: #dbeafe; border-color: #3b82f6;' : 'background-color: #f3f4f6; border-color: #d1d5db;'"
         >
+            <!-- Selected Plot (Priority) -->
             <template x-if="selectedPlotId">
                 <div>
-                    <div class="font-semibold text-blue-700 dark:text-blue-300 mb-2">✓ Lô đã chọn:</div>
                     <template x-for="plot in plots.filter(p => p.id === selectedPlotId)" :key="plot.id">
                         <div>
+                            <div class="font-semibold text-blue-700 dark:text-blue-300 mb-2">✓ Lô đã chọn:</div>
                             <div class="text-lg font-bold" x-text="`Lô ${plot.plot_code}`"></div>
                             <div class="text-sm text-gray-600 dark:text-gray-400">
                                 Vị trí: Hàng <span x-text="plot.row"></span>, Cột <span x-text="plot.column"></span>
+                            </div>
+                            <div class="text-sm mt-1">
+                                Trạng thái: 
+                                <span class="px-2 py-1 rounded text-xs font-medium"
+                                      :style="plot.status === 'available' ? 'background-color: #dcfce7; color: #166534;' :
+                                              plot.status === 'occupied' ? 'background-color: #f3f4f6; color: #374151;' :
+                                              plot.status === 'reserved' ? 'background-color: #fef3c7; color: #92400e;' :
+                                              'background-color: #fee2e2; color: #991b1b;'"
+                                      x-text="plot.status === 'available' ? 'Còn trống' : 
+                                             plot.status === 'occupied' ? 'Đã sử dụng' : 
+                                             plot.status === 'reserved' ? 'Đã đặt trước' : 'Không khả dụng'"></span>
                             </div>
                         </div>
                     </template>
                 </div>
             </template>
-        </div>
-
-        <!-- Hovered Plot Info (Fixed Position) -->
-        <div 
-            class="p-3 rounded-lg border-2 transition-all"
-            :style="hoveredPlot ? 'background-color: #dbeafe; border-color: #3b82f6; min-height: 80px;' : 'background-color: #f3f4f6; border-color: #d1d5db; min-height: 80px;'"
-        >
-            <template x-if="hoveredPlot">
+            
+            <!-- Hovered Plot (when no selection) -->
+            <template x-if="!selectedPlotId && hoveredPlot">
                 <div>
-                    <div class="font-bold text-sm" style="color: #1e40af;">
+                    <div class="font-bold text-sm mb-2" style="color: #1e40af;">
                         <span x-text="'Lô ' + hoveredPlot.plot_code"></span>
                     </div>
-                    <div class="text-xs mt-1">
+                    <div class="text-sm">
                         <div>Vị trí: Hàng <span x-text="hoveredPlot.row"></span>, Cột <span x-text="hoveredPlot.column"></span></div>
-                        <div>
+                        <div class="mt-1">
                             Trạng thái: 
                             <span x-text="hoveredPlot.status === 'available' ? 'Còn trống' : 
                                          hoveredPlot.status === 'occupied' ? 'Đã sử dụng' : 
@@ -160,9 +168,11 @@
                     </div>
                 </div>
             </template>
-            <template x-if="!hoveredPlot">
-                <div class="text-center text-gray-500 dark:text-gray-400" style="padding-top: 20px;">
-                    Di chuột vào các ô để xem thông tin
+            
+            <!-- Empty State -->
+            <template x-if="!selectedPlotId && !hoveredPlot">
+                <div class="text-center text-gray-500 dark:text-gray-400 flex items-center justify-center" style="min-height: 90px;">
+                    <p>Click vào ô xanh lá để chọn lô mộ</p>
                 </div>
             </template>
         </div>

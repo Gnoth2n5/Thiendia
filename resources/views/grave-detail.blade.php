@@ -33,7 +33,7 @@
             </div>
             <div class="flex items-center justify-center gap-3 mb-2">
                 <h1 class="text-4xl font-bold bg-gradient-to-r from-purple-700 to-red-600 bg-clip-text text-transparent">
-                    {{ $grave->deceased_full_name }}
+                   Liệt Sỹ {{ $grave->deceased_full_name }}
                 </h1>
             </div>
             <p class="text-lg text-slate-600 mb-6">{{ $grave->cemetery->name }}</p>

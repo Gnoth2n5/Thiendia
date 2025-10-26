@@ -107,8 +107,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <h2 class="text-xl font-bold text-neutral">Kết quả tìm kiếm</h2>
-                        <p class="text-sm text-base-content/60 search-result-count">Tìm thấy {{ $graves->total() }} lăng
-                            mộ</p>
+                        <p class="text-sm text-base-content/60 search-result-count">Tìm thấy {{ $graves->total() }} liệt sĩ</p>
                     </div>
                 </div>
             </div>
@@ -140,11 +139,11 @@
                                     </th>
                                     <th
                                         class="px-4 py-4 text-left text-sm font-bold text-gray-700 border-r border-gray-200">
-                                        Nghĩa trang
+                                        Cấp bậc, đơn vị
                                     </th>
                                     <th
                                         class="px-4 py-4 text-left text-sm font-bold text-gray-700 border-r border-gray-200">
-                                        Huyện/TP
+                                        Nghĩa trang
                                     </th>
                                     <th
                                         class="px-4 py-4 text-left text-sm font-bold text-gray-700 border-r border-gray-200">
@@ -152,7 +151,7 @@
                                     </th>
                                     <th
                                         class="px-4 py-4 text-left text-sm font-bold text-gray-700 border-r border-gray-200">
-                                        Loại mộ
+                                        Lô mộ
                                     </th>
                                     <th class="px-4 py-4 text-center text-sm font-bold text-gray-700">
                                         Thao tác
@@ -181,7 +180,9 @@
 
                                         <!-- Năm sinh -->
                                         <td class="px-4 py-4 text-sm text-gray-600 border-r border-gray-100">
-                                            @if ($grave->deceased_birth_date)
+                                            @if ($grave->birth_year)
+                                                {{ $grave->birth_year }}
+                                            @elseif ($grave->deceased_birth_date)
                                                 {{ $grave->deceased_birth_date->format('Y') }}
                                             @else
                                                 <span class="text-gray-400">-</span>
@@ -192,6 +193,15 @@
                                         <td class="px-4 py-4 text-sm text-gray-600 border-r border-gray-100">
                                             @if ($grave->deceased_death_date)
                                                 {{ $grave->deceased_death_date->format('Y') }}
+                                            @else
+                                                <span class="text-gray-400">-</span>
+                                            @endif
+                                        </td>
+
+                                        <!-- Cấp bậc, đơn vị -->
+                                        <td class="px-4 py-4 text-sm text-gray-700 border-r border-gray-100">
+                                            @if ($grave->rank_and_unit)
+                                                <div class="font-medium text-gray-900">{{ $grave->rank_and_unit }}</div>
                                             @else
                                                 <span class="text-gray-400">-</span>
                                             @endif
@@ -212,28 +222,21 @@
                                             </div>
                                         </td>
 
-                                        <!-- Huyện/TP -->
-                                        <td class="px-4 py-4 text-sm text-gray-600 border-r border-gray-100">
-                                            {{ $grave->cemetery->district }}
-                                        </td>
-
                                         <!-- Xã/Phường -->
                                         <td class="px-4 py-4 text-sm text-gray-600 border-r border-gray-100">
                                             {{ $grave->cemetery->commune }}
                                         </td>
 
-                                        <!-- Loại mộ -->
+                                        <!-- Lô mộ -->
                                         <td class="px-4 py-4 text-sm border-r border-gray-100">
-                                            <div class="flex flex-col gap-1">
-                                                <span
-                                                    class="font-medium text-gray-700">{{ $grave->grave_type_label }}</span>
-                                                <div class="flex items-center gap-2">
-                                                    <div
-                                                        class="w-2 h-2 rounded-full {{ $grave->status === 'đã_sử_dụng' ? 'bg-green-500' : 'bg-gray-400' }}">
-                                                    </div>
-                                                    <span class="text-xs text-gray-500">{{ $grave->status_label }}</span>
+                                            @if ($grave->plot)
+                                                <div class="flex flex-col gap-1">
+                                                    <span class="font-bold text-blue-700">{{ $grave->plot->plot_code }}</span>
+                                                    <span class="text-xs text-gray-500">Hàng {{ $grave->plot->row }}, Cột {{ $grave->plot->column }}</span>
                                                 </div>
-                                            </div>
+                                            @else
+                                                <span class="text-gray-400">-</span>
+                                            @endif
                                         </td>
 
                                         <!-- Thao tác -->
@@ -299,12 +302,11 @@
                                             <span class="font-medium">{{ $grave->cemetery->name }}</span>
                                         </div>
                                     </div>
-                                    <div class="flex items-center gap-2">
-                                        <div
-                                            class="w-2 h-2 rounded-full {{ $grave->status === 'đã_sử_dụng' ? 'bg-green-500' : 'bg-gray-400' }}">
+                                    @if ($grave->plot)
+                                        <div class="bg-blue-100 text-blue-700 px-3 py-1 rounded-lg text-xs font-bold">
+                                            {{ $grave->plot->plot_code }}
                                         </div>
-                                        <span class="text-xs text-gray-500">{{ $grave->status_label }}</span>
-                                    </div>
+                                    @endif
                                 </div>
 
                                 <!-- Mobile Info Grid -->
@@ -312,7 +314,9 @@
                                     <div>
                                         <span class="text-gray-500">Năm sinh:</span>
                                         <div class="font-medium">
-                                            @if ($grave->deceased_birth_date)
+                                            @if ($grave->birth_year)
+                                                {{ $grave->birth_year }}
+                                            @elseif ($grave->deceased_birth_date)
                                                 {{ $grave->deceased_birth_date->format('Y') }}
                                             @else
                                                 <span class="text-gray-400">-</span>
@@ -329,13 +333,29 @@
                                             @endif
                                         </div>
                                     </div>
-                                    <div>
-                                        <span class="text-gray-500">Huyện/TP:</span>
-                                        <div class="font-medium">{{ $grave->cemetery->district }}</div>
+                                    <div class="col-span-2">
+                                        <span class="text-gray-500">Cấp bậc, đơn vị:</span>
+                                        <div class="font-medium">
+                                            @if ($grave->rank_and_unit)
+                                                {{ $grave->rank_and_unit }}
+                                            @else
+                                                <span class="text-gray-400">-</span>
+                                            @endif
+                                        </div>
                                     </div>
                                     <div>
                                         <span class="text-gray-500">Xã/Phường:</span>
                                         <div class="font-medium">{{ $grave->cemetery->commune }}</div>
+                                    </div>
+                                    <div>
+                                        <span class="text-gray-500">Lô mộ:</span>
+                                        <div class="font-medium">
+                                            @if ($grave->plot)
+                                                {{ $grave->plot->plot_code }}
+                                            @else
+                                                <span class="text-gray-400">-</span>
+                                            @endif
+                                        </div>
                                     </div>
                                 </div>
 
