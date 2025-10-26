@@ -6,22 +6,22 @@
     <!-- Page Header -->
     <div class="mb-8">
         <div class="flex items-center gap-3 mb-4">
-            <div class="p-2 bg-primary/10 rounded-lg">
+            <div class="p-2 rounded-lg" style="background-color: rgba(139,0,0,0.1);">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-                    class="h-6 w-6 text-primary">
+                    class="h-6 w-6" style="color: #8b0000;">
                     <path stroke-linecap="round" stroke-linejoin="round"
                         d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
                 </svg>
             </div>
             <div>
-                <h1 class="text-3xl font-bold text-neutral">Bài viết & Tin tức</h1>
-                <p class="text-base-content/60">Cập nhật thông tin mới nhất về hệ thống quản lý nghĩa địa</p>
+                <h1 class="text-3xl font-bold" style="color: #2b2b2b;">Bài viết & Tin tức</h1>
+                <p style="color: #2b2b2b; opacity: 0.6;">Cập nhật thông tin mới nhất về hệ thống quản lý nghĩa địa</p>
             </div>
         </div>
     </div>
 
     <!-- Search & Filter -->
-    <div class="card bg-base-100 shadow-xl mb-8 border border-base-300">
+    <div class="card mb-8 border" style="background-color: #fafaf8; border-color: #d4d0c8; box-shadow: none;">
         <div class="card-body">
             <form method="GET" class="flex flex-col md:flex-row gap-4">
                 <div class="flex-1">
@@ -38,7 +38,8 @@
                         @endforeach
                     </select>
                 </div>
-                <button type="submit" class="btn btn-error gap-2">
+                <button type="submit" class="btn gap-2" style="background-color: #8b0000; color: #f5f3e7; border: none;"
+                    onmouseover="this.style.backgroundColor='#6b0000'" onmouseout="this.style.backgroundColor='#8b0000'">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
                         stroke="currentColor" class="h-5 w-5">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -54,27 +55,29 @@
     @if ($featuredArticles->count() > 0)
         <div class="mb-12">
             <div class="flex items-center gap-3 mb-6">
-                <div class="p-2 bg-warning/10 rounded-lg">
+                <div class="p-2 rounded-lg" style="background-color: rgba(139,0,0,0.1);">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                        stroke="currentColor" class="h-6 w-6 text-warning">
+                        stroke="currentColor" class="h-6 w-6" style="color: #8b0000;">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />
                     </svg>
                 </div>
-                <h2 class="text-2xl font-bold text-neutral">Bài viết nổi bật</h2>
+                <h2 class="text-2xl font-bold" style="color: #2b2b2b;">Bài viết nổi bật</h2>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 @foreach ($featuredArticles as $article)
-                    <div
-                        class="card bg-gradient-to-br from-white to-warning-50/30 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 border border-warning-200">
+                    <div class="card border transition-all"
+                        style="background-color: #fafaf8; border-color: #d4d0c8; box-shadow: none;"
+                        onmouseover="this.style.boxShadow='0 4px 6px rgba(139, 0, 0, 0.1)'"
+                        onmouseout="this.style.boxShadow='none'">
                         <figure class="h-48 overflow-hidden">
                             @if ($article->featured_image)
                                 <img src="{{ $article->featured_image }}" alt="{{ $article->title }}"
                                     class="w-full h-full object-cover">
                             @else
-                                <div
-                                    class="w-full h-full bg-gradient-to-br from-warning-400 to-orange-500 flex items-center justify-center">
+                                <div class="w-full h-full flex items-center justify-center"
+                                    style="background-color: #8b0000;">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                         stroke-width="2" stroke="currentColor" class="h-16 w-16 text-white">
                                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -83,7 +86,7 @@
                                 </div>
                             @endif
                             <div class="absolute top-4 left-4">
-                                <div class="badge badge-warning gap-1">
+                                <div class="badge gap-1" style="background-color: #8b0000; color: #f5f3e7; border: none;">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                         stroke-width="2" stroke="currentColor" class="h-3 w-3">
                                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -96,17 +99,19 @@
 
                         <div class="card-body">
                             <div class="flex items-center gap-2 mb-2">
-                                <div class="badge badge-primary badge-sm">{{ $article->category_label }}</div>
+                                <div class="badge badge-sm"
+                                    style="background-color: #8b0000; color: #f5f3e7; border: none;">
+                                    {{ $article->category_label }}</div>
                             </div>
 
                             <h3 class="card-title text-lg leading-tight mb-2">
-                                <a href="{{ route('articles.show', $article->slug) }}"
-                                    class="hover:text-primary transition-colors">
+                                <a href="{{ route('articles.show', $article->slug) }}" style="color: #2b2b2b;"
+                                    onmouseover="this.style.color='#8b0000'" onmouseout="this.style.color='#2b2b2b'">
                                     {{ $article->title }}
                                 </a>
                             </h3>
 
-                            <div class="flex items-center justify-between text-sm text-base-content/60">
+                            <div class="flex items-center justify-between text-sm" style="color: #2b2b2b; opacity: 0.6;">
                                 <div class="flex items-center gap-2">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                         stroke-width="2" stroke="currentColor" class="h-4 w-4">
@@ -128,7 +133,10 @@
                             </div>
 
                             <div class="card-actions justify-end mt-4">
-                                <a href="{{ route('articles.show', $article->slug) }}" class="btn btn-error btn-sm">
+                                <a href="{{ route('articles.show', $article->slug) }}" class="btn btn-sm"
+                                    style="background-color: #8b0000; color: #f5f3e7; border: none;"
+                                    onmouseover="this.style.backgroundColor='#6b0000'"
+                                    onmouseout="this.style.backgroundColor='#8b0000'">
                                     Đọc tiếp
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                         stroke-width="2" stroke="currentColor" class="h-4 w-4">
@@ -147,8 +155,8 @@
     <!-- All Articles -->
     <div class="mb-8">
         <div class="flex items-center justify-between mb-6">
-            <h2 class="text-2xl font-bold text-neutral">Tất cả bài viết</h2>
-            <div class="text-sm text-base-content/60">
+            <h2 class="text-2xl font-bold" style="color: #2b2b2b;">Tất cả bài viết</h2>
+            <div class="text-sm" style="color: #2b2b2b; opacity: 0.6;">
                 Hiển thị {{ $articles->count() }} / {{ $articles->total() }} bài viết
             </div>
         </div>
@@ -159,18 +167,20 @@
                 <!-- Left Side: Large Articles (2/3 width) -->
                 <div class="lg:col-span-2 space-y-8">
                     @foreach ($articles->take(2) as $index => $article)
-                        <div
-                            class="card bg-base-100 shadow-xl border border-base-300 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+                        <div class="card border transition-all"
+                            style="background-color: #fafaf8; border-color: #d4d0c8; box-shadow: none;"
+                            onmouseover="this.style.boxShadow='0 4px 6px rgba(139, 0, 0, 0.1)'"
+                            onmouseout="this.style.boxShadow='none'">
                             <div class="card-body p-0">
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-0">
                                     <!-- Image Section -->
                                     <div class="relative overflow-hidden">
                                         @if ($article->featured_image)
                                             <img src="{{ $article->featured_image }}" alt="{{ $article->title }}"
-                                                class="w-full h-64 md:h-full object-cover transition-transform duration-300 hover:scale-105">
+                                                class="w-full h-64 md:h-full object-cover">
                                         @else
-                                            <div
-                                                class="w-full h-64 md:h-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center">
+                                            <div class="w-full h-64 md:h-full flex items-center justify-center"
+                                                style="background-color: #8b0000;">
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                     viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
                                                     class="h-16 w-16 text-white">
@@ -185,24 +195,27 @@
                                     <div class="p-6 flex flex-col justify-between">
                                         <div>
                                             <div class="flex items-center gap-2 mb-3">
-                                                <div class="badge badge-primary badge-sm">{{ $article->category_label }}
-                                                </div>
+                                                <div class="badge badge-sm"
+                                                    style="background-color: #8b0000; color: #f5f3e7; border: none;">
+                                                    {{ $article->category_label }}</div>
                                             </div>
 
                                             <h3 class="card-title text-xl leading-tight mb-3">
                                                 <a href="{{ route('articles.show', $article->slug) }}"
-                                                    class="hover:text-primary transition-colors">
+                                                    style="color: #2b2b2b;" onmouseover="this.style.color='#8b0000'"
+                                                    onmouseout="this.style.color='#2b2b2b'">
                                                     {{ $article->title }}
                                                 </a>
                                             </h3>
 
-                                            <p class="text-base-content/70 text-sm line-clamp-3 mb-4">
+                                            <p class="text-sm line-clamp-3 mb-4" style="color: #2b2b2b; opacity: 0.6;">
                                                 {{ Str::limit(strip_tags($article->content), 150) }}
                                             </p>
                                         </div>
 
                                         <div class="space-y-3">
-                                            <div class="flex items-center justify-between text-sm text-base-content/60">
+                                            <div class="flex items-center justify-between text-sm"
+                                                style="color: #2b2b2b; opacity: 0.6;">
                                                 <div class="flex items-center gap-2">
                                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                         viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
@@ -226,8 +239,10 @@
                                             </div>
 
                                             <div class="card-actions justify-start">
-                                                <a href="{{ route('articles.show', $article->slug) }}"
-                                                    class="btn btn-error btn-sm">
+                                                <a href="{{ route('articles.show', $article->slug) }}" class="btn btn-sm"
+                                                    style="background-color: #8b0000; color: #f5f3e7; border: none;"
+                                                    onmouseover="this.style.backgroundColor='#6b0000'"
+                                                    onmouseout="this.style.backgroundColor='#8b0000'">
                                                     Đọc tiếp
                                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                         viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
@@ -248,11 +263,13 @@
                 <!-- Right Side: Small Articles (1/3 width) -->
                 <div class="lg:col-span-1">
                     <div class="sticky top-8">
-                        <h3 class="text-lg font-bold text-neutral mb-4">Bài viết khác</h3>
+                        <h3 class="text-lg font-bold mb-4" style="color: #2b2b2b;">Bài viết khác</h3>
                         <div class="space-y-4">
                             @foreach ($articles->skip(2) as $article)
-                                <div
-                                    class="card bg-base-100 shadow-lg border border-base-300 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                                <div class="card border"
+                                    style="background-color: #fafaf8; border-color: #d4d0c8; box-shadow: none;"
+                                    onmouseover="this.style.boxShadow='0 2px 4px rgba(139, 0, 0, 0.1)'"
+                                    onmouseout="this.style.boxShadow='none'">
                                     <div class="card-body p-4">
                                         <div class="flex gap-3">
                                             <!-- Small Image -->
@@ -262,8 +279,8 @@
                                                         alt="{{ $article->title }}"
                                                         class="w-16 h-16 object-cover rounded-lg">
                                                 @else
-                                                    <div
-                                                        class="w-16 h-16 bg-gradient-to-br from-primary-400 to-primary-600 rounded-lg flex items-center justify-center">
+                                                    <div class="w-16 h-16 rounded-lg flex items-center justify-center"
+                                                        style="background-color: #8b0000;">
                                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                             viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
                                                             class="h-6 w-6 text-white">
@@ -277,18 +294,22 @@
                                             <!-- Content -->
                                             <div class="flex-1 min-w-0">
                                                 <div class="flex items-center gap-2 mb-1">
-                                                    <div class="badge badge-primary badge-xs">
+                                                    <div class="badge badge-xs"
+                                                        style="background-color: #8b0000; color: #f5f3e7; border: none;">
                                                         {{ $article->category_label }}</div>
                                                 </div>
 
-                                                <h4 class="font-semibold text-sm leading-tight mb-2 line-clamp-2">
+                                                <h4 class="font-semibold text-sm leading-tight mb-2 line-clamp-2"
+                                                    style="color: #2b2b2b;">
                                                     <a href="{{ route('articles.show', $article->slug) }}"
-                                                        class="hover:text-primary transition-colors">
+                                                        onmouseover="this.style.color='#8b0000'"
+                                                        onmouseout="this.style.color='#2b2b2b'">
                                                         {{ $article->title }}
                                                     </a>
                                                 </h4>
 
-                                                <div class="flex items-center gap-2 text-xs text-base-content/60">
+                                                <div class="flex items-center gap-2 text-xs"
+                                                    style="color: #2b2b2b; opacity: 0.6;">
                                                     <span>{{ $article->created_at->format('d/m/Y') }}</span>
                                                     <span>•</span>
                                                     <span>{{ $article->views }} lượt xem</span>
@@ -308,16 +329,18 @@
                 {{ $articles->appends(request()->query())->links() }}
             </div>
         @else
-            <div class="card bg-base-100 shadow-lg border border-base-300">
-                <div class="card-body text-center py-16">
+            <div class="card border text-center py-16" style="background-color: #fafaf8; border-color: #d4d0c8;">
+                <div class="card-body">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor" class="h-16 w-16 mx-auto text-base-content/30 mb-4">
+                        stroke="currentColor" class="h-16 w-16 mx-auto mb-4" style="color: #8b0000; opacity: 0.3;">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
                     </svg>
-                    <h3 class="text-xl font-bold text-neutral mb-2">Không tìm thấy bài viết</h3>
-                    <p class="text-base-content/60 mb-4">Vui lòng thử lại với từ khóa khác hoặc bộ lọc khác</p>
-                    <a href="{{ route('articles.index') }}" class="btn btn-ghost">Xem tất cả bài viết</a>
+                    <h3 class="text-xl font-bold mb-2" style="color: #2b2b2b;">Không tìm thấy bài viết</h3>
+                    <p class="mb-4" style="color: #2b2b2b; opacity: 0.6;">Vui lòng thử lại với từ khóa khác hoặc bộ lọc
+                        khác</p>
+                    <a href="{{ route('articles.index') }}" class="btn"
+                        style="background-color: #d4d0c8; color: #2b2b2b; border: none;">Xem tất cả bài viết</a>
                 </div>
             </div>
         @endif

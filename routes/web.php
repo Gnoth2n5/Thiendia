@@ -28,3 +28,19 @@ Route::post('/modification-request/{id}/reject', [ModificationRequestController:
 Route::get('/articles', [ArticleController::class, 'index'])->name('articles.index');
 Route::get('/articles/{slug}', [ArticleController::class, 'show'])->name('articles.show');
 Route::get('/articles/category/{category}', [ArticleController::class, 'category'])->name('articles.category');
+
+// Các trang chính sách và hỗ trợ
+Route::get('/privacy-policy', function () {
+  return view('privacy-policy');
+})->name('privacy-policy');
+
+Route::get('/terms-of-service', function () {
+  return view('terms-of-service');
+})->name('terms-of-service');
+
+Route::get('/guide', function () {
+  return view('guide');
+})->name('guide');
+
+Route::get('/contact', [App\Http\Controllers\ContactController::class, 'index'])->name('contact');
+Route::post('/contact', [App\Http\Controllers\ContactController::class, 'store'])->name('contact.store');

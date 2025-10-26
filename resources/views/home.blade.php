@@ -76,7 +76,7 @@
         </div>
 
         <!-- Quick Search Form -->
-        <div class="card bg-base-100 shadow-xl border border-base-300 max-w-4xl mx-auto">
+        <div class="card max-w-4xl mx-auto" style="background-color: #fafaf8; border: 1px solid #d4d0c8; box-shadow: none;">
             <div class="card-body">
                 <form method="GET" action="{{ route('search') }}" class="space-y-6">
                     <!-- Search Inputs Row -->
@@ -156,7 +156,10 @@
 
                     <!-- Search Button -->
                     <div class="flex justify-center pt-4">
-                        <button type="submit" class="btn btn-error btn-lg px-12 gap-3">
+                        <button type="submit" class="btn btn-lg px-12 gap-3"
+                            style="background-color: #8b0000; color: #f5f3e7; border: none;"
+                            onmouseover="this.style.backgroundColor='#6b0000'"
+                            onmouseout="this.style.backgroundColor='#8b0000'">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
                                 stroke="currentColor" class="h-6 w-6">
                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -173,11 +176,8 @@
     <!-- Latest Articles Section -->
     <div class="mb-20">
         <div class="text-center mb-12">
-            <div class="relative inline-block mb-6">
-                <div
-                    class="absolute inset-0 bg-gradient-to-r from-green-400 to-blue-500 rounded-2xl blur-lg opacity-30 scale-110">
-                </div>
-                <div class="relative p-4 bg-gradient-to-br from-purple-500 to-red-500 rounded-2xl shadow-xl">
+            <div class="inline-block mb-6">
+                <div class="p-4 rounded-2xl" style="background-color: #8b0000;">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
                         stroke="currentColor" class="h-10 w-10 text-white">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -186,10 +186,10 @@
                 </div>
             </div>
 
-            <h2 class="text-4xl font-bold text-red-600 mb-4">
+            <h2 class="text-4xl font-bold mb-4" style="color: #8b0000;">
                 Tin tức & Bài viết mới
             </h2>
-            <p class="text-lg text-slate-600 max-w-2xl mx-auto">
+            <p class="text-lg max-w-2xl mx-auto" style="color: #2b2b2b;">
                 Cập nhật những thông tin mới nhất về hệ thống tra cứu thông tin liệt sĩ
             </p>
         </div>
@@ -203,25 +203,19 @@
             <!-- Left Side: Large Articles (2/3 width) -->
             <div class="lg:col-span-2 space-y-8">
                 @foreach ($latestArticles->take(2) as $article)
-                    <div
-                        class="group relative overflow-hidden rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 bg-gradient-to-br from-white via-slate-50/50 to-green-50/30 border border-green-200/50">
-                        <!-- Background Effects -->
-                        <div
-                            class="absolute inset-0 bg-gradient-to-br from-green-100/20 to-blue-100/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                        </div>
-                        <div
-                            class="absolute -top-10 -right-10 w-32 h-32 bg-green-500/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700">
-                        </div>
-
+                    <div class="group relative overflow-hidden rounded-xl border"
+                        style="background-color: #fafaf8; border-color: #d4d0c8; transition: box-shadow 0.2s ease;"
+                        onmouseover="this.style.boxShadow='0 4px 6px rgba(139, 0, 0, 0.1)'"
+                        onmouseout="this.style.boxShadow='none'">
                         <div class="relative grid grid-cols-1 md:grid-cols-2 gap-0">
                             <!-- Image Section -->
                             <div class="relative overflow-hidden">
                                 @if ($article->featured_image)
                                     <img src="{{ $article->featured_image }}" alt="{{ $article->title }}"
-                                        class="w-full h-64 md:h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                        class="w-full h-64 md:h-full object-cover">
                                 @else
-                                    <div
-                                        class="w-full h-64 md:h-full bg-gradient-to-br from-purple-500 to-red-500 flex items-center justify-center">
+                                    <div class="w-full h-64 md:h-full flex items-center justify-center"
+                                        style="background-color: #8b0000;">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                             stroke-width="2" stroke="currentColor" class="h-16 w-16 text-white">
                                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -237,7 +231,8 @@
                                     <!-- Category Badge -->
                                     <div class="mb-3">
                                         <span
-                                            class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-purple-500 to-red-500 text-white">
+                                            class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium text-white"
+                                            style="background-color: #8b0000;">
                                             @switch($article->category)
                                                 @case('tin_tuc')
                                                     📰 Tin tức
@@ -258,20 +253,20 @@
                                     </div>
 
                                     <!-- Title -->
-                                    <h3
-                                        class="text-xl font-bold text-slate-800 group-hover:text-red-700 transition-colors duration-300 mb-3 line-clamp-2">
+                                    <h3 class="text-xl font-bold mb-3 line-clamp-2" style="color: #2b2b2b;">
                                         {{ $article->title }}
                                     </h3>
 
                                     <!-- Excerpt -->
-                                    <p class="text-sm text-slate-600 mb-4 line-clamp-3 leading-relaxed">
+                                    <p class="text-sm mb-4 line-clamp-3 leading-relaxed" style="color: #2b2b2b;">
                                         {{ Str::limit(strip_tags($article->content), 150) }}
                                     </p>
                                 </div>
 
                                 <div class="space-y-3">
                                     <!-- Meta Info -->
-                                    <div class="flex items-center justify-between text-xs text-slate-500">
+                                    <div class="flex items-center justify-between text-xs"
+                                        style="color: #2b2b2b; opacity: 0.6;">
                                         <div class="flex items-center gap-2">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                                 stroke-width="2" stroke="currentColor" class="h-4 w-4">
@@ -294,19 +289,16 @@
 
                                     <!-- Action Button -->
                                     <a href="{{ route('articles.show', $article->slug) }}"
-                                        class="group/btn relative inline-flex items-center justify-center px-4 py-3 bg-gradient-to-r from-purple-500 to-red-500 hover:from-purple-700 hover:to-red-700 text-white font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">
-                                        <div
-                                            class="absolute inset-0 bg-gradient-to-r from-purple-500 to-red-500 rounded-2xl blur opacity-0 group-hover/btn:opacity-75 transition-opacity duration-300">
-                                        </div>
-                                        <div class="relative flex items-center gap-2">
-                                            <span>Đọc tiếp</span>
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                stroke-width="2" stroke="currentColor"
-                                                class="h-4 w-4 group-hover/btn:translate-x-1 transition-transform duration-300">
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="m8.25 4.5 7.5 7.5-7.5 7.5" />
-                                            </svg>
-                                        </div>
+                                        class="inline-flex items-center justify-center px-4 py-3 text-white font-semibold rounded-lg transition-colors duration-200"
+                                        style="background-color: #8b0000;"
+                                        onmouseover="this.style.backgroundColor='#6b0000'"
+                                        onmouseout="this.style.backgroundColor='#8b0000'">
+                                        <span>Đọc tiếp</span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="2" stroke="currentColor" class="h-4 w-4 ml-1">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                                        </svg>
                                     </a>
                                 </div>
                             </div>
@@ -318,11 +310,13 @@
             <!-- Right Side: Small Articles (1/3 width) -->
             <div class="lg:col-span-1">
                 <div class="sticky top-8">
-                    <h3 class="text-lg font-bold text-slate-800 mb-4">Bài viết khác</h3>
+                    <h3 class="text-lg font-bold mb-4" style="color: #2b2b2b;">Bài viết khác</h3>
                     <div class="space-y-4">
                         @foreach ($latestArticles->skip(2) as $article)
-                            <div
-                                class="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-white border border-green-200/50">
+                            <div class="group relative overflow-hidden rounded-lg border"
+                                style="background-color: #fafaf8; border-color: #d4d0c8; transition: box-shadow 0.2s ease;"
+                                onmouseover="this.style.boxShadow='0 2px 4px rgba(139, 0, 0, 0.1)'"
+                                onmouseout="this.style.boxShadow='none'">
                                 <div class="p-4">
                                     <div class="flex gap-3">
                                         <!-- Small Image -->
@@ -331,8 +325,8 @@
                                                 <img src="{{ $article->featured_image }}" alt="{{ $article->title }}"
                                                     class="w-16 h-16 object-cover rounded-lg">
                                             @else
-                                                <div
-                                                    class="w-16 h-16 bg-gradient-to-br from-purple-500 to-red-500 rounded-lg flex items-center justify-center">
+                                                <div class="w-16 h-16 rounded-lg flex items-center justify-center"
+                                                    style="background-color: #8b0000;">
                                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                         viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
                                                         class="h-6 w-6 text-white">
@@ -347,19 +341,21 @@
                                         <div class="flex-1 min-w-0">
                                             <div class="mb-1">
                                                 <span
-                                                    class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gradient-to-r from-purple-500 to-red-500 text-white">
+                                                    class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium text-white"
+                                                    style="background-color: #8b0000;">
                                                     {{ $article->category_label }}
                                                 </span>
                                             </div>
 
-                                            <h4
-                                                class="font-semibold text-sm leading-tight mb-2 line-clamp-2 text-slate-800 group-hover:text-red-700 transition-colors">
+                                            <h4 class="font-semibold text-sm leading-tight mb-2 line-clamp-2 transition-colors"
+                                                style="color: #2b2b2b;">
                                                 <a href="{{ route('articles.show', $article->slug) }}">
                                                     {{ $article->title }}
                                                 </a>
                                             </h4>
 
-                                            <div class="flex items-center gap-2 text-xs text-slate-500">
+                                            <div class="flex items-center gap-2 text-xs"
+                                                style="color: #2b2b2b; opacity: 0.6;">
                                                 <span>{{ $article->created_at->format('d/m/Y') }}</span>
                                                 <span>•</span>
                                                 <span>{{ $article->views }} lượt xem</span>
@@ -377,22 +373,19 @@
         <!-- View All Button -->
         <div class="text-center mt-12">
             <a href="{{ route('articles.index') }}"
-                class="group relative inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-purple-500 to-red-500 hover:from-purple-700 hover:to-red-700 text-white font-bold text-lg rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 transform">
-                <div
-                    class="absolute inset-0 bg-gradient-to-r from-purple-500 to-red-500 rounded-2xl blur opacity-0 group-hover:opacity-75 transition-opacity duration-300">
-                </div>
-                <div class="relative flex items-center gap-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                        stroke="currentColor" class="h-6 w-6">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
-                    </svg>
-                    Xem tất cả bài viết
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                        stroke="currentColor" class="h-5 w-5 group-hover:translate-x-1 transition-transform duration-300">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
-                    </svg>
-                </div>
+                class="inline-flex items-center gap-3 px-8 py-4 text-white font-bold text-lg rounded-lg transition-colors duration-200"
+                style="background-color: #8b0000;" onmouseover="this.style.backgroundColor='#6b0000'"
+                onmouseout="this.style.backgroundColor='#8b0000'">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                    stroke="currentColor" class="h-6 w-6">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                </svg>
+                Xem tất cả bài viết
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                    stroke="currentColor" class="h-5 w-5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                </svg>
             </a>
         </div>
     </div>
@@ -400,31 +393,31 @@
     <!-- SEO Content Section -->
     <div>
         <div class="max-w-6xl mx-auto">
-            <div class="bg-white rounded-3xl shadow-xl border border-gray-200 p-8 md:p-12">
-                <h1 class="text-2xl md:text-4xl font-bold text-gray-800 mb-6 text-center xl:mx-28">
+            <div class="rounded-xl border p-8 md:p-12" style="background-color: #fafaf8; border-color: #d4d0c8;">
+                <h1 class="text-2xl md:text-4xl font-bold mb-6 text-center xl:mx-28" style="color: #2b2b2b;">
                     HỆ THỐNG TRA CỨU THÔNG TIN LIỆT SĨ TỈNH NINH BÌNH TRỰC TUYẾN
                 </h1>
-                <p class="text-xl text-gray-600 text-center mb-8">
+                <p class="text-xl text-center mb-8" style="color: #8b0000;">
                     Tra cứu thông tin lăng mộ nhanh chóng, chính xác và tiện lợi
                 </p>
 
                 <div class="prose prose-lg max-w-none">
-                    <p class="text-lg text-gray-700 leading-relaxed mb-6">
+                    <p class="text-lg leading-relaxed mb-6" style="color: #2b2b2b;">
                         Hệ thống Tra cứu thông tin liệt sĩ tỉnh Ninh Bình là nền tảng trực tuyến giúp người dân dễ dàng tra
                         cứu thông tin người thân đã khuất, xác định vị trí lăng mộ và quản lý dữ liệu nghĩa trang một cách
                         khoa học, minh bạch và hiện đại. Với công nghệ bản đồ số tiên tiến, người dùng có thể tìm kiếm thông
                         tin chính xác chỉ bằng vài thao tác đơn giản.
                     </p>
 
-                    <h2 class="text-3xl font-bold text-gray-800 mb-6">Giới thiệu hệ thống</h2>
-                    <p class="text-lg text-gray-700 leading-relaxed mb-6">
+                    <h2 class="text-3xl font-bold mb-6" style="color: #8b0000;">Giới thiệu hệ thống</h2>
+                    <p class="text-lg leading-relaxed mb-6" style="color: #2b2b2b;">
                         Hệ thống được xây dựng nhằm số hóa dữ liệu nghĩa địa, phục vụ công tác quản lý, tra cứu và bảo tồn
                         thông tin người đã khuất. Đây là giải pháp tối ưu cho các địa phương, ban quản lý nghĩa trang, cũng
                         như thân nhân có nhu cầu tìm kiếm và cập nhật thông tin mộ phần.
                     </p>
 
-                    <h2 class="text-3xl font-bold text-gray-800 mb-6">Tính năng nổi bật</h2>
-                    <ul class="list-disc list-inside text-lg text-gray-700 leading-relaxed mb-6 space-y-2">
+                    <h2 class="text-3xl font-bold mb-6" style="color: #8b0000;">Tính năng nổi bật</h2>
+                    <ul class="list-disc list-inside text-lg leading-relaxed mb-6 space-y-2" style="color: #2b2b2b;">
                         <li>Tra cứu thông tin người đã khuất: Nhập tên, năm sinh, năm mất hoặc khu vực chôn cất để tìm kiếm
                             dễ dàng.</li>
                         <li>Xác định vị trí lăng mộ trên bản đồ số: Hỗ trợ định vị nhanh chóng, chính xác từng ô mộ.</li>
@@ -435,8 +428,8 @@
                         </li>
                     </ul>
 
-                    <h2 class="text-3xl font-bold text-gray-800 mb-6">Lợi ích mang lại</h2>
-                    <ul class="list-disc list-inside text-lg text-gray-700 leading-relaxed mb-6 space-y-2">
+                    <h2 class="text-3xl font-bold mb-6" style="color: #8b0000;">Lợi ích mang lại</h2>
+                    <ul class="list-disc list-inside text-lg leading-relaxed mb-6 space-y-2" style="color: #2b2b2b;">
                         <li>Đối với người dân: Dễ dàng tìm kiếm thông tin người thân mà không cần đến trực tiếp nghĩa trang.
                         </li>
                         <li>Đối với ban quản lý nghĩa trang: Tiết kiệm thời gian, giảm sai sót và quản lý tập trung, chuyên
@@ -445,18 +438,18 @@
                             dân cư và di sản văn hóa tâm linh.</li>
                     </ul>
 
-                    <h2 class="text-3xl font-bold text-gray-800 mb-6">Tầm nhìn và sứ mệnh</h2>
-                    <p class="text-lg text-gray-700 leading-relaxed mb-6">
+                    <h2 class="text-3xl font-bold mb-6" style="color: #8b0000;">Tầm nhìn và sứ mệnh</h2>
+                    <p class="text-lg leading-relaxed mb-6" style="color: #2b2b2b;">
                         Chúng tôi hướng tới mục tiêu xây dựng hệ thống tra cứu và quản lý nghĩa địa toàn diện, góp phần gìn
                         giữ giá trị văn hóa truyền thống và tạo thuận tiện cho người dân trong hành trình tưởng nhớ tổ tiên.
                     </p>
 
-                    <h2 class="text-3xl font-bold text-gray-800 mb-6">Liên hệ</h2>
-                    <p class="text-lg text-gray-700 leading-relaxed mb-6">
+                    <h2 class="text-3xl font-bold mb-6" style="color: #8b0000;">Liên hệ</h2>
+                    <p class="text-lg leading-relaxed mb-6" style="color: #2b2b2b;">
                         Nếu bạn là ban quản lý nghĩa trang, chính quyền địa phương hoặc người dân muốn sử dụng hệ thống, hãy
                         liên hệ với chúng tôi để được tư vấn và hỗ trợ triển khai:
                     </p>
-                    <ul class="list-disc list-inside text-lg text-gray-700 leading-relaxed">
+                    <ul class="list-disc list-inside text-lg leading-relaxed" style="color: #2b2b2b;">
                         <li>📍 Địa chỉ: Ninh Bình, Việt Nam</li>
                         <li>📞 Hotline: 0123 456 789</li>
                         <li>🌐 Website: tenmiencuaban.vn</li>

@@ -271,8 +271,9 @@
                             class="flex-1 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">
                             Hủy
                         </button>
-                        <button type="submit" id="submitTributeBtn"
-                            class="flex-1 px-4 py-2 bg-8b0000 text-white rounded hover:bg-6b0000">
+                        <button type="submit" id="submitTributeBtn" class="flex-1 px-4 py-2 text-white rounded"
+                            style="background-color: #8b0000;" onmouseover="this.style.backgroundColor='#6b0000'"
+                            onmouseout="this.style.backgroundColor='#8b0000'">
                             Thắp hương
                         </button>
                     </div>
