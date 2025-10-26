@@ -66,25 +66,10 @@
 
                     <div class="form-control">
                         <label class="label">
-                            <span class="label-text font-medium">Huyện/Thành phố</span>
-                        </label>
-                        <select name="district" id="district" class="select select-bordered w-full">
-                            <option value="">Tất cả huyện/thành phố</option>
-                            @foreach ($districts as $district)
-                                <option value="{{ $district }}"
-                                    {{ request('district') == $district ? 'selected' : '' }}>
-                                    {{ $district }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="form-control">
-                        <label class="label">
                             <span class="label-text font-medium">Xã/Phường/Thị trấn</span>
                         </label>
                         <select name="commune" id="commune" class="select select-bordered w-full"
-                            {{ request('district') ? '' : 'disabled' }} data-selected="{{ request('commune') }}">
+                            data-selected="{{ request('commune') }}">
                             <option value="">Tất cả xã/phường</option>
                         </select>
                     </div>

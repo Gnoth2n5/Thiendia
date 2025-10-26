@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\HomeController;
 use App\Models\Cemetery;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -19,35 +20,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-// API to get all districts
-Route::get('/districts', function () {
-    $locations = config('ninhbinh_locations');
-    $districts = array_keys($locations);
+// API to get wards (cached from Ninh Binh API)
+Route::get('/wards', [HomeController::class, 'getWards']);
 
-    return response()->json($districts);
-});
 
-// API to get communes by district
-Route::get('/communes', function (Request $request) {
-    $district = $request->get('district');
-
-    if (! $district) {
-        return response()->json([]);
-    }
-
-    $locations = config('ninhbinh_locations');
-    $communes = $locations[$district] ?? [];
-
-    return response()->json($communes);
-});
-
-// API to get cemeteries (optionally filtered by district and commune)
+// API to get cemeteries (optionally filtered by commune)
 Route::get('/cemeteries', function (Request $request) {
     $query = Cemetery::query()->withCount('graves');
-
-    if ($district = $request->get('district')) {
-        $query->where('district', $district);
-    }
 
     if ($commune = $request->get('commune')) {
         $query->where('commune', $commune);
@@ -84,8 +63,8 @@ Route::get('/graves/{id}', function ($id) {
         'deceased_gender' => $grave->deceased_gender,
         'deceased_birth_date' => $grave->deceased_birth_date?->format('d/m/Y'),
         'deceased_death_date' => $grave->deceased_death_date?->format('d/m/Y'),
-        'deceased_photo' => $grave->deceased_photo ? \Storage::url($grave->deceased_photo) : null,
-        'grave_photos' => $grave->grave_photos ? array_map(fn ($photo) => \Storage::url($photo), $grave->grave_photos) : [],
+        'deceased_photo' => $grave->deceased_photo ? \Illuminate\Support\Facades\Storage::url($grave->deceased_photo) : null,
+        'grave_photos' => $grave->grave_photos ? array_map(fn($photo) => \Illuminate\Support\Facades\Storage::url($photo), $grave->grave_photos) : [],
         'location_description' => $grave->location_description,
         'notes' => $grave->notes,
         'latitude' => $grave->latitude,

@@ -112,35 +112,20 @@
                                 class="input input-bordered w-full" value="{{ request('owner_name') }}">
                         </div>
 
-                        <!-- District -->
-                        <div class="form-control">
-                            <label class="label" for="district">
-                                <span class="label-text font-semibold">Huyện/Thành phố</span>
-                            </label>
-                            <select name="district" id="district" class="select select-bordered w-full">
-                                <option value="">Tất cả huyện/thành phố</option>
-                                @foreach (['Bình Lục', 'Thanh Liêm', 'Lý Nhân', 'Nam Trực', 'Vụ Bản', 'Ý Yên', 'Trực Ninh', 'Xuân Trường', 'Hải Hậu', 'Giao Thủy', 'Nghĩa Hưng', 'Gia Viễn', 'Nho Quan', 'Yên Khánh', 'Yên Mô', 'Kim Sơn', 'Thành phố Phủ Lý', 'Thành phố Nam Định', 'Thành phố Hoa Lư', 'Thành phố Tam Điệp'] as $district)
-                                    <option value="{{ $district }}"
-                                        {{ request('district') == $district ? 'selected' : '' }}>
-                                        {{ $district }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-
-                    <!-- Third Row -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- Commune -->
                         <div class="form-control">
                             <label class="label" for="commune">
                                 <span class="label-text font-semibold">Xã/Phường</span>
                             </label>
                             <select name="commune" id="commune" class="select select-bordered w-full"
-                                {{ request('district') ? '' : 'disabled' }} data-selected="{{ request('commune') }}">
+                                data-selected="{{ request('commune') }}">
                                 <option value="">Tất cả xã/phường</option>
                             </select>
                         </div>
+                    </div>
+
+                    <!-- Third Row -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
                         <!-- Cemetery -->
                         <div class="form-control">

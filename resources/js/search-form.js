@@ -1,6 +1,6 @@
 /**
  * Search Form - Dynamic Location and Cemetery Filtering
- * Xử lý cập nhật động các dropdown khi người dùng chọn huyện/xã
+ * Xử lý cập nhật động các dropdown khi người dùng chọn xã/phường
  */
 
 class SearchForm {
@@ -8,20 +8,14 @@ class SearchForm {
         this.form = document.querySelector(formSelector);
         if (!this.form) return;
 
-        this.districtSelect = this.form.querySelector("#district");
         this.communeSelect = this.form.querySelector("#commune");
         this.cemeterySelect = this.form.querySelector("#cemetery_id");
 
         this.init();
     }
 
-    init() {
-        if (!this.districtSelect || !this.communeSelect) return;
-
-        // Lắng nghe sự kiện thay đổi huyện
-        this.districtSelect.addEventListener("change", () => {
-            this.handleDistrictChange();
-        });
+    async init() {
+        if (!this.communeSelect) return;
 
         // Lắng nghe sự kiện thay đổi xã (nếu cần filter cemetery)
         if (this.cemeterySelect) {
@@ -31,55 +25,21 @@ class SearchForm {
         }
 
         // Load dữ liệu ban đầu khi trang load
-        this.loadInitialData();
+        await this.loadInitialData();
     }
 
     /**
      * Load dữ liệu ban đầu khi trang mới load
      */
     async loadInitialData() {
-        const selectedDistrict = this.districtSelect.value;
         const selectedCommune = this.communeSelect.dataset.selected;
 
-        // Load communes nếu đã có district được chọn (khi quay lại từ trang kết quả)
-        if (selectedDistrict) {
-            await this.loadCommunes(selectedDistrict, selectedCommune);
-        }
+        // Load tất cả communes từ API
+        await this.loadCommunes(selectedCommune);
 
         // Load cemeteries theo filter hiện tại (hoặc tất cả nếu chưa có filter)
         if (this.cemeterySelect) {
-            await this.loadCemeteries(
-                selectedDistrict || null,
-                selectedCommune || null
-            );
-        }
-    }
-
-    /**
-     * Xử lý khi thay đổi huyện
-     */
-    async handleDistrictChange() {
-        const district = this.districtSelect.value;
-
-        // Reset commune
-        this.communeSelect.innerHTML =
-            '<option value="">Tất cả xã/phường</option>';
-        this.communeSelect.disabled = !district;
-
-        if (!district) {
-            // Nếu clear district, load lại tất cả cemeteries
-            if (this.cemeterySelect) {
-                await this.loadCemeteries();
-            }
-            return;
-        }
-
-        // Load communes theo district
-        await this.loadCommunes(district);
-
-        // Load cemeteries theo district
-        if (this.cemeterySelect) {
-            await this.loadCemeteries(district);
+            await this.loadCemeteries(selectedCommune || null);
         }
     }
 
@@ -87,45 +47,45 @@ class SearchForm {
      * Xử lý khi thay đổi xã
      */
     async handleCommuneChange() {
-        const district = this.districtSelect.value;
         const commune = this.communeSelect.value;
 
         if (this.cemeterySelect) {
-            await this.loadCemeteries(district, commune);
+            await this.loadCemeteries(commune);
         }
     }
 
     /**
-     * Load danh sách communes theo district
+     * Load danh sách communes từ API Laravel (đã cache)
      */
-    async loadCommunes(district, selectedCommune = null) {
-        if (!district) return;
-
+    async loadCommunes(selectedCommune = null) {
         try {
             // Hiển thị loading state
             this.communeSelect.disabled = true;
             this.communeSelect.innerHTML =
                 '<option value="">Đang tải...</option>';
 
-            const response = await fetch(
-                `/api/communes?district=${encodeURIComponent(district)}`
-            );
-            const communes = await response.json();
+            // Gọi API Laravel để lấy cached data
+            const response = await fetch("/api/wards");
+            const result = await response.json();
 
             // Reset và thêm option mặc định
             this.communeSelect.innerHTML =
                 '<option value="">Tất cả xã/phường</option>';
 
-            // Thêm các communes
-            communes.forEach((commune) => {
-                const option = document.createElement("option");
-                option.value = commune;
-                option.textContent = commune;
-                if (selectedCommune && commune === selectedCommune) {
-                    option.selected = true;
-                }
-                this.communeSelect.appendChild(option);
-            });
+            // API trả về data trong result.data
+            if (result.success && result.data) {
+                result.data.forEach((ward) => {
+                    const option = document.createElement("option");
+                    // Giá trị chỉ là tên (không có type)
+                    option.value = ward.name;
+                    // Hiển thị là type + name
+                    option.textContent = `${ward.type} ${ward.name}`;
+                    if (selectedCommune && ward.name === selectedCommune) {
+                        option.selected = true;
+                    }
+                    this.communeSelect.appendChild(option);
+                });
+            }
 
             this.communeSelect.disabled = false;
         } catch (error) {
@@ -136,9 +96,9 @@ class SearchForm {
     }
 
     /**
-     * Load danh sách cemeteries theo district và commune
+     * Load danh sách cemeteries theo commune
      */
-    async loadCemeteries(district = null, commune = null) {
+    async loadCemeteries(commune = null) {
         if (!this.cemeterySelect) return;
 
         try {
@@ -154,7 +114,6 @@ class SearchForm {
 
             // Build query string
             const params = new URLSearchParams();
-            if (district) params.append("district", district);
             if (commune) params.append("commune", commune);
 
             const url = `/api/cemeteries${
@@ -200,8 +159,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // Tìm tất cả form search trong trang
     const forms = document.querySelectorAll('form[action*="search"]');
     forms.forEach((form) => {
-        // Kiểm tra xem form có các trường district và commune không
-        if (form.querySelector("#district") && form.querySelector("#commune")) {
+        // Kiểm tra xem form có trường commune không
+        if (form.querySelector("#commune")) {
             new SearchForm(`form[action="${form.getAttribute("action")}"]`);
         }
     });

@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Cemetery;
 use App\Models\Grave;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class HomeController extends Controller
 {
@@ -36,13 +39,6 @@ class HomeController extends Controller
             $query->where('deceased_full_name', 'like', '%' . $request->deceased_name . '%');
         }
 
-        // Lọc theo huyện (từ cemetery)
-        if ($request->filled('district')) {
-            $query->whereHas('cemetery', function ($q) use ($request) {
-                $q->where('district', $request->district);
-            });
-        }
-
         // Lọc theo xã (từ cemetery)
         if ($request->filled('commune')) {
             $query->whereHas('cemetery', function ($q) use ($request) {
@@ -57,14 +53,8 @@ class HomeController extends Controller
 
         $graves = $query->paginate(12);
         $cemeteries = Cemetery::all();
-        $districts = array_keys(config('ninhbinh_locations'));
-        $communes = [];
 
-        if ($request->filled('district')) {
-            $communes = config("ninhbinh_locations.{$request->district}", []);
-        }
-
-        return view('search', compact('graves', 'cemeteries', 'districts', 'communes'));
+        return view('search', compact('graves', 'cemeteries'));
     }
 
     public function show($id)
@@ -72,5 +62,49 @@ class HomeController extends Controller
         $grave = Grave::with('cemetery')->findOrFail($id);
 
         return view('grave-detail', compact('grave'));
+    }
+
+    /**
+     * Fetch và cache danh sách xã/phường từ API Ninh Bình
+     */
+    public function fetchAndCacheWards(): array
+    {
+        return Cache::remember('ninhbinh_wards', now()->addDays(7), function () {
+            try {
+                $apiUrl = config('app.ninhbinh_api_url');
+                $apiKey = config('app.ninhbinh_api_key');
+
+                // Gọi API với SSL verification disabled (chỉ cho development)
+                // API không cần api_key trong query, chỉ cần URL với limit
+                $response = Http::withoutVerifying()->get($apiUrl);
+
+                if ($response->successful()) {
+                    $result = $response->json();
+
+                    if (isset($result['success']) && $result['success'] && isset($result['data'])) {
+                        return $result['data'];
+                    }
+                }
+
+                return [];
+            } catch (\Exception $e) {
+                Log::error('Lỗi khi fetch wards từ API Ninh Bình: ' . $e->getMessage());
+
+                return [];
+            }
+        });
+    }
+
+    /**
+     * API endpoint để trả về danh sách xã/phường cho JavaScript
+     */
+    public function getWards(): \Illuminate\Http\JsonResponse
+    {
+        $wards = $this->fetchAndCacheWards();
+
+        return response()->json([
+            'success' => true,
+            'data' => $wards,
+        ]);
     }
 }
