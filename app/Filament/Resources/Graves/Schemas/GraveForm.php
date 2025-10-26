@@ -23,7 +23,17 @@ class GraveForm
                     ->schema([
                         Select::make('cemetery_id')
                             ->label('Nghĩa trang')
-                            ->options(Cemetery::all()->pluck('name', 'id'))
+                            ->options(function () {
+                                $query = Cemetery::query();
+
+                                // Nếu là cán bộ xã/phường, chỉ hiển thị nghĩa trang của xã/phường mình
+                                $user = auth()->user();
+                                if ($user && $user->isCommuneStaff()) {
+                                    $query->where('commune', $user->commune);
+                                }
+
+                                return $query->pluck('name', 'id');
+                            })
                             ->required()
                             ->searchable()
                             ->preload()

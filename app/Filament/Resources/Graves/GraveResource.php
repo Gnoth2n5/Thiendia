@@ -26,6 +26,21 @@ class GraveResource extends Resource
 
     protected static ?int $navigationSort = 2;
 
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        $query = parent::getEloquentQuery();
+
+        // Nếu là cán bộ xã/phường, chỉ hiển thị lăng mộ của xã/phường mình
+        $user = auth()->user();
+        if ($user && $user->isCommuneStaff()) {
+            $query->whereHas('cemetery', function ($q) use ($user) {
+                $q->where('commune', $user->commune);
+            });
+        }
+
+        return $query;
+    }
+
     public static function form(Form $form): Form
     {
         return GraveForm::configure($form);

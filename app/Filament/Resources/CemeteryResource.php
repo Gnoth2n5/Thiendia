@@ -25,6 +25,19 @@ class CemeteryResource extends Resource
 
     protected static ?int $navigationSort = 1;
 
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        $query = parent::getEloquentQuery();
+
+        // Nếu là cán bộ xã/phường, chỉ hiển thị nghĩa trang của xã/phường mình
+        $user = auth()->user();
+        if ($user && $user->isCommuneStaff()) {
+            $query->where('commune', $user->commune);
+        }
+
+        return $query;
+    }
+
     public static function form(Form $form): Form
     {
         return $form
