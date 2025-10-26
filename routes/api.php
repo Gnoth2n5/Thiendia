@@ -38,7 +38,6 @@ Route::get('/cemeteries', function (Request $request) {
         return [
             'id' => $cemetery->id,
             'name' => $cemetery->name,
-            'district' => $cemetery->district,
             'commune' => $cemetery->commune,
             'graves_count' => $cemetery->graves_count,
         ];
