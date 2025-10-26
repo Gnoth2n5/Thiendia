@@ -30,19 +30,19 @@
                 <x-slot name="description">
                     <div class="flex items-center gap-4 text-sm">
                         <div class="flex items-center gap-2">
-                            <div class="w-4 h-4 bg-green-500 rounded"></div>
+                            <div class="w-4 h-4 rounded" style="background-color: #22c55e;"></div>
                             <span>Còn trống</span>
                         </div>
                         <div class="flex items-center gap-2">
-                            <div class="w-4 h-4 bg-gray-500 rounded"></div>
+                            <div class="w-4 h-4 rounded" style="background-color: #6b7280;"></div>
                             <span>Đã sử dụng</span>
                         </div>
                         <div class="flex items-center gap-2">
-                            <div class="w-4 h-4 bg-yellow-500 rounded"></div>
+                            <div class="w-4 h-4 rounded" style="background-color: #eab308;"></div>
                             <span>Đã đặt trước</span>
                         </div>
                         <div class="flex items-center gap-2">
-                            <div class="w-4 h-4 bg-red-500 rounded"></div>
+                            <div class="w-4 h-4 rounded" style="background-color: #ef4444;"></div>
                             <span>Không khả dụng</span>
                         </div>
                     </div>
@@ -219,13 +219,13 @@
         @else
             <x-filament::section>
                 <div class="text-center py-12">
-                    <div class="text-gray-500 dark:text-gray-400 mb-4">
-                        <svg class="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    <div class="mb-4" style="color: #9ca3af;">
+                        <svg class="mx-auto" style="width: 64px; height: 64px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z" />
                         </svg>
                     </div>
-                    <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Chưa có lưới lô</h3>
-                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                    <h3 class="text-lg font-medium mb-2" style="color: #374151;">Chưa có lưới lô</h3>
+                    <p class="text-sm" style="color: #9ca3af;">
                         Nhấn nút "Tạo lưới" ở góc trên để bắt đầu tạo lưới lô mộ.
                     </p>
                 </div>
