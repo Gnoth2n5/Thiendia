@@ -4,7 +4,6 @@ namespace App\Filament\Widgets;
 
 use App\Models\Cemetery;
 use App\Models\Grave;
-use App\Models\ModificationRequest;
 use Filament\Widgets\StatsOverviewWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 
@@ -15,7 +14,7 @@ class StatsOverview extends StatsOverviewWidget
         $totalCemeteries = Cemetery::count();
         $totalGraves = Grave::count();
         $occupiedGraves = Grave::where('status', 'đã_sử_dụng')->count();
-        $pendingRequests = ModificationRequest::where('status', 'pending')->count();
+        $availableGraves = $totalGraves - $occupiedGraves;
 
         return [
             Stat::make('Tổng số nghĩa trang', $totalCemeteries)
@@ -33,9 +32,9 @@ class StatsOverview extends StatsOverviewWidget
                 ->descriptionIcon('heroicon-m-check-circle')
                 ->color('info'),
 
-            Stat::make('Đơn yêu cầu chờ xử lý', $pendingRequests)
-                ->description('Cần xử lý ngay')
-                ->descriptionIcon('heroicon-m-clock')
+            Stat::make('Lăng mộ còn trống', $availableGraves)
+                ->description('Có thể sử dụng')
+                ->descriptionIcon('heroicon-m-square-3-stack-3d')
                 ->color('warning'),
         ];
     }

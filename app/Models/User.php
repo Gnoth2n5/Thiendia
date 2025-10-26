@@ -49,14 +49,6 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the modification requests processed by this user.
-     */
-    public function processedModificationRequests(): HasMany
-    {
-        return $this->hasMany(ModificationRequest::class, 'processed_by');
-    }
-
-    /**
      * Get the articles authored by this user.
      */
     public function articles(): HasMany

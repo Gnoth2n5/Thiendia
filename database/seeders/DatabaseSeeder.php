@@ -29,7 +29,6 @@ class DatabaseSeeder extends Seeder
             GraveSeeder::class,
             DeceasedPersonSeeder::class,
             ArticleSeeder::class,
-            ModificationRequestSeeder::class,
         ]);
     }
 }

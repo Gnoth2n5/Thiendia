@@ -63,7 +63,7 @@ class Grave extends Model
         $count = static::where('cemetery_id', $cemeteryId)->count();
         $nextNumber = $count + 1;
 
-        return $cemeteryId.'-'.str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+        return $cemeteryId . '-' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
     }
 
     /**
@@ -80,22 +80,6 @@ class Grave extends Model
     public function deceasedPersons(): HasMany
     {
         return $this->hasMany(DeceasedPerson::class);
-    }
-
-    /**
-     * Get the modification requests for the grave.
-     */
-    public function modificationRequests(): HasMany
-    {
-        return $this->hasMany(ModificationRequest::class);
-    }
-
-    /**
-     * Get the pending modification requests for the grave.
-     */
-    public function pendingModificationRequests(): HasMany
-    {
-        return $this->hasMany(ModificationRequest::class)->where('status', 'pending');
     }
 
     /**
