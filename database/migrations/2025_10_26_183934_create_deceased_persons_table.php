@@ -13,18 +13,18 @@ return new class extends Migration
     {
         Schema::create('deceased_persons', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('grave_id')->constrained()->onDelete('cascade');
-            $table->string('full_name')->comment('Họ tên đầy đủ');
+            $table->foreignId('grave_id')->constrained()->cascadeOnDelete()->comment('Mộ');
+            $table->string('full_name')->comment('Họ tên');
             $table->date('birth_date')->nullable()->comment('Ngày sinh');
             $table->date('death_date')->nullable()->comment('Ngày mất');
             $table->enum('gender', ['nam', 'nữ', 'khác'])->default('nam')->comment('Giới tính');
-            $table->string('relationship')->nullable()->comment('Mối quan hệ với chủ lăng mộ');
-            $table->string('photo')->nullable()->comment('Ảnh người đã khuất');
+            $table->string('relationship')->nullable()->comment('Quan hệ');
+            $table->string('photo')->nullable()->comment('Ảnh');
             $table->text('biography')->nullable()->comment('Tiểu sử');
             $table->text('notes')->nullable()->comment('Ghi chú');
             $table->timestamps();
 
-            $table->index(['grave_id', 'full_name']);
+            $table->index('grave_id');
         });
     }
 
