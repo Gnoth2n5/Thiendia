@@ -80,7 +80,7 @@ class ArticleController extends Controller
             'thong_bao' => 'Thông báo',
         ];
 
-        if (!array_key_exists($category, $categories)) {
+        if (! array_key_exists($category, $categories)) {
             abort(404);
         }
 

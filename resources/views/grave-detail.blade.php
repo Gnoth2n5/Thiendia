@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Chi tiết lăng mộ ' . $grave->grave_number . ' - Tra cứu liệt sĩ tỉnh Ninh Bình')
+@section('title', 'Liệt sĩ ' . $grave->deceased_full_name . ' - Tra cứu liệt sĩ tỉnh Ninh Bình')
 
 @section('content')
     <!-- Breadcrumb -->
@@ -14,7 +14,7 @@
                 <a href="{{ route('search') }}" style="color: #8b0000;" onmouseover="this.style.textDecoration='underline'"
                     onmouseout="this.style.textDecoration='none'">Tìm kiếm</a>
             </li>
-            <li style="color: #2b2b2b; opacity: 0.6;">{{ $grave->grave_number }}</li>
+            <li class="text-base-content/60">{{ $grave->deceased_full_name }}</li>
         </ul>
     </div>
 
@@ -31,27 +31,11 @@
                 </div>
             </div>
             <div class="flex items-center justify-center gap-3 mb-2">
-                <h1 class="text-4xl font-bold" style="color: #8b0000;">
-                    Lăng mộ {{ $grave->grave_number }}
+                <h1 class="text-4xl font-bold bg-gradient-to-r from-purple-700 to-red-600 bg-clip-text text-transparent">
+                   Liệt Sỹ {{ $grave->deceased_full_name }}
                 </h1>
-                <div class="badge badge-lg"
-                    style="background-color: {{ $grave->status === 'đã_sử_dụng' ? '#8b0000' : '#d4d0c8' }}; color: {{ $grave->status === 'đã_sử_dụng' ? '#f5f3e7' : '#2b2b2b' }}; border: none;">
-                    {{ $grave->status_label }}
-                </div>
             </div>
             <p class="text-lg mb-6" style="color: #2b2b2b;">{{ $grave->cemetery->name }}</p>
-
-            <a href="{{ route('modification-request.create', $grave->id) }}"
-                class="inline-flex items-center gap-2 px-6 py-3 text-white font-semibold rounded"
-                style="background-color: #8b0000;" onmouseover="this.style.backgroundColor='#6b0000'"
-                onmouseout="this.style.backgroundColor='#8b0000'">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                    stroke="currentColor" class="h-5 w-5">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                        d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
-                </svg>
-                Yêu cầu sửa đổi
-            </a>
 
             <!-- Tribute Memorial Section -->
             <div class="mt-8 text-center">
@@ -104,24 +88,10 @@
                     <h2 class="card-title text-xl mb-4" style="color: #2b2b2b;">Thông tin cơ bản</h2>
 
                     <div class="space-y-4">
-                        <div class="flex items-start gap-3 p-3 rounded-lg" style="background-color: #f5f3e7;">
-                            <div class="p-2 rounded-lg shrink-0" style="background-color: rgba(139,0,0,0.1);">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                                    stroke="currentColor" class="h-5 w-5" style="color: #8b0000;">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
-                                </svg>
-                            </div>
-                            <div class="flex-1">
-                                <p class="text-sm" style="color: #2b2b2b; opacity: 0.6;">Chủ lăng mộ</p>
-                                <p class="font-bold text-lg" style="color: #2b2b2b;">{{ $grave->owner_name }}</p>
-                            </div>
-                        </div>
-
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <p class="text-sm mb-1" style="color: #2b2b2b; opacity: 0.6;">Loại lăng mộ</p>
-                                <p class="font-medium" style="color: #2b2b2b;">{{ $grave->grave_type_label }}</p>
+                                <p class="text-sm text-base-content/60 mb-1">Loại mộ</p>
+                                <p class="font-medium">{{ $grave->grave_type_label }}</p>
                             </div>
 
                             @if ($grave->burial_date)
@@ -131,10 +101,177 @@
                                         {{ $grave->burial_date->format('d/m/Y') }}</p>
                                 </div>
                             @endif
+
+                            @if ($grave->plot)
+                                <div>
+                                    <p class="text-sm text-base-content/60 mb-1">Lô mộ</p>
+                                    <p class="font-medium text-primary">{{ $grave->plot->plot_code }}</p>
+                                </div>
+
+                                <div>
+                                    <p class="text-sm text-base-content/60 mb-1">Vị trí trong lưới</p>
+                                    <p class="font-medium">Hàng {{ $grave->plot->row }}, Cột {{ $grave->plot->column }}</p>
+                                </div>
+
+                            @endif
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- Cemetery Plot Grid -->
+            @if ($grave->plot && $plotGrid)
+                <div class="card bg-gradient-to-br from-white via-slate-50/50 to-blue-50/30 shadow-xl border border-blue-200/50">
+                    <div class="card-body">
+                        <h2 class="card-title text-xl mb-4 flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-6 w-6 text-blue-600">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z" />
+                            </svg>
+                            Sơ đồ vị trí trong nghĩa trang
+                        </h2>
+
+                        <div class="space-y-4">
+                            <!-- Target Plot Banner -->
+                            <div class="p-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg shadow-lg">
+                                <div class="flex items-center gap-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-8 w-8 flex-shrink-0">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+                                    </svg>
+                                    <div class="flex-1">
+                                        <div class="font-bold text-lg">📍 Vị trí liệt sĩ: Lô {{ $grave->plot->plot_code }} - Hàng {{ $grave->plot->row }}, Cột {{ $grave->plot->column }}</div>
+                                        <div class="text-sm opacity-90">Lô được đánh dấu màu xanh dương trên sơ đồ</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Legend -->
+                            <div class="flex items-center gap-4 text-sm p-3 bg-gray-50 rounded-lg">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-4 h-4 rounded" style="background-color: #3b82f6;"></div>
+                                    <span>Lô này</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <div class="w-4 h-4 rounded" style="background-color: #22c55e;"></div>
+                                    <span>Còn trống</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <div class="w-4 h-4 rounded" style="background-color: #6b7280;"></div>
+                                    <span>Đã sử dụng</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <div class="w-4 h-4 rounded" style="background-color: #eab308;"></div>
+                                    <span>Đã đặt trước</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <div class="w-4 h-4 rounded" style="background-color: #ef4444;"></div>
+                                    <span>Không khả dụng</span>
+                                </div>
+                            </div>
+
+                            <!-- Grid Container -->
+                            @if ($plotGrid['rows'] > 0 && $plotGrid['columns'] > 0 && $plotGrid['plots']->count() > 0)
+                                @php
+                                    // Helper function for plot colors
+                                    $getPlotColor = function($plot, $targetPlotId) {
+                                        if ($plot->id === $targetPlotId) {
+                                            return '#3b82f6'; // blue-500 - highlighted
+                                        }
+                                        
+                                        $colors = [
+                                            'available' => '#22c55e',    // green-500
+                                            'occupied' => '#6b7280',     // gray-500
+                                            'reserved' => '#eab308',     // yellow-500
+                                            'unavailable' => '#ef4444'   // red-500
+                                        ];
+                                        return $colors[$plot->status] ?? '#d1d5db';
+                                    };
+                                    
+                                    // Build plot lookup map
+                                    $plotMap = [];
+                                    foreach ($plotGrid['plots'] as $plot) {
+                                        $plotMap[$plot->row][$plot->column] = $plot;
+                                    }
+                                @endphp
+
+                                <div class="overflow-x-auto p-4 bg-white rounded-lg border-2 border-gray-200">
+                                    <div class="inline-block">
+                                        <!-- Column Headers -->
+                                        <div style="display: flex; gap: 4px; margin-bottom: 4px; margin-left: 40px;">
+                                            @for ($col = 1; $col <= $plotGrid['columns']; $col++)
+                                                <div style="width: 40px; text-align: center; font-weight: 600; color: #6b7280; font-size: 11px;">
+                                                    {{ $col }}
+                                                </div>
+                                            @endfor
+                                        </div>
+
+                                        <!-- Grid Rows -->
+                                        @for ($row = 1; $row <= $plotGrid['rows']; $row++)
+                                            <div style="display: flex; gap: 4px; margin-bottom: 4px;">
+                                                <!-- Row Label -->
+                                                <div style="width: 36px; display: flex; align-items: center; justify-content: center; font-weight: 600; color: #6b7280; font-size: 13px;">
+                                                    {{ chr(64 + $row) }}
+                                                </div>
+
+                                                <!-- Plot Cells -->
+                                                @for ($col = 1; $col <= $plotGrid['columns']; $col++)
+                                                    @if (isset($plotMap[$row][$col]))
+                                                        @php
+                                                            $plot = $plotMap[$row][$col];
+                                                            $isHighlighted = $plot->id === $plotGrid['targetPlotId'];
+                                                            $backgroundColor = $getPlotColor($plot, $plotGrid['targetPlotId']);
+                                                            $border = $isHighlighted ? '3px solid #1e40af' : '1px solid rgba(0,0,0,0.1)';
+                                                            $boxShadow = $isHighlighted ? '0 4px 12px rgba(59, 130, 246, 0.5)' : '0 1px 2px rgba(0,0,0,0.1)';
+                                                            $title = $plot->plot_code . ' - ' . $plot->status_label;
+                                                            if ($plot->grave) {
+                                                                $title .= ' (' . $plot->grave->deceased_full_name . ')';
+                                                            }
+                                                        @endphp
+                                                        <div
+                                                            style="
+                                                                width: 40px;
+                                                                height: 40px;
+                                                                border-radius: 6px;
+                                                                display: flex;
+                                                                align-items: center;
+                                                                justify-content: center;
+                                                                font-size: 9px;
+                                                                font-weight: bold;
+                                                                color: #ffffff;
+                                                                background-color: {{ $backgroundColor }};
+                                                                border: {{ $border }};
+                                                                box-shadow: {{ $boxShadow }};
+                                                            "
+                                                            title="{{ $title }}"
+                                                        >
+                                                            {{ $plot->plot_code }}
+                                                        </div>
+                                                    @else
+                                                        <div style="width: 40px; height: 40px;"></div>
+                                                    @endif
+                                                @endfor
+                                            </div>
+                                        @endfor
+                                    </div>
+                                </div>
+
+                                <!-- Stats -->
+                                <div class="text-sm text-gray-600 text-center mt-4">
+                                    <span>Tổng số lô: {{ $plotGrid['plots']->count() }}</span>
+                                    <span class="mx-2">•</span>
+                                    <span>Còn trống: {{ $plotGrid['plots']->where('status', 'available')->count() }}</span>
+                                    <span class="mx-2">•</span>
+                                    <span>Đã sử dụng: {{ $plotGrid['plots']->where('status', 'occupied')->count() }}</span>
+                                </div>
+                            @else
+                                <div class="text-center py-8 text-gray-500">
+                                    <p>Nghĩa trang chưa có lưới lô</p>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            @endif
 
             <!-- Deceased Person Information -->
             @if ($grave->deceased_full_name)
@@ -180,12 +317,20 @@
                                         </div>
                                     @endif
                                     <div class="flex-1">
-                                        <p class="font-bold text-2xl mb-2" style="color: #2b2b2b;">
-                                            {{ $grave->deceased_full_name }}</p>
-                                        @if ($grave->deceased_relationship)
-                                            <p class="text-sm mb-3" style="color: #2b2b2b; opacity: 0.7;">
-                                                {{ $grave->deceased_relationship }} của chủ lăng mộ</p>
+                                        <p class="font-bold text-2xl mb-2">{{ $grave->deceased_full_name }}</p>
+                                        
+                                        @if ($grave->rank_and_unit)
+                                            <p class="text-base text-primary font-semibold mb-2">
+                                                {{ $grave->rank_and_unit }}
+                                            </p>
                                         @endif
+                                        
+                                        @if ($grave->position)
+                                            <p class="text-sm text-base-content/70 mb-2">
+                                                Chức vụ: <span class="font-semibold">{{ $grave->position }}</span>
+                                            </p>
+                                        @endif
+                                        
                                         @if ($grave->deceased_gender)
                                             <div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium mb-2"
                                                 style="background-color: #fafaf8;">
@@ -196,6 +341,13 @@
                                 </div>
 
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    @if ($grave->birth_year)
+                                        <div class="bg-white/50 rounded-lg p-3">
+                                            <p class="text-xs text-base-content/60 mb-1">Năm sinh</p>
+                                            <p class="font-bold text-lg">{{ $grave->birth_year }}</p>
+                                        </div>
+                                    @endif
+                                    
                                     @if ($grave->deceased_birth_date)
                                         <div class="rounded-lg p-3" style="background-color: #fafaf8;">
                                             <p class="text-xs mb-1" style="color: #2b2b2b; opacity: 0.6;">Ngày sinh</p>
@@ -211,6 +363,41 @@
                                             <p class="font-bold text-lg" style="color: #2b2b2b;">
                                                 {{ $grave->deceased_death_date->format('d/m/Y') }}
                                             </p>
+                                        </div>
+                                    @endif
+                                    
+                                    @if ($grave->certificate_number)
+                                        <div class="bg-white/50 rounded-lg p-3">
+                                            <p class="text-xs text-base-content/60 mb-1">Số bằng TQGC</p>
+                                            <p class="font-bold text-base">{{ $grave->certificate_number }}</p>
+                                        </div>
+                                    @endif
+                                    
+                                    @if ($grave->decision_number)
+                                        <div class="bg-white/50 rounded-lg p-3">
+                                            <p class="text-xs text-base-content/60 mb-1">Số QĐ</p>
+                                            <p class="font-bold text-base">{{ $grave->decision_number }}</p>
+                                        </div>
+                                    @endif
+                                    
+                                    @if ($grave->decision_date)
+                                        <div class="bg-white/50 rounded-lg p-3">
+                                            <p class="text-xs text-base-content/60 mb-1">Ngày cấp QĐ</p>
+                                            <p class="font-bold text-base">{{ $grave->decision_date->format('d/m/Y') }}</p>
+                                        </div>
+                                    @endif
+                                    
+                                    @if ($grave->next_of_kin)
+                                        <div class="bg-white/50 rounded-lg p-3">
+                                            <p class="text-xs text-base-content/60 mb-1">Thân nhân</p>
+                                            <p class="font-bold text-base">{{ $grave->next_of_kin }}</p>
+                                        </div>
+                                    @endif
+                                    
+                                    @if ($grave->deceased_relationship)
+                                        <div class="bg-white/50 rounded-lg p-3">
+                                            <p class="text-xs text-base-content/60 mb-1">Quan hệ</p>
+                                            <p class="font-bold text-base">{{ $grave->deceased_relationship }}</p>
                                         </div>
                                     @endif
                                 </div>
@@ -380,17 +567,27 @@
 
                     <div class="divider my-2"></div>
 
-                    <a href="{{ route('search', ['cemetery_id' => $grave->cemetery_id]) }}"
-                        class="btn btn-sm gap-2 w-full" style="background-color: #8b0000; color: #f5f3e7; border: none;"
-                        onmouseover="this.style.backgroundColor='#6b0000'"
-                        onmouseout="this.style.backgroundColor='#8b0000'">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                            stroke="currentColor" class="h-4 w-4">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-                        </svg>
-                        Xem nghĩa trang
-                    </a>
+                    <div class="flex flex-col gap-2">
+                        <a href="{{ route('search', ['cemetery_id' => $grave->cemetery_id]) }}"
+                            class="btn btn-outline btn-sm gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                stroke="currentColor" class="h-4 w-4">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                            </svg>
+                            Xem nghĩa trang
+                        </a>
+
+                        <a href="{{ route('cemetery.map', ['id' => $grave->cemetery_id]) }}"
+                            class="btn btn-primary btn-sm gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                stroke="currentColor" class="h-4 w-4">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z" />
+                            </svg>
+                            Xem sơ đồ lô
+                        </a>
+                    </div>
                 </div>
             </div>
 
@@ -487,7 +684,7 @@
                         Gửi yêu cầu sửa đổi
                     </a>
                 </div>
-            </div>
+            </div> --}}
         </div>
     </div>
 
@@ -770,7 +967,7 @@
                 // Add popup with grave information
                 marker.bindPopup(`
                 <div class="text-center">
-                    <p class="font-bold text-lg mb-2">{{ $grave->grave_number }}</p>
+                    <p class="font-bold text-lg mb-2">{{ $grave->deceased_full_name }}</p>
                     <p class="text-sm mb-1">{{ $grave->cemetery->name }}</p>
                     @if ($grave->location_description)
                         <p class="text-xs text-gray-600 mt-2">{{ $grave->location_description }}</p>

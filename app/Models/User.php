@@ -23,6 +23,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'commune',
     ];
 
     /**
@@ -49,14 +50,6 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the modification requests processed by this user.
-     */
-    public function processedModificationRequests(): HasMany
-    {
-        return $this->hasMany(ModificationRequest::class, 'processed_by');
-    }
-
-    /**
      * Get the articles authored by this user.
      */
     public function articles(): HasMany
@@ -78,5 +71,25 @@ class User extends Authenticatable
     public function isSuperAdmin(): bool
     {
         return $this->role === 'super_admin';
+    }
+
+    /**
+     * Check if user is commune staff.
+     */
+    public function isCommuneStaff(): bool
+    {
+        return $this->role === 'commune_staff' && ! empty($this->commune);
+    }
+
+    /**
+     * Check if user can manage commune.
+     */
+    public function canManageCommune(string $commune): bool
+    {
+        if ($this->isAdmin()) {
+            return true;
+        }
+
+        return $this->isCommuneStaff() && $this->commune === $commune;
     }
 }

@@ -12,18 +12,24 @@ class Grave extends Model
 {
   protected $fillable = [
     'cemetery_id',
-    'grave_number',
-    'owner_name',
+    'plot_id',
+    'caretaker_name',
     'deceased_full_name',
+    'birth_year',
+    'rank_and_unit',
+    'position',
     'deceased_birth_date',
     'deceased_death_date',
+    'certificate_number',
+    'decision_number',
+    'decision_date',
     'deceased_gender',
     'deceased_relationship',
+    'next_of_kin',
     'deceased_photo',
     'grave_photos',
     'burial_date',
     'grave_type',
-    'status',
     'location_description',
     'latitude',
     'longitude',
@@ -37,6 +43,8 @@ class Grave extends Model
     'burial_date' => 'date',
     'deceased_birth_date' => 'date',
     'deceased_death_date' => 'date',
+    'decision_date' => 'date',
+    'birth_year' => 'integer',
     'latitude' => 'float',
     'longitude' => 'float',
     'created_at' => 'datetime',
@@ -44,28 +52,40 @@ class Grave extends Model
   ];
 
   /**
-   * Boot the model.
+   * Boot the model and register events.
    */
-  protected static function boot(): void
+  protected static function booted(): void
   {
-    parent::boot();
-
-    static::creating(function ($grave) {
-      if (empty($grave->grave_number) && $grave->cemetery_id) {
-        $grave->grave_number = static::generateGraveNumber($grave->cemetery_id);
+    // When a grave is created or updated with a plot_id, mark the plot as occupied
+    static::created(function (Grave $grave) {
+      if ($grave->plot_id) {
+        CemeteryPlot::where('id', $grave->plot_id)->update(['status' => 'occupied']);
       }
     });
-  }
 
-  /**
-   * Generate grave number based on cemetery_id.
-   */
-  public static function generateGraveNumber(int $cemeteryId): string
-  {
-    $count = static::where('cemetery_id', $cemeteryId)->count();
-    $nextNumber = $count + 1;
+    static::updated(function (Grave $grave) {
+      // If plot_id changed, update both old and new plots
+      if ($grave->isDirty('plot_id')) {
+        $originalPlotId = $grave->getOriginal('plot_id');
 
-    return $cemeteryId . '-' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+        // Mark old plot as available
+        if ($originalPlotId) {
+          CemeteryPlot::where('id', $originalPlotId)->update(['status' => 'available']);
+        }
+
+        // Mark new plot as occupied
+        if ($grave->plot_id) {
+          CemeteryPlot::where('id', $grave->plot_id)->update(['status' => 'occupied']);
+        }
+      }
+    });
+
+    // When a grave is deleted, mark the plot as available
+    static::deleted(function (Grave $grave) {
+      if ($grave->plot_id) {
+        CemeteryPlot::where('id', $grave->plot_id)->update(['status' => 'available']);
+      }
+    });
   }
 
   /**
@@ -77,35 +97,19 @@ class Grave extends Model
   }
 
   /**
+   * Get the plot that the grave is located in.
+   */
+  public function plot(): BelongsTo
+  {
+    return $this->belongsTo(CemeteryPlot::class, 'plot_id');
+  }
+
+  /**
    * Get the deceased persons for the grave.
    */
   public function deceasedPersons(): HasMany
   {
     return $this->hasMany(DeceasedPerson::class);
-  }
-
-  /**
-   * Get the modification requests for the grave.
-   */
-  public function modificationRequests(): HasMany
-  {
-    return $this->hasMany(ModificationRequest::class);
-  }
-
-  /**
-   * Get the pending modification requests for the grave.
-   */
-  public function pendingModificationRequests(): HasMany
-  {
-    return $this->hasMany(ModificationRequest::class)->where('status', 'pending');
-  }
-
-  /**
-   * Get the tributes for the grave.
-   */
-  public function tributes(): HasMany
-  {
-    return $this->hasMany(Tribute::class);
   }
 
   /**
@@ -120,20 +124,6 @@ class Grave extends Model
       'gỗ' => 'Lăng mộ gỗ',
       'khác' => 'Loại khác',
       default => $this->grave_type,
-    };
-  }
-
-  /**
-   * Get the status label in Vietnamese.
-   */
-  public function getStatusLabelAttribute(): string
-  {
-    return match ($this->status) {
-      'còn_trống' => 'Còn trống',
-      'đã_sử_dụng' => 'Đã sử dụng',
-      'bảo_trì' => 'Bảo trì',
-      'ngừng_sử_dụng' => 'Ngừng sử dụng',
-      default => $this->status,
     };
   }
 

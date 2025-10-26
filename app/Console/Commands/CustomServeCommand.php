@@ -43,7 +43,7 @@ class CustomServeCommand extends ServeCommand
         preg_match($regex, $line, $matches);
 
         // Fix: Check if matches[1] exists before using it
-        if (!isset($matches[1])) {
+        if (! isset($matches[1])) {
             // Return current time if no match found
             return Carbon::now();
         }

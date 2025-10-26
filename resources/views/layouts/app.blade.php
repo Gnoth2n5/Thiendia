@@ -7,9 +7,9 @@
     <title>@yield('title', 'Tra cứu liệt sĩ tỉnh Ninh Bình')</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="@yield('description', 'Hệ thống tra cứu thông tin liệt sĩ tỉnh Ninh Bình trực tuyến. Tìm kiếm lăng mộ nhanh chóng, chính xác và tiện lợi. Quản lý dữ liệu nghĩa trang khoa học, minh bạch và hiện đại.')">
+    <meta name="description" content="@yield('description', 'Hệ thống tra cứu thông tin liệt sĩ tỉnh Ninh Bình trực tuyến. Tìm kiếm nhanh chóng, chính xác và tiện lợi. Quản lý dữ liệu nghĩa trang khoa học, minh bạch và hiện đại.')">
     <meta name="keywords"
-        content="tra cứu liệt sĩ, nghĩa trang Ninh Bình, tìm kiếm lăng mộ, quản lý nghĩa địa, hệ thống tra cứu trực tuyến, bản đồ số nghĩa trang">
+        content="tra cứu liệt sĩ, nghĩa trang Ninh Bình, tìm kiếm liệt sĩ, quản lý nghĩa trang, hệ thống tra cứu trực tuyến, bản đồ số nghĩa trang">
     <meta name="author" content="Hệ thống Tra cứu Liệt sĩ Ninh Bình">
     <meta name="robots" content="index, follow">
     <meta name="language" content="vi">
@@ -18,7 +18,7 @@
 
     <!-- Open Graph Meta Tags -->
     <meta property="og:title" content="@yield('title', 'Tra cứu liệt sĩ tỉnh Ninh Bình')">
-    <meta property="og:description" content="@yield('description', 'Hệ thống tra cứu thông tin liệt sĩ tỉnh Ninh Bình trực tuyến. Tìm kiếm lăng mộ nhanh chóng, chính xác và tiện lợi.')">
+    <meta property="og:description" content="@yield('description', 'Hệ thống tra cứu thông tin liệt sĩ tỉnh Ninh Bình trực tuyến. Tìm kiếm nhanh chóng, chính xác và tiện lợi.')">
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:site_name" content="Hệ thống Tra cứu Liệt sĩ Ninh Bình">
@@ -27,7 +27,7 @@
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="@yield('title', 'Tra cứu liệt sĩ tỉnh Ninh Bình')">
-    <meta name="twitter:description" content="@yield('description', 'Hệ thống tra cứu thông tin liệt sĩ tỉnh Ninh Bình trực tuyến. Tìm kiếm lăng mộ nhanh chóng, chính xác và tiện lợi.')">
+    <meta name="twitter:description" content="@yield('description', 'Hệ thống tra cứu thông tin liệt sĩ tỉnh Ninh Bình trực tuyến. Tìm kiếm nhanh chóng, chính xác và tiện lợi.')">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -322,8 +322,8 @@
                         </div>
                     </div>
                     <p class="text-sm opacity-80 max-w-md">
-                        Hệ thống cung cấp dịch vụ tra cứu thông tin lăng mộ, quản lý nghĩa địa hiện đại,
-                        giúp người dân dễ dàng tìm kiếm và quản lý thông tin người thân.
+                        Hệ thống cung cấp dịch vụ tra cứu thông tin liệt sĩ, quản lý nghĩa trang hiện đại,
+                        giúp người dân dễ dàng tìm kiếm và tưởng nhớ công ơn các anh hùng liệt sĩ.
                     </p>
                 </div>
 

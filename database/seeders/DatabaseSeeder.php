@@ -25,11 +25,11 @@ class DatabaseSeeder extends Seeder
 
         // Chạy các seeder theo thứ tự
         $this->call([
+            UserSeeder::class,
             CemeterySeeder::class,
             GraveSeeder::class,
             DeceasedPersonSeeder::class,
             ArticleSeeder::class,
-            ModificationRequestSeeder::class,
         ]);
     }
 }

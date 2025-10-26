@@ -13,7 +13,8 @@ class DeceasedPersonSeeder extends Seeder
      */
     public function run(): void
     {
-        $graves = Grave::where('status', 'đã_sử_dụng')->get();
+        // Lấy tất cả graves (tất cả đều là lăng mộ liệt sĩ đã sử dụng)
+        $graves = Grave::all();
 
         // Vietnamese names for deceased persons
         $vietnameseNames = [
@@ -56,7 +57,7 @@ class DeceasedPersonSeeder extends Seeder
             'Đặng Văn Oanh',
             'Bùi Thị Phượng',
             'Đỗ Văn Quang',
-            'Ngô Thị Rạng'
+            'Ngô Thị Rạng',
         ];
 
         $relationships = ['cha', 'mẹ', 'ông', 'bà', 'anh', 'chị', 'em', 'cô', 'chú', 'dì', 'cậu'];
@@ -85,14 +86,14 @@ class DeceasedPersonSeeder extends Seeder
                         'Người nông dân chăm chỉ, hiền lành',
                         'Có tài năng đặc biệt trong nghề nghiệp',
                         'Người con hiếu thảo, được gia đình yêu thương',
-                        'Có nhiều bạn bè, được mọi người quý mến'
+                        'Có nhiều bạn bè, được mọi người quý mến',
                     ]),
                     'notes' => fake()->optional(0.3)->randomElement([
                         'Cần chăm sóc đặc biệt',
                         'Gia đình thường xuyên đến thăm',
                         'Có yêu cầu riêng về nghi lễ',
                         'Người thân ở xa',
-                        'Cần liên hệ trước khi thăm'
+                        'Cần liên hệ trước khi thăm',
                     ]),
                 ]);
             }

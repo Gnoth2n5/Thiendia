@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AnniversaryController;
 use App\Http\Controllers\TributeController;
 use App\Models\Cemetery;
+use App\Models\CemeteryPlot;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,35 +23,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-// API to get all districts
-Route::get('/districts', function () {
-    $locations = config('ninhbinh_locations');
-    $districts = array_keys($locations);
+// API to get wards (cached from Ninh Binh API)
+Route::get('/wards', [HomeController::class, 'getWards']);
 
-    return response()->json($districts);
-});
-
-// API to get communes by district
-Route::get('/communes', function (Request $request) {
-    $district = $request->get('district');
-
-    if (!$district) {
-        return response()->json([]);
-    }
-
-    $locations = config('ninhbinh_locations');
-    $communes = $locations[$district] ?? [];
-
-    return response()->json($communes);
-});
-
-// API to get cemeteries (optionally filtered by district and commune)
+// API to get cemeteries (optionally filtered by commune)
 Route::get('/cemeteries', function (Request $request) {
     $query = Cemetery::query()->withCount('graves');
-
-    if ($district = $request->get('district')) {
-        $query->where('district', $district);
-    }
 
     if ($commune = $request->get('commune')) {
         $query->where('commune', $commune);
@@ -61,7 +40,6 @@ Route::get('/cemeteries', function (Request $request) {
         return [
             'id' => $cemetery->id,
             'name' => $cemetery->name,
-            'district' => $cemetery->district,
             'commune' => $cemetery->commune,
             'graves_count' => $cemetery->graves_count,
         ];
@@ -70,40 +48,86 @@ Route::get('/cemeteries', function (Request $request) {
 
 // API to get grave details
 Route::get('/graves/{id}', function ($id) {
-    $grave = \App\Models\Grave::with('cemetery')->findOrFail($id);
+    $grave = \App\Models\Grave::with('cemetery', 'plot')->findOrFail($id);
 
     return response()->json([
         'id' => $grave->id,
-        'grave_number' => $grave->grave_number,
-        'owner_name' => $grave->owner_name,
-        'grave_type' => $grave->grave_type,
-        'grave_type_label' => $grave->grave_type_label,
-        'status' => $grave->status,
-        'status_label' => $grave->status_label,
-        'burial_date' => $grave->burial_date?->format('d/m/Y'),
+        'caretaker_name' => $grave->caretaker_name,
         'deceased_full_name' => $grave->deceased_full_name,
-        'deceased_relationship' => $grave->deceased_relationship,
-        'deceased_gender' => $grave->deceased_gender,
+        'birth_year' => $grave->birth_year,
+        'rank_and_unit' => $grave->rank_and_unit,
+        'position' => $grave->position,
         'deceased_birth_date' => $grave->deceased_birth_date?->format('d/m/Y'),
         'deceased_death_date' => $grave->deceased_death_date?->format('d/m/Y'),
-        'deceased_photo' => $grave->deceased_photo ? \Storage::url($grave->deceased_photo) : null,
-        'grave_photos' => $grave->grave_photos ? array_map(fn($photo) => \Storage::url($photo), $grave->grave_photos) : [],
+        'certificate_number' => $grave->certificate_number,
+        'decision_number' => $grave->decision_number,
+        'decision_date' => $grave->decision_date?->format('d/m/Y'),
+        'deceased_gender' => $grave->deceased_gender,
+        'deceased_relationship' => $grave->deceased_relationship,
+        'next_of_kin' => $grave->next_of_kin,
+        'deceased_photo' => $grave->deceased_photo ? \Illuminate\Support\Facades\Storage::url($grave->deceased_photo) : null,
+        'grave_photos' => $grave->grave_photos ? array_map(fn($photo) => \Illuminate\Support\Facades\Storage::url($photo), $grave->grave_photos) : [],
+        'burial_date' => $grave->burial_date?->format('d/m/Y'),
+        'grave_type' => $grave->grave_type,
+        'grave_type_label' => $grave->grave_type_label,
         'location_description' => $grave->location_description,
         'notes' => $grave->notes,
         'latitude' => $grave->latitude,
         'longitude' => $grave->longitude,
         'contact_info' => $grave->contact_info,
+        'plot' => $grave->plot ? [
+            'id' => $grave->plot->id,
+            'plot_code' => $grave->plot->plot_code,
+            'row' => $grave->plot->row,
+            'column' => $grave->plot->column,
+        ] : null,
         'cemetery' => [
             'id' => $grave->cemetery->id,
             'name' => $grave->cemetery->name,
             'address' => $grave->cemetery->address,
-            'district' => $grave->cemetery->district,
             'commune' => $grave->cemetery->commune,
             'description' => $grave->cemetery->description,
         ],
     ]);
 });
 
+// API to get cemetery plots
+Route::get('/cemeteries/{id}/plots', function ($id) {
+    $cemetery = Cemetery::findOrFail($id);
+    $plots = CemeteryPlot::where('cemetery_id', $id)
+        ->with('grave:id,plot_id,deceased_full_name')
+        ->orderBy('row')
+        ->orderBy('column')
+        ->get();
+
+    $dimensions = $cemetery->getGridDimensions();
+
+    return response()->json([
+        'cemetery' => [
+            'id' => $cemetery->id,
+            'name' => $cemetery->name,
+            'address' => $cemetery->address,
+            'commune' => $cemetery->commune,
+        ],
+        'grid' => [
+            'rows' => $dimensions['rows'],
+            'columns' => $dimensions['columns'],
+        ],
+        'plots' => $plots->map(function ($plot) {
+            return [
+                'id' => $plot->id,
+                'plot_code' => $plot->plot_code,
+                'row' => $plot->row,
+                'column' => $plot->column,
+                'status' => $plot->status,
+                'status_label' => $plot->status_label,
+                'grave' => $plot->grave ? [
+                    'id' => $plot->grave->id,
+                    'deceased_full_name' => $plot->grave->deceased_full_name,
+                ] : null,
+            ];
+        }),
+    ]);
 // Tribute API Routes
 Route::prefix('tributes')->group(function () {
     // Get tribute count for a grave
