@@ -79,55 +79,80 @@
         <div class="card bg-base-100 shadow-xl border border-base-300 max-w-4xl mx-auto">
             <div class="card-body">
                 <form method="GET" action="{{ route('search') }}" class="space-y-6">
-                    <!-- Search Inputs Row -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Deceased Name -->
-                        <div class="form-control">
-                            <label class="label" for="deceased_name">
-                                <span class="label-text font-semibold">Tên người đã khuất</span>
-                            </label>
-                            <input type="text" name="deceased_name" id="deceased_name"
-                                placeholder="Nhập tên người đã khuất..." class="input input-bordered w-full"
-                                value="{{ request('deceased_name') }}">
-                        </div>
+                    <!-- Thông tin liệt sĩ -->
+                    <div>
+                        <h3 class="text-base font-bold text-gray-700 mb-3">Thông tin liệt sĩ</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="form-control">
+                                <label class="label" for="deceased_name">
+                                    <span class="label-text font-medium">Họ tên liệt sĩ</span>
+                                </label>
+                                <input type="text" name="deceased_name" id="deceased_name"
+                                    placeholder="Nhập họ tên liệt sĩ..." class="input input-bordered w-full"
+                                    value="{{ request('deceased_name') }}">
+                            </div>
 
+                            <div class="form-control">
+                                <label class="label" for="birth_year">
+                                    <span class="label-text font-medium">Năm sinh</span>
+                                </label>
+                                <select name="birth_year" id="birth_year" class="select select-bordered w-full">
+                                    <option value="">Chọn năm sinh</option>
+                                    @for ($year = 1920; $year <= 1975; $year++)
+                                        <option value="{{ $year }}" {{ request('birth_year') == $year ? 'selected' : '' }}>
+                                            {{ $year }}
+                                        </option>
+                                    @endfor
+                                </select>
+                            </div>
+
+                            <div class="form-control">
+                                <label class="label" for="death_year">
+                                    <span class="label-text font-medium">Năm hy sinh</span>
+                                </label>
+                                <select name="death_year" id="death_year" class="select select-bordered w-full">
+                                    <option value="">Chọn năm hy sinh</option>
+                                    @for ($year = 1945; $year <= 1990; $year++)
+                                        <option value="{{ $year }}" {{ request('death_year') == $year ? 'selected' : '' }}>
+                                            {{ $year }}
+                                        </option>
+                                    @endfor
+                                </select>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Second Row -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Caretaker Name -->
-                        <div class="form-control">
-                            <label class="label" for="caretaker_name">
-                                <span class="label-text font-semibold">Người quản lý mộ</span>
-                            </label>
-                            <input type="text" name="caretaker_name" id="caretaker_name" placeholder="Nhập tên người quản lý..."
-                                class="input input-bordered w-full" value="{{ request('caretaker_name') }}">
-                        </div>
+                    <!-- Nghĩa trang yên nghỉ -->
+                    <div>
+                        <h3 class="text-base font-bold text-gray-700 mb-3">Nghĩa trang yên nghỉ</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="form-control">
+                                <label class="label" for="commune">
+                                    <span class="label-text font-medium">Xã/Phường</span>
+                                </label>
+                                <select name="commune" id="commune" class="select select-bordered w-full"
+                                    data-selected="{{ request('commune') }}">
+                                    <option value="">Tất cả xã/phường</option>
+                                </select>
+                            </div>
 
-                        <!-- Commune -->
-                        <div class="form-control">
-                            <label class="label" for="commune">
-                                <span class="label-text font-semibold">Xã/Phường</span>
-                            </label>
-                            <select name="commune" id="commune" class="select select-bordered w-full"
-                                data-selected="{{ request('commune') }}">
-                                <option value="">Tất cả xã/phường</option>
-                            </select>
-                        </div>
-                    </div>
+                            <div class="form-control">
+                                <label class="label" for="cemetery_id">
+                                    <span class="label-text font-medium">Nghĩa trang</span>
+                                </label>
+                                <select name="cemetery_id" id="cemetery_id" class="select select-bordered w-full"
+                                    data-selected="{{ request('cemetery_id') }}">
+                                    <option value="">Tất cả nghĩa trang</option>
+                                </select>
+                            </div>
 
-                    <!-- Third Row -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-                        <!-- Cemetery -->
-                        <div class="form-control">
-                            <label class="label" for="cemetery_id">
-                                <span class="label-text font-semibold">Nghĩa trang</span>
-                            </label>
-                            <select name="cemetery_id" id="cemetery_id" class="select select-bordered w-full"
-                                data-selected="{{ request('cemetery_id') }}">
-                                <option value="">Tất cả nghĩa trang</option>
-                            </select>
+                            <div class="form-control">
+                                <label class="label" for="plot_code">
+                                    <span class="label-text font-medium">Lô mộ</span>
+                                </label>
+                                <input type="text" name="plot_code" id="plot_code" placeholder="VD: A1, B5..."
+                                    class="input input-bordered w-full" value="{{ request('plot_code') }}">
+                            </div>
                         </div>
                     </div>
 

@@ -49,11 +49,6 @@ class GraveForm
                             ->view('filament.forms.components.plot-grid-simple')
                             ->columnSpanFull()
                             ->dehydrated(false),
-
-                        TextInput::make('caretaker_name')
-                            ->label('Người quản lý mộ')
-                            ->maxLength(255)
-                            ->placeholder('Tên người quản lý, chăm sóc mộ'),
                     ])
                     ->columns(2),
 
