@@ -146,8 +146,8 @@
                         Danh Sách Liệt Sĩ
                     </a>
 
-                    <a href="{{ route('contact') }}"
-                        class="px-4 py-2 text-white font-semibold hover:bg-red-700 transition-colors duration-300 rounded {{ request()->routeIs('contact') ? 'bg-red-700' : '' }}">
+                    <a href="#contact"
+                        class="px-4 py-2 text-white font-semibold hover:bg-red-700 transition-colors duration-300 rounded">
                         Liên Hệ
                     </a>
                 </div>
@@ -195,8 +195,8 @@
                         Video clip
                     </a>
 
-                    <a href="{{ route('contact') }}"
-                        class="flex items-center gap-3 px-4 py-3 text-white font-semibold hover:bg-red-800 transition-colors duration-300 {{ request()->routeIs('contact') ? 'bg-red-800' : '' }}">
+                    <a href="#contact"
+                        class="flex items-center gap-3 px-4 py-3 text-white font-semibold hover:bg-red-800 transition-colors duration-300">
                         Liên Hệ
                     </a>
                 </div>
@@ -265,10 +265,8 @@
                         </li>
                         <li><a href="{{ route('search') }}" class="hover:text-accent transition-colors">Tra cứu</a>
                         </li>
-                        <li><a href="{{ route('guide') }}" class="hover:text-accent transition-colors">Hướng dẫn sử
-                                dụng</a></li>
-                        <li><a href="{{ route('contact') }}" class="hover:text-accent transition-colors">Câu hỏi
-                                thường gặp</a></li>
+                        <li><a href="#" class="hover:text-accent transition-colors">Hướng dẫn sử dụng</a></li>
+                        <li><a href="#" class="hover:text-accent transition-colors">Câu hỏi thường gặp</a></li>
                     </ul>
                 </div>
 
@@ -311,10 +309,8 @@
                 <div class="flex flex-col md:flex-row justify-between items-center gap-4 text-sm opacity-80">
                     <p>© {{ date('Y') }} Hệ thống Tra cứu liệt sĩ tỉnh Ninh Bình. All rights reserved.</p>
                     <div class="flex gap-6">
-                        <a href="{{ route('privacy-policy') }}" class="hover:text-accent transition-colors">Chính
-                            sách bảo mật</a>
-                        <a href="{{ route('terms-of-service') }}" class="hover:text-accent transition-colors">Điều
-                            khoản sử dụng</a>
+                        <a href="#" class="hover:text-accent transition-colors">Chính sách bảo mật</a>
+                        <a href="#" class="hover:text-accent transition-colors">Điều khoản sử dụng</a>
                     </div>
                 </div>
             </div>

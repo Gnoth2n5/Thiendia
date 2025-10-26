@@ -775,7 +775,7 @@
 </script>
 
 <!-- Image Modal -->
-<div id="imageModal" class="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4"
+<div id="imageModal" class="fixed inset-0 bg-black/40 z-[9999] flex items-center justify-center p-4"
     style="display: none;" onclick="closeImageModal()">
     <div class="relative max-w-6xl w-full max-h-[90vh]">
         <!-- Close Button -->
