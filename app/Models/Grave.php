@@ -113,6 +113,14 @@ class Grave extends Model
   }
 
   /**
+   * Get the tributes for the grave.
+   */
+  public function tributes(): HasMany
+  {
+    return $this->hasMany(Tribute::class);
+  }
+
+  /**
    * Get the grave type label in Vietnamese.
    */
   public function getGraveTypeLabelAttribute(): string

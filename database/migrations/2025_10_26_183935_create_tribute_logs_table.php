@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tributes', function (Blueprint $table) {
+        Schema::create('tribute_logs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('grave_id')->constrained()->cascadeOnDelete()->comment('Mộ liệt sĩ');
             $table->string('name')->comment('Tên người viếng');
