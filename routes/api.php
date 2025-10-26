@@ -23,7 +23,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 // API to get wards (cached from Ninh Binh API)
 Route::get('/wards', [HomeController::class, 'getWards']);
 
-
 // API to get cemeteries (optionally filtered by commune)
 Route::get('/cemeteries', function (Request $request) {
     $query = Cemetery::query()->withCount('graves');
@@ -50,20 +49,24 @@ Route::get('/graves/{id}', function ($id) {
 
     return response()->json([
         'id' => $grave->id,
-        'grave_number' => $grave->grave_number,
-        'owner_name' => $grave->owner_name,
-        'grave_type' => $grave->grave_type,
-        'grave_type_label' => $grave->grave_type_label,
-        'status' => $grave->status,
-        'status_label' => $grave->status_label,
-        'burial_date' => $grave->burial_date?->format('d/m/Y'),
+        'caretaker_name' => $grave->caretaker_name,
         'deceased_full_name' => $grave->deceased_full_name,
-        'deceased_relationship' => $grave->deceased_relationship,
-        'deceased_gender' => $grave->deceased_gender,
+        'birth_year' => $grave->birth_year,
+        'rank_and_unit' => $grave->rank_and_unit,
+        'position' => $grave->position,
         'deceased_birth_date' => $grave->deceased_birth_date?->format('d/m/Y'),
         'deceased_death_date' => $grave->deceased_death_date?->format('d/m/Y'),
+        'certificate_number' => $grave->certificate_number,
+        'decision_number' => $grave->decision_number,
+        'decision_date' => $grave->decision_date?->format('d/m/Y'),
+        'deceased_gender' => $grave->deceased_gender,
+        'deceased_relationship' => $grave->deceased_relationship,
+        'next_of_kin' => $grave->next_of_kin,
         'deceased_photo' => $grave->deceased_photo ? \Illuminate\Support\Facades\Storage::url($grave->deceased_photo) : null,
         'grave_photos' => $grave->grave_photos ? array_map(fn($photo) => \Illuminate\Support\Facades\Storage::url($photo), $grave->grave_photos) : [],
+        'burial_date' => $grave->burial_date?->format('d/m/Y'),
+        'grave_type' => $grave->grave_type,
+        'grave_type_label' => $grave->grave_type_label,
         'location_description' => $grave->location_description,
         'notes' => $grave->notes,
         'latitude' => $grave->latitude,
@@ -73,7 +76,6 @@ Route::get('/graves/{id}', function ($id) {
             'id' => $grave->cemetery->id,
             'name' => $grave->cemetery->name,
             'address' => $grave->cemetery->address,
-            'district' => $grave->cemetery->district,
             'commune' => $grave->cemetery->commune,
             'description' => $grave->cemetery->description,
         ],

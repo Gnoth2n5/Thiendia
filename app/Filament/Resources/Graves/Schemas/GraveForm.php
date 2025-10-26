@@ -6,7 +6,6 @@ use App\Models\Cemetery;
 use App\Models\User;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -38,38 +37,7 @@ class GraveForm
                             })
                             ->required()
                             ->searchable()
-                            ->preload()
-                            ->live()
-                            ->afterStateUpdated(function ($state, callable $set, $context) {
-                                // Chỉ tự động generate khi tạo mới
-                                if ($context === 'create' && $state) {
-                                    $nextNumber = \App\Models\Grave::where('cemetery_id', $state)->count() + 1;
-                                    $graveNumber = $state.'-'.str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
-                                    $set('grave_number', $graveNumber);
-                                }
-                            }),
-
-                        Placeholder::make('grave_number_preview')
-                            ->label('Số lăng mộ (tự động)')
-                            ->content(function ($get, $record) {
-                                if ($record?->grave_number) {
-                                    return $record->grave_number;
-                                }
-
-                                $cemeteryId = $get('cemetery_id');
-                                if ($cemeteryId) {
-                                    return \App\Models\Grave::generateGraveNumber($cemeteryId);
-                                }
-
-                                return 'Chọn nghĩa trang để xem số lăng mộ';
-                            })
-                            ->visible(fn ($context) => $context === 'create'),
-
-                        TextInput::make('grave_number')
-                            ->label('Số lăng mộ')
-                            ->disabled()
-                            ->dehydrated()
-                            ->visible(fn ($context) => $context === 'edit'),
+                            ->preload(),
 
                         TextInput::make('caretaker_name')
                             ->label('Người quản lý mộ')

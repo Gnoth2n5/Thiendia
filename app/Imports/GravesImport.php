@@ -26,31 +26,27 @@ class GravesImport implements SkipsOnError, SkipsOnFailure, ToModel, WithStartRo
     }
 
     /**
-     * Map dữ liệu từ Excel theo thứ tự cột.
+     * Map dữ liệu từ Excel theo thứ tự cột (format liệt sĩ).
      *
      * Thứ tự cột:
      * 0: Tên Nghĩa Trang
-     * 1: Số Lăng Mộ
-     * 2: Tên Chủ Lăng Mộ
-     * 3: Tên Người Quá Cố
-     * 4: Ngày Sinh
-     * 5: Ngày Mất
-     * 6: Giới Tính
-     * 7: Quan Hệ
-     * 8: Ngày An Táng
-     * 9: Loại Mộ
-     * 10: Trạng Thái
-     * 11: Mô Tả Vị Trí
-     * 12: Số Điện Thoại
-     * 13: Email
-     * 14: Địa Chỉ Liên Hệ
-     * 15: Ghi Chú
+     * 1: Họ và tên Liệt sỹ
+     * 2: Năm sinh
+     * 3: Cấp bậc, chức vụ, đơn vị
+     * 4: Chức vụ
+     * 5: Ngày tháng năm hy sinh
+     * 6: Số bằng TQGC
+     * 7: Số QĐ, ngày, tháng, năm cấp
+     * 8: Quan hệ với liệt sỹ
+     * 9: Thân nhân
+     * 10: Mô tả vị trí
+     * 11: Ghi chú
      *
      * @return \Illuminate\Database\Eloquent\Model|null
      */
     public function model(array $row): ?Grave
     {
-        // Bỏ qua row trống - kiểm tra tất cả các cột
+        // Bỏ qua row trống
         $isEmpty = true;
         foreach ($row as $cell) {
             if (! empty($cell) && trim((string) $cell) !== '') {
@@ -63,9 +59,8 @@ class GravesImport implements SkipsOnError, SkipsOnFailure, ToModel, WithStartRo
             return null;
         }
 
-        // Kiểm tra các trường bắt buộc
-        // Tên Nghĩa Trang (cột 0), Số Lăng Mộ (cột 1), Tên Chủ Lăng Mộ (cột 2)
-        if (empty($row[0]) || empty(trim((string) ($row[1] ?? ''))) || empty(trim((string) ($row[2] ?? '')))) {
+        // Kiểm tra các trường bắt buộc: Nghĩa trang và Tên liệt sĩ
+        if (empty($row[0]) || empty(trim((string) ($row[1] ?? '')))) {
             return null;
         }
 
@@ -77,39 +72,25 @@ class GravesImport implements SkipsOnError, SkipsOnFailure, ToModel, WithStartRo
         }
 
         // Parse dates
-        $burialDate = $this->parseDate($row[8] ?? null);
-        $deceasedBirthDate = $this->parseDate($row[4] ?? null);
-        $deceasedDeathDate = $this->parseDate($row[5] ?? null);
-
-        // Build contact info
-        $contactInfo = [];
-        if (! empty($row[12])) {
-            // Xử lý số điện thoại: đảm bảo giữ số 0 đằng trước
-            $phone = $this->formatPhoneNumber($row[12]);
-            $contactInfo['phone'] = $phone;
-        }
-        if (! empty($row[13])) {
-            $contactInfo['email'] = trim($row[13]);
-        }
-        if (! empty($row[14])) {
-            $contactInfo['address'] = trim($row[14]);
-        }
+        $deathDate = $this->parseDate($row[5] ?? null);
+        $decisionDate = $this->parseDecisionDate($row[7] ?? null);
 
         return new Grave([
             'cemetery_id' => $cemetery->id,
-            'grave_number' => $row[1] ?? '',
-            'owner_name' => $row[2] ?? '',
-            'deceased_full_name' => $row[3] ?? null,
-            'deceased_birth_date' => $deceasedBirthDate,
-            'deceased_death_date' => $deceasedDeathDate,
-            'deceased_gender' => $row[6] ?? 'nam',
-            'deceased_relationship' => $row[7] ?? null,
-            'burial_date' => $burialDate,
-            'grave_type' => $row[9] ?? 'đất',
-            'status' => $row[10] ?? 'còn_trống',
-            'location_description' => $row[11] ?? null,
-            'contact_info' => ! empty($contactInfo) ? $contactInfo : null,
-            'notes' => $row[15] ?? null,
+            'deceased_full_name' => $row[1] ?? '',
+            'birth_year' => ! empty($row[2]) ? (int) $row[2] : null,
+            'rank_and_unit' => $row[3] ?? null,
+            'position' => $row[4] ?? null,
+            'deceased_death_date' => $deathDate,
+            'certificate_number' => $row[6] ?? null,
+            'decision_number' => $this->extractDecisionNumber($row[7] ?? null),
+            'decision_date' => $decisionDate,
+            'deceased_relationship' => $row[8] ?? null,
+            'next_of_kin' => $row[9] ?? null,
+            'location_description' => $row[10] ?? null,
+            'grave_type' => 'đá',
+            'deceased_gender' => 'nam',
+            'notes' => $row[11] ?? null,
         ]);
     }
 
@@ -123,17 +104,14 @@ class GravesImport implements SkipsOnError, SkipsOnFailure, ToModel, WithStartRo
         }
 
         try {
-            // If it's already a Carbon instance
             if ($date instanceof Carbon) {
                 return $date->format('Y-m-d');
             }
 
-            // If it's a numeric Excel date
             if (is_numeric($date)) {
                 return Carbon::createFromFormat('Y-m-d', \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($date)->format('Y-m-d'))->format('Y-m-d');
             }
 
-            // Try to parse as string
             return Carbon::parse($date)->format('Y-m-d');
         } catch (\Exception $e) {
             return null;
@@ -141,41 +119,43 @@ class GravesImport implements SkipsOnError, SkipsOnFailure, ToModel, WithStartRo
     }
 
     /**
-     * Format phone number - đảm bảo giữ số 0 đằng trước
+     * Extract số quyết định từ chuỗi "123/QĐ-BQP, 15/06/2009"
      */
-    protected function formatPhoneNumber($value): string
+    protected function extractDecisionNumber($value): ?string
     {
         if (empty($value)) {
-            return '';
+            return null;
         }
 
-        // Chuyển thành string và loại bỏ khoảng trắng
-        $phone = trim((string) $value);
+        $parts = explode(',', $value);
 
-        // Nếu là số và không bắt đầu bằng 0, thêm 0 vào đầu
-        if (is_numeric($phone) && ! str_starts_with($phone, '0')) {
-            $phone = '0' . $phone;
+        return trim($parts[0]);
+    }
+
+    /**
+     * Extract ngày cấp từ chuỗi "123/QĐ-BQP, 15/06/2009"
+     */
+    protected function parseDecisionDate($value): ?string
+    {
+        if (empty($value)) {
+            return null;
         }
 
-        // Loại bỏ các ký tự không phải số (giữ dấu +)
-        $phone = preg_replace('/[^\d+]/', '', $phone);
+        $parts = explode(',', $value);
+        if (count($parts) < 2) {
+            return null;
+        }
 
-        return $phone;
+        return $this->parseDate(trim($parts[1]));
     }
 
     /**
      * Validation rules theo index cột.
-     *
-     * Chỉ validate các trường không bắt buộc
      */
     public function rules(): array
     {
         return [
-            '6' => 'nullable|in:nam,nữ,khác', // Giới Tính
-            '9' => 'nullable|in:đất,xi_măng,đá,gỗ,khác', // Loại Mộ
-            '10' => 'nullable|in:còn_trống,đã_sử_dụng,bảo_trì,ngừng_sử_dụng', // Trạng Thái
-            '12' => 'nullable|string|max:20', // Số Điện Thoại
-            '13' => 'nullable|email|max:255', // Email
+            '2' => 'nullable|integer|min:1900|max:2100', // Năm sinh
         ];
     }
 
@@ -185,13 +165,9 @@ class GravesImport implements SkipsOnError, SkipsOnFailure, ToModel, WithStartRo
     public function customValidationMessages(): array
     {
         return [
-            '6.in' => 'Giới tính phải là: nam, nữ hoặc khác',
-            '9.in' => 'Loại mộ phải là: đất, xi_măng, đá, gỗ hoặc khác',
-            '10.in' => 'Trạng thái phải là: còn_trống, đã_sử_dụng, bảo_trì hoặc ngừng_sử_dụng',
-            '12.string' => 'Số điện thoại phải là chuỗi ký tự',
-            '12.max' => 'Số điện thoại không được vượt quá 20 ký tự',
-            '13.email' => 'Email không đúng định dạng',
-            '13.max' => 'Email không được vượt quá 255 ký tự',
+            '2.integer' => 'Năm sinh phải là số',
+            '2.min' => 'Năm sinh không hợp lệ',
+            '2.max' => 'Năm sinh không hợp lệ',
         ];
     }
 }
