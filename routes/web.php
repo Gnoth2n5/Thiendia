@@ -27,3 +27,8 @@ Route::get('/articles/category/{category}', [ArticleController::class, 'category
 
 // Liên hệ
 Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
+
+// Hướng dẫn và chính sách
+Route::get('/guide', [HomeController::class, 'guide'])->name('guide');
+Route::get('/privacy-policy', [HomeController::class, 'privacyPolicy'])->name('privacy-policy');
+Route::get('/terms-of-service', [HomeController::class, 'termsOfService'])->name('terms-of-service');

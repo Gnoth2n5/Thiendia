@@ -161,9 +161,11 @@
                         <input type="checkbox" id="privacy" name="privacy" required
                             class="mt-1 h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded">
                         <label for="privacy" class="text-sm text-gray-600">
-                            Tôi đồng ý với <a href="#" class="text-red-600 hover:underline">chính sách bảo mật</a>
+                            Tôi đồng ý với <a href="{{ route('privacy-policy') }}"
+                                class="text-red-600 hover:underline">chính sách bảo mật</a>
                             và
-                            <a href="#" class="text-red-600 hover:underline">điều khoản sử dụng</a> của hệ thống.
+                            <a href="{{ route('terms-of-service') }}" class="text-red-600 hover:underline">điều khoản sử
+                                dụng</a> của hệ thống.
                         </label>
                     </div>
 

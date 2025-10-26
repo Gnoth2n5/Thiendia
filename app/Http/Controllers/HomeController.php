@@ -74,8 +74,23 @@ class HomeController extends Controller
     return view('grave-detail', compact('grave'));
   }
 
-  public function contact()
-  {
-    return view('contact');
-  }
+    public function contact()
+    {
+        return view('contact');
+    }
+
+    public function guide()
+    {
+        return view('guide');
+    }
+
+    public function privacyPolicy()
+    {
+        return view('privacy-policy');
+    }
+
+    public function termsOfService()
+    {
+        return view('terms-of-service');
+    }
 }

@@ -265,7 +265,8 @@
                         </li>
                         <li><a href="{{ route('search') }}" class="hover:text-accent transition-colors">Tra cứu</a>
                         </li>
-                        <li><a href="#" class="hover:text-accent transition-colors">Hướng dẫn sử dụng</a></li>
+                        <li><a href="{{ route('guide') }}" class="hover:text-accent transition-colors">Hướng dẫn sử
+                                dụng</a></li>
                         <li><a href="{{ route('contact') }}" class="hover:text-accent transition-colors">Câu hỏi
                                 thường gặp</a></li>
                     </ul>
@@ -310,8 +311,10 @@
                 <div class="flex flex-col md:flex-row justify-between items-center gap-4 text-sm opacity-80">
                     <p>© {{ date('Y') }} Hệ thống Tra cứu liệt sĩ tỉnh Ninh Bình. All rights reserved.</p>
                     <div class="flex gap-6">
-                        <a href="#" class="hover:text-accent transition-colors">Chính sách bảo mật</a>
-                        <a href="#" class="hover:text-accent transition-colors">Điều khoản sử dụng</a>
+                        <a href="{{ route('privacy-policy') }}" class="hover:text-accent transition-colors">Chính
+                            sách bảo mật</a>
+                        <a href="{{ route('terms-of-service') }}" class="hover:text-accent transition-colors">Điều
+                            khoản sử dụng</a>
                     </div>
                 </div>
             </div>
