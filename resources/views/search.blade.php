@@ -50,19 +50,12 @@
 
                     <div class="form-control">
                         <label class="label">
-                            <span class="label-text font-medium">Tên chủ lăng mộ</span>
+                            <span class="label-text font-medium">Người quản lý mộ</span>
                         </label>
-                        <input type="text" name="owner_name" placeholder="Nhập tên chủ lăng mộ"
-                            class="input input-bordered w-full" value="{{ request('owner_name') }}">
+                        <input type="text" name="caretaker_name" placeholder="Nhập tên người quản lý"
+                            class="input input-bordered w-full" value="{{ request('caretaker_name') }}">
                     </div>
 
-                    <div class="form-control">
-                        <label class="label">
-                            <span class="label-text font-medium">Số lăng mộ</span>
-                        </label>
-                        <input type="text" name="grave_number" placeholder="Ví dụ: 1-001"
-                            class="input input-bordered w-full" value="{{ request('grave_number') }}">
-                    </div>
 
                     <div class="form-control">
                         <label class="label">
@@ -109,7 +102,7 @@
 
     <!-- Search Results -->
     <div class="search-results-content">
-        @if (request()->hasAny(['grave_number', 'owner_name', 'deceased_name', 'cemetery_id', 'district', 'commune']))
+        @if (request()->hasAny(['caretaker_name', 'deceased_name', 'cemetery_id', 'commune']))
             <div class="mb-6">
                 <div class="flex items-center justify-between">
                     <div>
@@ -181,14 +174,8 @@
                                         <td class="px-4 py-4 border-r border-gray-100">
                                             <div class="flex flex-col">
                                                 <div class="font-semibold text-gray-900 text-sm mb-1">
-                                                    {{ $grave->deceased_full_name ?: $grave->owner_name }}
+                                                    {{ $grave->deceased_full_name ?: $grave->caretaker_name }}
                                                 </div>
-                                                @if ($grave->grave_number)
-                                                    <div
-                                                        class="text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded-full inline-block w-fit">
-                                                        {{ $grave->grave_number }}
-                                                    </div>
-                                                @endif
                                             </div>
                                         </td>
 
@@ -297,14 +284,9 @@
                                         <div class="flex items-center gap-2 mb-2">
                                             <span
                                                 class="text-sm font-bold text-blue-600">#{{ $graves->firstItem() + $index }}</span>
-                                            @if ($grave->grave_number)
-                                                <span class="text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded-full">
-                                                    {{ $grave->grave_number }}
-                                                </span>
-                                            @endif
                                         </div>
                                         <h3 class="font-bold text-gray-900 text-base mb-1">
-                                            {{ $grave->deceased_full_name ?: $grave->owner_name }}
+                                            {{ $grave->deceased_full_name ?: $grave->caretaker_name }}
                                         </h3>
                                         <div class="flex items-center gap-2 text-sm text-gray-600">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -581,10 +563,9 @@
         document.getElementById('deceasedName').textContent = grave.deceased_full_name || grave.owner_name;
         document.getElementById('deceasedBirth').textContent = grave.deceased_birth_date || '-';
         document.getElementById('deceasedDeath').textContent = grave.deceased_death_date || '-';
-        document.getElementById('deceasedHometown').textContent = grave.cemetery.commune + ', ' + grave.cemetery
-            .district;
+        document.getElementById('deceasedHometown').textContent = grave.cemetery.commune;
         document.getElementById('cemeteryName').textContent = grave.cemetery.name;
-        document.getElementById('graveLocation').textContent = grave.location_description || grave.grave_number || '-';
+        document.getElementById('graveLocation').textContent = grave.location_description || '-';
 
         // Update view details button URL
         document.getElementById('viewDetailsBtn').href = `/grave/${grave.id}`;

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Chi tiết lăng mộ ' . $grave->grave_number . ' - Tra cứu liệt sĩ tỉnh Ninh Bình')
+@section('title', 'Chi tiết lăng mộ - ' . $grave->deceased_full_name . ' - Tra cứu liệt sĩ tỉnh Ninh Bình')
 
 @section('content')
     <!-- Breadcrumb -->
@@ -12,7 +12,7 @@
             <li>
                 <a href="{{ route('search') }}" class="text-green-600 hover:underline">Tìm kiếm</a>
             </li>
-            <li class="text-base-content/60">{{ $grave->grave_number }}</li>
+            <li class="text-base-content/60">{{ $grave->deceased_full_name }}</li>
         </ul>
     </div>
 
@@ -33,11 +33,8 @@
             </div>
             <div class="flex items-center justify-center gap-3 mb-2">
                 <h1 class="text-4xl font-bold bg-gradient-to-r from-purple-700 to-red-600 bg-clip-text text-transparent">
-                    Lăng mộ {{ $grave->grave_number }}
+                    {{ $grave->deceased_full_name }}
                 </h1>
-                <div class="badge {{ $grave->status === 'đã_sử_dụng' ? 'badge-success' : 'badge-ghost' }} badge-lg">
-                    {{ $grave->status_label }}
-                </div>
             </div>
             <p class="text-lg text-slate-600 mb-6">{{ $grave->cemetery->name }}</p>
         </div>
@@ -62,8 +59,8 @@
                                 </svg>
                             </div>
                             <div class="flex-1">
-                                <p class="text-sm text-base-content/60">Chủ lăng mộ</p>
-                                <p class="font-bold text-lg">{{ $grave->owner_name }}</p>
+                                <p class="text-sm text-base-content/60">Người quản lý mộ</p>
+                                <p class="font-bold text-lg">{{ $grave->caretaker_name ?? 'Chưa có thông tin' }}</p>
                             </div>
                         </div>
 
@@ -130,13 +127,22 @@
                                     @endif
                                     <div class="flex-1">
                                         <p class="font-bold text-2xl mb-2">{{ $grave->deceased_full_name }}</p>
-                                        @if ($grave->deceased_relationship)
-                                            <p class="text-sm text-base-content/70 mb-3">
-                                                {{ $grave->deceased_relationship }} của chủ lăng mộ</p>
+                                        
+                                        @if ($grave->rank_and_unit)
+                                            <p class="text-base text-primary font-semibold mb-2">
+                                                {{ $grave->rank_and_unit }}
+                                            </p>
                                         @endif
+                                        
+                                        @if ($grave->position)
+                                            <p class="text-sm text-base-content/70 mb-2">
+                                                Chức vụ: <span class="font-semibold">{{ $grave->position }}</span>
+                                            </p>
+                                        @endif
+                                        
                                         @if ($grave->deceased_gender)
                                             <div
-                                                class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-white/50 mb-2">
+                                                class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-white/50">
                                                 {{ ucfirst($grave->deceased_gender) }}
                                             </div>
                                         @endif
@@ -144,19 +150,61 @@
                                 </div>
 
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    @if ($grave->birth_year)
+                                        <div class="bg-white/50 rounded-lg p-3">
+                                            <p class="text-xs text-base-content/60 mb-1">Năm sinh</p>
+                                            <p class="font-bold text-lg">{{ $grave->birth_year }}</p>
+                                        </div>
+                                    @endif
+                                    
                                     @if ($grave->deceased_birth_date)
                                         <div class="bg-white/50 rounded-lg p-3">
-                                            <p class="text-xs text-base-content/60 mb-1">Ngày sinh</p>
-                                            <p class="font-bold text-lg">{{ $grave->deceased_birth_date->format('d/m/Y') }}
+                                            <p class="text-xs text-base-content/60 mb-1">Ngày sinh đầy đủ</p>
+                                            <p class="font-bold text-base">{{ $grave->deceased_birth_date->format('d/m/Y') }}
                                             </p>
                                         </div>
                                     @endif
 
                                     @if ($grave->deceased_death_date)
                                         <div class="bg-white/50 rounded-lg p-3">
-                                            <p class="text-xs text-base-content/60 mb-1">Ngày mất</p>
-                                            <p class="font-bold text-lg">{{ $grave->deceased_death_date->format('d/m/Y') }}
+                                            <p class="text-xs text-base-content/60 mb-1">Ngày hy sinh</p>
+                                            <p class="font-bold text-lg text-error">{{ $grave->deceased_death_date->format('d/m/Y') }}
                                             </p>
+                                        </div>
+                                    @endif
+                                    
+                                    @if ($grave->certificate_number)
+                                        <div class="bg-white/50 rounded-lg p-3">
+                                            <p class="text-xs text-base-content/60 mb-1">Số bằng TQGC</p>
+                                            <p class="font-bold text-base">{{ $grave->certificate_number }}</p>
+                                        </div>
+                                    @endif
+                                    
+                                    @if ($grave->decision_number)
+                                        <div class="bg-white/50 rounded-lg p-3">
+                                            <p class="text-xs text-base-content/60 mb-1">Số QĐ</p>
+                                            <p class="font-bold text-base">{{ $grave->decision_number }}</p>
+                                        </div>
+                                    @endif
+                                    
+                                    @if ($grave->decision_date)
+                                        <div class="bg-white/50 rounded-lg p-3">
+                                            <p class="text-xs text-base-content/60 mb-1">Ngày cấp QĐ</p>
+                                            <p class="font-bold text-base">{{ $grave->decision_date->format('d/m/Y') }}</p>
+                                        </div>
+                                    @endif
+                                    
+                                    @if ($grave->next_of_kin)
+                                        <div class="bg-white/50 rounded-lg p-3">
+                                            <p class="text-xs text-base-content/60 mb-1">Thân nhân</p>
+                                            <p class="font-bold text-base">{{ $grave->next_of_kin }}</p>
+                                        </div>
+                                    @endif
+                                    
+                                    @if ($grave->deceased_relationship)
+                                        <div class="bg-white/50 rounded-lg p-3">
+                                            <p class="text-xs text-base-content/60 mb-1">Quan hệ</p>
+                                            <p class="font-bold text-base">{{ $grave->deceased_relationship }}</p>
                                         </div>
                                     @endif
                                 </div>
@@ -683,7 +731,7 @@
                 // Add popup with grave information
                 marker.bindPopup(`
                 <div class="text-center">
-                    <p class="font-bold text-lg mb-2">{{ $grave->grave_number }}</p>
+                    <p class="font-bold text-lg mb-2">{{ $grave->deceased_full_name }}</p>
                     <p class="text-sm mb-1">{{ $grave->cemetery->name }}</p>
                     @if ($grave->location_description)
                         <p class="text-xs text-gray-600 mt-2">{{ $grave->location_description }}</p>

@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Graves\Tables;
 
 use Filament\Tables\Actions\BulkActionGroup;
+use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ViewAction;
@@ -16,80 +17,67 @@ class GravesTable
     {
         return $table
             ->columns([
-                TextColumn::make('id')
-                    ->label('ID')
-                    ->sortable()
-                    ->searchable(),
-
-                TextColumn::make('grave_number')
-                    ->label('Số lăng mộ')
+                TextColumn::make('deceased_full_name')
+                    ->label('Họ và tên liệt sỹ')
                     ->sortable()
                     ->searchable()
-                    ->weight('bold')
-                    ->copyable(),
+                    ->limit(30)
+                    ->placeholder('Chưa có thông tin'),
+
+                TextColumn::make('birth_year')
+                    ->label('Năm sinh')
+                    ->sortable()
+                    ->alignCenter()
+                    ->placeholder('—'),
+
+                TextColumn::make('rank_and_unit')
+                    ->label('Cấp bậc, đơn vị')
+                    ->sortable()
+                    ->searchable()
+                    ->limit(35)
+                    ->placeholder('—')
+                    ->toggleable(),
+
+                TextColumn::make('position')
+                    ->label('Chức vụ')
+                    ->sortable()
+                    ->searchable()
+                    ->limit(25)
+                    ->placeholder('—')
+                    ->toggleable(),
+
+                TextColumn::make('deceased_death_date')
+                    ->label('Ngày hy sinh')
+                    ->date('d/m/Y')
+                    ->sortable(),
+
+                TextColumn::make('certificate_number')
+                    ->label('Số bằng TQGC')
+                    ->sortable()
+                    ->searchable()
+                    ->placeholder('—')
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('decision_number')
+                    ->label('Số QĐ')
+                    ->sortable()
+                    ->searchable()
+                    ->placeholder('—')
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('next_of_kin')
+                    ->label('Thân nhân')
+                    ->sortable()
+                    ->searchable()
+                    ->limit(25)
+                    ->placeholder('—')
+                    ->toggleable(),
 
                 TextColumn::make('cemetery.name')
                     ->label('Nghĩa trang')
                     ->sortable()
                     ->searchable()
                     ->limit(30),
-
-                TextColumn::make('owner_name')
-                    ->label('Chủ lăng mộ')
-                    ->sortable()
-                    ->searchable()
-                    ->limit(25),
-
-                TextColumn::make('deceased_full_name')
-                    ->label('Người đã khuất')
-                    ->sortable()
-                    ->searchable()
-                    ->limit(25)
-                    ->placeholder('Chưa có thông tin'),
-
-                TextColumn::make('grave_type')
-                    ->label('Loại')
-                    ->formatStateUsing(fn (string $state): string => match ($state) {
-                        'đất' => 'Đất',
-                        'xi_măng' => 'Xi măng',
-                        'đá' => 'Đá',
-                        'gỗ' => 'Gỗ',
-                        'khác' => 'Khác',
-                        default => $state,
-                    })
-                    ->badge()
-                    ->color(fn (string $state): string => match ($state) {
-                        'đất' => 'gray',
-                        'xi_măng' => 'primary',
-                        'đá' => 'success',
-                        'gỗ' => 'warning',
-                        'khác' => 'gray',
-                        default => 'gray',
-                    }),
-
-                TextColumn::make('status')
-                    ->label('Trạng thái')
-                    ->formatStateUsing(fn (string $state): string => match ($state) {
-                        'còn_trống' => 'Còn trống',
-                        'đã_sử_dụng' => 'Đã sử dụng',
-                        'bảo_trì' => 'Bảo trì',
-                        'ngừng_sử_dụng' => 'Ngừng sử dụng',
-                        default => $state,
-                    })
-                    ->badge()
-                    ->color(fn (string $state): string => match ($state) {
-                        'còn_trống' => 'success',
-                        'đã_sử_dụng' => 'primary',
-                        'bảo_trì' => 'warning',
-                        'ngừng_sử_dụng' => 'danger',
-                        default => 'gray',
-                    }),
-
-                TextColumn::make('burial_date')
-                    ->label('Ngày an táng')
-                    ->date('d/m/Y')
-                    ->sortable()
-                    ->toggleable(),
 
                 TextColumn::make('created_at')
                     ->label('Ngày tạo')
@@ -103,29 +91,11 @@ class GravesTable
                     ->relationship('cemetery', 'name')
                     ->searchable()
                     ->preload(),
-
-                SelectFilter::make('grave_type')
-                    ->label('Loại lăng mộ')
-                    ->options([
-                        'đất' => 'Lăng mộ đất',
-                        'xi_măng' => 'Lăng mộ xi măng',
-                        'đá' => 'Lăng mộ đá',
-                        'gỗ' => 'Lăng mộ gỗ',
-                        'khác' => 'Loại khác',
-                    ]),
-
-                SelectFilter::make('status')
-                    ->label('Trạng thái')
-                    ->options([
-                        'còn_trống' => 'Còn trống',
-                        'đã_sử_dụng' => 'Đã sử dụng',
-                        'bảo_trì' => 'Bảo trì',
-                        'ngừng_sử_dụng' => 'Ngừng sử dụng',
-                    ]),
             ])
             ->actions([
                 ViewAction::make(),
                 EditAction::make(),
+                DeleteAction::make(),
             ])
             ->bulkActions([
                 BulkActionGroup::make([

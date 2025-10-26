@@ -91,25 +91,17 @@
                                 value="{{ request('deceased_name') }}">
                         </div>
 
-                        <!-- Grave Number -->
-                        <div class="form-control">
-                            <label class="label" for="grave_number">
-                                <span class="label-text font-semibold">Số lăng mộ</span>
-                            </label>
-                            <input type="text" name="grave_number" id="grave_number" placeholder="Nhập số lăng mộ..."
-                                class="input input-bordered w-full" value="{{ request('grave_number') }}">
-                        </div>
                     </div>
 
                     <!-- Second Row -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Owner Name -->
+                        <!-- Caretaker Name -->
                         <div class="form-control">
-                            <label class="label" for="owner_name">
-                                <span class="label-text font-semibold">Tên chủ lăng mộ</span>
+                            <label class="label" for="caretaker_name">
+                                <span class="label-text font-semibold">Người quản lý mộ</span>
                             </label>
-                            <input type="text" name="owner_name" id="owner_name" placeholder="Nhập tên chủ lăng mộ..."
-                                class="input input-bordered w-full" value="{{ request('owner_name') }}">
+                            <input type="text" name="caretaker_name" id="caretaker_name" placeholder="Nhập tên người quản lý..."
+                                class="input input-bordered w-full" value="{{ request('caretaker_name') }}">
                         </div>
 
                         <!-- Commune -->

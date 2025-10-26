@@ -10,18 +10,23 @@ class Grave extends Model
 {
     protected $fillable = [
         'cemetery_id',
-        'grave_number',
-        'owner_name',
+        'caretaker_name',
         'deceased_full_name',
+        'birth_year',
+        'rank_and_unit',
+        'position',
         'deceased_birth_date',
         'deceased_death_date',
+        'certificate_number',
+        'decision_number',
+        'decision_date',
         'deceased_gender',
         'deceased_relationship',
+        'next_of_kin',
         'deceased_photo',
         'grave_photos',
         'burial_date',
         'grave_type',
-        'status',
         'location_description',
         'latitude',
         'longitude',
@@ -35,36 +40,13 @@ class Grave extends Model
         'burial_date' => 'date',
         'deceased_birth_date' => 'date',
         'deceased_death_date' => 'date',
+        'decision_date' => 'date',
+        'birth_year' => 'integer',
         'latitude' => 'float',
         'longitude' => 'float',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
-
-    /**
-     * Boot the model.
-     */
-    protected static function boot(): void
-    {
-        parent::boot();
-
-        static::creating(function ($grave) {
-            if (empty($grave->grave_number) && $grave->cemetery_id) {
-                $grave->grave_number = static::generateGraveNumber($grave->cemetery_id);
-            }
-        });
-    }
-
-    /**
-     * Generate grave number based on cemetery_id.
-     */
-    public static function generateGraveNumber(int $cemeteryId): string
-    {
-        $count = static::where('cemetery_id', $cemeteryId)->count();
-        $nextNumber = $count + 1;
-
-        return $cemeteryId . '-' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
-    }
 
     /**
      * Get the cemetery that owns the grave.
@@ -94,20 +76,6 @@ class Grave extends Model
             'gỗ' => 'Lăng mộ gỗ',
             'khác' => 'Loại khác',
             default => $this->grave_type,
-        };
-    }
-
-    /**
-     * Get the status label in Vietnamese.
-     */
-    public function getStatusLabelAttribute(): string
-    {
-        return match ($this->status) {
-            'còn_trống' => 'Còn trống',
-            'đã_sử_dụng' => 'Đã sử dụng',
-            'bảo_trì' => 'Bảo trì',
-            'ngừng_sử_dụng' => 'Ngừng sử dụng',
-            default => $this->status,
         };
     }
 }

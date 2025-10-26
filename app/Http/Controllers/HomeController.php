@@ -15,23 +15,17 @@ class HomeController extends Controller
     {
         $cemeteries = Cemetery::withCount('graves')->get();
         $totalGraves = Grave::count();
-        $occupiedGraves = Grave::where('status', 'đã_sử_dụng')->count();
 
-        return view('home', compact('cemeteries', 'totalGraves', 'occupiedGraves'));
+        return view('home', compact('cemeteries', 'totalGraves'));
     }
 
     public function search(Request $request)
     {
         $query = Grave::with('cemetery');
 
-        // Tìm kiếm theo số lăng mộ
-        if ($request->filled('grave_number')) {
-            $query->where('grave_number', 'like', '%' . $request->grave_number . '%');
-        }
-
-        // Tìm kiếm theo tên chủ lăng mộ
-        if ($request->filled('owner_name')) {
-            $query->where('owner_name', 'like', '%' . $request->owner_name . '%');
+        // Tìm kiếm theo tên người quản lý mộ
+        if ($request->filled('caretaker_name')) {
+            $query->where('caretaker_name', 'like', '%' . $request->caretaker_name . '%');
         }
 
         // Tìm kiếm theo tên người đã khuất

@@ -13,8 +13,8 @@ class StatsOverview extends StatsOverviewWidget
     {
         $totalCemeteries = Cemetery::count();
         $totalGraves = Grave::count();
-        $occupiedGraves = Grave::where('status', 'đã_sử_dụng')->count();
-        $availableGraves = $totalGraves - $occupiedGraves;
+        $totalUsers = \App\Models\User::count();
+        $communeStaff = \App\Models\User::where('role', 'commune_staff')->count();
 
         return [
             Stat::make('Tổng số nghĩa trang', $totalCemeteries)
@@ -22,19 +22,19 @@ class StatsOverview extends StatsOverviewWidget
                 ->descriptionIcon('heroicon-m-building-office-2')
                 ->color('primary'),
 
-            Stat::make('Tổng số lăng mộ', $totalGraves)
+            Stat::make('Tổng số lăng mộ liệt sĩ', $totalGraves)
                 ->description('Lăng mộ trong hệ thống')
                 ->descriptionIcon('heroicon-m-rectangle-stack')
                 ->color('success'),
 
-            Stat::make('Lăng mộ đã sử dụng', $occupiedGraves)
-                ->description(sprintf('%.1f%% tổng số lăng mộ', $totalGraves > 0 ? ($occupiedGraves / $totalGraves) * 100 : 0))
-                ->descriptionIcon('heroicon-m-check-circle')
+            Stat::make('Người dùng', $totalUsers)
+                ->description("{$communeStaff} cán bộ xã/phường")
+                ->descriptionIcon('heroicon-m-users')
                 ->color('info'),
 
-            Stat::make('Lăng mộ còn trống', $availableGraves)
-                ->description('Có thể sử dụng')
-                ->descriptionIcon('heroicon-m-square-3-stack-3d')
+            Stat::make('Xã/Phường', 129)
+                ->description('Được quản lý')
+                ->descriptionIcon('heroicon-m-map-pin')
                 ->color('warning'),
         ];
     }

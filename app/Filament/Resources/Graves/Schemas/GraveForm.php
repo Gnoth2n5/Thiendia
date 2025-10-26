@@ -12,6 +12,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ViewField;
 use Filament\Forms\Form;
+use App\Models\User;
 
 class GraveForm
 {
@@ -19,14 +20,15 @@ class GraveForm
     {
         return $form
             ->schema([
-                Section::make('Thông tin cơ bản')
+                Section::make('Thông tin nghĩa trang')
                     ->schema([
                         Select::make('cemetery_id')
-                            ->label('Nghĩa trang')
+                            ->label('Mộ tưởng niệm tại nghĩa trang')
                             ->options(function () {
                                 $query = Cemetery::query();
 
                                 // Nếu là cán bộ xã/phường, chỉ hiển thị nghĩa trang của xã/phường mình
+                                /** @var User $user */
                                 $user = auth()->user();
                                 if ($user && $user->isCommuneStaff()) {
                                     $query->where('commune', $user->commune);
@@ -69,71 +71,103 @@ class GraveForm
                             ->dehydrated()
                             ->visible(fn($context) => $context === 'edit'),
 
-                        TextInput::make('owner_name')
-                            ->label('Tên chủ lăng mộ')
-                            ->required()
-                            ->maxLength(255),
-
-                        DatePicker::make('burial_date')
-                            ->label('Ngày an táng')
-                            ->displayFormat('d/m/Y'),
-
-                        Select::make('grave_type')
-                            ->label('Loại lăng mộ')
-                            ->options([
-                                'đất' => 'Lăng mộ đất',
-                                'xi_măng' => 'Lăng mộ xi măng',
-                                'đá' => 'Lăng mộ đá',
-                                'gỗ' => 'Lăng mộ gỗ',
-                                'khác' => 'Loại khác',
-                            ])
-                            ->default('đất')
-                            ->required(),
-
-                        Select::make('status')
-                            ->label('Trạng thái')
-                            ->options([
-                                'còn_trống' => 'Còn trống',
-                                'đã_sử_dụng' => 'Đã sử dụng',
-                                'bảo_trì' => 'Bảo trì',
-                                'ngừng_sử_dụng' => 'Ngừng sử dụng',
-                            ])
-                            ->default('còn_trống')
-                            ->required(),
+                        TextInput::make('caretaker_name')
+                            ->label('Người quản lý mộ')
+                            ->maxLength(255)
+                            ->placeholder('Tên người quản lý, chăm sóc mộ'),
                     ])
                     ->columns(2),
 
-                Section::make('Thông tin người đã khuất')
+                Section::make('Thông tin liệt sĩ')
+                    ->description('Thông tin về liệt sĩ an nghỉ tại lăng mộ')
                     ->schema([
                         TextInput::make('deceased_full_name')
-                            ->label('Họ tên đầy đủ')
+                            ->label('Họ và tên liệt sỹ')
+                            ->required()
                             ->maxLength(255)
-                            ->placeholder('Họ và tên người đã khuất'),
+                            ->placeholder('Họ và tên đầy đủ của liệt sỹ')
+                            ->columnSpan(2),
+
+                        TextInput::make('birth_year')
+                            ->label('Năm sinh')
+                            ->numeric()
+                            ->minValue(1900)
+                            ->maxValue(2100)
+                            ->placeholder('1950'),
 
                         DatePicker::make('deceased_birth_date')
-                            ->label('Ngày sinh')
-                            ->displayFormat('d/m/Y'),
+                            ->label('Ngày sinh đầy đủ')
+                            ->displayFormat('d/m/Y')
+                            ->helperText('(Tùy chọn nếu biết đầy đủ ngày sinh)'),
+
+                        TextInput::make('rank_and_unit')
+                            ->label('Cấp bậc, chức vụ, đơn vị')
+                            ->maxLength(255)
+                            ->placeholder('Ví dụ: Trung sĩ, Tiểu đoàn 5, Trung đoàn 88')
+                            ->columnSpan(2),
+
+                        TextInput::make('position')
+                            ->label('Chức vụ')
+                            ->maxLength(255)
+                            ->placeholder('Ví dụ: Tiểu đội trưởng'),
 
                         DatePicker::make('deceased_death_date')
-                            ->label('Ngày mất')
-                            ->displayFormat('d/m/Y'),
+                            ->label('Ngày tháng năm hy sinh')
+                            ->displayFormat('d/m/Y')
+                            ->required(),
 
                         Select::make('deceased_gender')
                             ->label('Giới tính')
                             ->options([
                                 'nam' => 'Nam',
                                 'nữ' => 'Nữ',
-                                'khác' => 'Khác',
                             ])
                             ->default('nam'),
 
-                        TextInput::make('deceased_relationship')
-                            ->label('Mối quan hệ với chủ lăng mộ')
-                            ->maxLength(255)
-                            ->placeholder('Ví dụ: cha, mẹ, ông, bà...'),
+                        DatePicker::make('burial_date')
+                            ->label('Ngày an táng')
+                            ->displayFormat('d/m/Y'),
+                    ])
+                    ->columns(3),
 
+                Section::make('Giấy tờ và hồ sơ')
+                    ->schema([
+                        TextInput::make('certificate_number')
+                            ->label('Số bằng TQGC')
+                            ->maxLength(255)
+                            ->placeholder('Số bằng Tổ quốc ghi công'),
+
+                        TextInput::make('decision_number')
+                            ->label('Số QĐ')
+                            ->maxLength(255)
+                            ->placeholder('Số quyết định'),
+
+                        DatePicker::make('decision_date')
+                            ->label('Ngày, tháng, năm cấp QĐ')
+                            ->displayFormat('d/m/Y'),
+                    ])
+                    ->columns(3)
+                    ->collapsible(),
+
+                Section::make('Thông tin thân nhân')
+                    ->schema([
+                        TextInput::make('deceased_relationship')
+                            ->label('Quan hệ với liệt sỹ')
+                            ->maxLength(255)
+                            ->placeholder('Ví dụ: Con trai, Con gái, Cháu...'),
+
+                        TextInput::make('next_of_kin')
+                            ->label('Thân nhân')
+                            ->maxLength(255)
+                            ->placeholder('Tên người thân'),
+                    ])
+                    ->columns(2)
+                    ->collapsible(),
+
+                Section::make('Hình ảnh')
+                    ->schema([
                         FileUpload::make('deceased_photo')
-                            ->label('Ảnh người đã khuất')
+                            ->label('Ảnh liệt sỹ')
                             ->image()
                             ->directory('deceased-photos')
                             ->visibility('public')
@@ -144,12 +178,7 @@ class GraveForm
                             ])
                             ->maxSize(2048)
                             ->helperText('Ảnh dạng chữ nhật dọc (tối đa 2MB)'),
-                    ])
-                    ->columns(2)
-                    ->collapsible(),
 
-                Section::make('Hình ảnh bia mộ')
-                    ->schema([
                         FileUpload::make('grave_photos')
                             ->label('Ảnh bia mộ')
                             ->image()
@@ -162,20 +191,33 @@ class GraveForm
                             ->maxSize(2048)
                             ->helperText('Tối đa 5 ảnh, mỗi ảnh tối đa 2MB'),
                     ])
-                    ->columns(1)
+                    ->columns(2)
                     ->collapsible(),
 
                 Section::make('Thông tin bổ sung')
                     ->schema([
+                        Select::make('grave_type')
+                            ->label('Loại lăng mộ')
+                            ->options([
+                                'đất' => 'Lăng mộ đất',
+                                'xi_măng' => 'Lăng mộ xi măng',
+                                'đá' => 'Lăng mộ đá',
+                                'gỗ' => 'Lăng mộ gỗ',
+                                'khác' => 'Loại khác',
+                            ])
+                            ->default('đá'),
+
                         Textarea::make('location_description')
                             ->label('Mô tả vị trí')
                             ->rows(2)
-                            ->placeholder('Ví dụ: Khu A, hàng 3, mộ số 15'),
+                            ->placeholder('Ví dụ: Khu A, hàng 3, mộ số 15')
+                            ->columnSpanFull(),
 
                         Textarea::make('notes')
                             ->label('Ghi chú')
-                            ->rows(2)
-                            ->placeholder('Ghi chú thêm về lăng mộ...'),
+                            ->rows(3)
+                            ->placeholder('Ghi chú thêm về lăng mộ, lịch sử hy sinh, công lao...')
+                            ->columnSpanFull(),
                     ])
                     ->columns(2)
                     ->collapsible(),
