@@ -128,26 +128,27 @@ Route::get('/cemeteries/{id}/plots', function ($id) {
             ];
         }),
     ]);
-// Tribute API Routes
-Route::prefix('tributes')->group(function () {
-    // Get tribute count for a grave
-    Route::get('/count/{grave}', [TributeController::class, 'count']);
+    // Tribute API Routes
+    Route::prefix('tributes')->group(function () {
+        // Get tribute count for a grave
+        Route::get('/count/{grave}', [TributeController::class, 'count']);
 
-    // Get recent tributes for a grave
-    Route::get('/recent/{grave}', [TributeController::class, 'recent']);
+        // Get recent tributes for a grave
+        Route::get('/recent/{grave}', [TributeController::class, 'recent']);
 
-    // Check if user has tributed today
-    Route::get('/status/{grave}', [TributeController::class, 'checkStatus']);
+        // Check if user has tributed today
+        Route::get('/status/{grave}', [TributeController::class, 'checkStatus']);
 
-    // Add a tribute
-    Route::post('/add', [TributeController::class, 'store']);
-});
+        // Add a tribute
+        Route::post('/add', [TributeController::class, 'store']);
+    });
 
-// Anniversary API Routes
-Route::prefix('anniversary')->group(function () {
-    // Get today's tribute count for a grave
-    Route::get('/tribute-count/{grave}', [AnniversaryController::class, 'getTodayCount']);
+    // Anniversary API Routes
+    Route::prefix('anniversary')->group(function () {
+        // Get today's tribute count for a grave
+        Route::get('/tribute-count/{grave}', [AnniversaryController::class, 'getTodayCount']);
 
-    // Search martyrs
-    Route::get('/search', [AnniversaryController::class, 'search']);
+        // Search martyrs
+        Route::get('/search', [AnniversaryController::class, 'search']);
+    });
 });

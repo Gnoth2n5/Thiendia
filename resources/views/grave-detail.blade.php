@@ -665,7 +665,7 @@
                 </div>
             </div>
 
-            <!-- Quick Actions -->
+            {{-- <!-- Quick Actions -->
             <div class="card border" style="background-color: #fafaf8; border-color: #d4d0c8; box-shadow: none;">
                 <div class="card-body">
                     <h3 class="font-bold text-lg mb-3" style="color: #2b2b2b;">Cần hỗ trợ?</h3>
@@ -684,7 +684,7 @@
                         Gửi yêu cầu sửa đổi
                     </a>
                 </div>
-            </div> --}}
+            </div> --}} 
         </div>
     </div>
 
