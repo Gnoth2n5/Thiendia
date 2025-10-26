@@ -275,10 +275,19 @@ function showSmokeAnimation() {
     const smokeElement = document.getElementById("smokeAnimation");
     if (!smokeElement) return;
 
+    const particle = smokeElement.querySelector(".smoke-particle");
+    if (!particle) return;
+
+    // Reset animation by removing and re-adding the class
+    particle.classList.remove("smoke-rising");
+
+    // Force reflow to restart animation
+    void particle.offsetWidth;
+
+    // Show the smoke element
     smokeElement.style.display = "block";
 
     // Add animation class
-    const particle = smokeElement.querySelector(".smoke-particle");
     particle.classList.add("smoke-rising");
 
     // Hide after animation completes

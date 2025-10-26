@@ -146,6 +146,11 @@
                         Danh Sách Liệt Sĩ
                     </a>
 
+                    <a href="{{ route('anniversary.today') }}"
+                        class="px-4 py-2 text-white font-semibold hover:bg-red-700 transition-colors duration-300 rounded {{ request()->routeIs('anniversary.*') ? 'bg-red-700' : '' }}">
+                        Ngày Giỗ Hôm Nay
+                    </a>
+
                     <a href="#contact"
                         class="px-4 py-2 text-white font-semibold hover:bg-red-700 transition-colors duration-300 rounded">
                         Liên Hệ
@@ -188,6 +193,11 @@
                     <a href="{{ route('search') }}"
                         class="flex items-center gap-3 px-4 py-3 text-white font-semibold hover:bg-red-800 transition-colors duration-300 {{ request()->routeIs('search') ? 'bg-red-800' : '' }}">
                         Danh Sách Liệt Sĩ
+                    </a>
+
+                    <a href="{{ route('anniversary.today') }}"
+                        class="flex items-center gap-3 px-4 py-3 text-white font-semibold hover:bg-red-800 transition-colors duration-300 {{ request()->routeIs('anniversary.*') ? 'bg-red-800' : '' }}">
+                        Ngày Giỗ Hôm Nay
                     </a>
 
                     <a href="#"

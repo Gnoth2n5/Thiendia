@@ -4,10 +4,10 @@ on:
   push:
     branches:
       - master
-      - '*.x'
+      - "*.x"
   pull_request:
   schedule:
-    - cron: '0 0 * * *'
+    - cron: "0 0 * * *"
 
 permissions:
   contents: read
@@ -37,8 +37,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
-          cache: 'npm'
+          node-version: "18"
+          cache: "npm"
 
       - name: Install npm dependencies
         run: npm ci --prefer-offline --no-audit --progress=false
@@ -56,7 +56,9 @@ jobs:
         run: php artisan key:generate
 
       - name: Migrate and seed
-        run: php artisan migrate --seed
+        run: |
+          touch database/database.sqlite
+          php artisan migrate:fresh --seed
 
       - name: Execute tests
         run: php artisan test

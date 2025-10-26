@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AnniversaryController;
+use App\Http\Controllers\TributeController;
 use App\Models\Cemetery;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -31,7 +33,7 @@ Route::get('/districts', function () {
 Route::get('/communes', function (Request $request) {
     $district = $request->get('district');
 
-    if (! $district) {
+    if (!$district) {
         return response()->json([]);
     }
 
@@ -85,7 +87,7 @@ Route::get('/graves/{id}', function ($id) {
         'deceased_birth_date' => $grave->deceased_birth_date?->format('d/m/Y'),
         'deceased_death_date' => $grave->deceased_death_date?->format('d/m/Y'),
         'deceased_photo' => $grave->deceased_photo ? \Storage::url($grave->deceased_photo) : null,
-        'grave_photos' => $grave->grave_photos ? array_map(fn ($photo) => \Storage::url($photo), $grave->grave_photos) : [],
+        'grave_photos' => $grave->grave_photos ? array_map(fn($photo) => \Storage::url($photo), $grave->grave_photos) : [],
         'location_description' => $grave->location_description,
         'notes' => $grave->notes,
         'latitude' => $grave->latitude,
@@ -100,4 +102,28 @@ Route::get('/graves/{id}', function ($id) {
             'description' => $grave->cemetery->description,
         ],
     ]);
+});
+
+// Tribute API Routes
+Route::prefix('tributes')->group(function () {
+    // Get tribute count for a grave
+    Route::get('/count/{grave}', [TributeController::class, 'count']);
+
+    // Get recent tributes for a grave
+    Route::get('/recent/{grave}', [TributeController::class, 'recent']);
+
+    // Check if user has tributed today
+    Route::get('/status/{grave}', [TributeController::class, 'checkStatus']);
+
+    // Add a tribute
+    Route::post('/add', [TributeController::class, 'store']);
+});
+
+// Anniversary API Routes
+Route::prefix('anniversary')->group(function () {
+    // Get today's tribute count for a grave
+    Route::get('/tribute-count/{grave}', [AnniversaryController::class, 'getTodayCount']);
+
+    // Search martyrs
+    Route::get('/search', [AnniversaryController::class, 'search']);
 });
