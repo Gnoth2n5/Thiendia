@@ -30,182 +30,142 @@
         </div>
 
         <!-- Grid Map -->
-        <div class="card bg-base-100 shadow-xl"
-            x-data="{
-                cemeteryId: {{ $cemetery->id }},
-                plots: [],
-                gridDimensions: { rows: 0, columns: 0 },
-                selectedPlot: null,
-                hoveredPlot: null,
-                loading: true,
-                filterStatus: 'all',
-            
-                async init() {
-                    await this.loadPlots();
-                },
-            
-                async loadPlots() {
-                    this.loading = true;
-                    try {
-                        const response = await fetch(`/api/cemeteries/${this.cemeteryId}/plots`);
-                        const data = await response.json();
-            
-                        this.plots = data.plots;
-                        this.gridDimensions = data.grid;
-                    } catch (error) {
-                        console.error('Error loading plots:', error);
-                    } finally {
-                        this.loading = false;
-                    }
-                },
-            
-                getPlotColor(status) {
-                    const colors = {
-                        'available': 'bg-green-500 hover:bg-green-600',
-                        'occupied': 'bg-gray-500 hover:bg-gray-600',
-                        'reserved': 'bg-yellow-500 hover:bg-yellow-600',
-                        'unavailable': 'bg-red-500 hover:bg-red-600'
-                    };
-                    return colors[status] || 'bg-gray-300';
-                },
-            
-                selectPlot(plot) {
-                    this.selectedPlot = plot;
-                },
-            
-                closeModal() {
-                    this.selectedPlot = null;
-                },
-            
-                filteredPlots() {
-                    if (this.filterStatus === 'all') {
-                        return this.plots;
-                    }
-                    return this.plots.filter(p => p.status === this.filterStatus);
-                }
-            }">
-
+        <div class="card bg-base-100 shadow-xl">
             <div class="card-body">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="card-title text-2xl">Sơ đồ lô mộ</h2>
-
-                    <!-- Filter -->
-                    <select x-model="filterStatus"
-                        class="select select-bordered select-sm">
-                        <option value="all">Tất cả</option>
-                        <option value="available">Còn trống</option>
-                        <option value="occupied">Đã sử dụng</option>
-                        <option value="reserved">Đã đặt trước</option>
-                        <option value="unavailable">Không khả dụng</option>
-                    </select>
-                </div>
+                <h2 class="card-title text-2xl mb-6">Sơ đồ lô mộ</h2>
 
                 <!-- Legend -->
                 <div class="flex flex-wrap items-center gap-4 mb-6 text-sm">
                     <div class="flex items-center gap-2">
-                        <div class="w-4 h-4 bg-green-500 rounded"></div>
+                        <div class="w-4 h-4 rounded" style="background-color: #22c55e;"></div>
                         <span>Còn trống</span>
                     </div>
                     <div class="flex items-center gap-2">
-                        <div class="w-4 h-4 bg-gray-500 rounded"></div>
+                        <div class="w-4 h-4 rounded" style="background-color: #6b7280;"></div>
                         <span>Đã sử dụng</span>
                     </div>
                     <div class="flex items-center gap-2">
-                        <div class="w-4 h-4 bg-yellow-500 rounded"></div>
+                        <div class="w-4 h-4 rounded" style="background-color: #eab308;"></div>
                         <span>Đã đặt trước</span>
                     </div>
                     <div class="flex items-center gap-2">
-                        <div class="w-4 h-4 bg-red-500 rounded"></div>
+                        <div class="w-4 h-4 rounded" style="background-color: #ef4444;"></div>
                         <span>Không khả dụng</span>
                     </div>
                 </div>
 
-                <!-- Loading State -->
-                <div x-show="loading" class="text-center py-12">
-                    <span class="loading loading-spinner loading-lg"></span>
-                    <p class="mt-4 text-base-content/60">Đang tải sơ đồ...</p>
-                </div>
+                @if ($plotGrid['rows'] > 0 && $plotGrid['columns'] > 0 && $plotGrid['plots']->count() > 0)
+                    @php
+                        // Helper function for plot colors
+                        $getPlotColor = function($status) {
+                            $colors = [
+                                'available' => '#22c55e',    // green-500
+                                'occupied' => '#6b7280',     // gray-500
+                                'reserved' => '#eab308',     // yellow-500
+                                'unavailable' => '#ef4444'   // red-500
+                            ];
+                            return $colors[$status] ?? '#d1d5db';
+                        };
+                        
+                        // Build plot lookup map
+                        $plotMap = [];
+                        foreach ($plotGrid['plots'] as $plot) {
+                            $plotMap[$plot->row][$plot->column] = $plot;
+                        }
+                    @endphp
 
-                <!-- Grid -->
-                <div x-show="!loading && plots.length > 0" class="overflow-x-auto">
-                    <div class="inline-block min-w-full">
-                        <template x-for="row in gridDimensions.rows" :key="'row-' + row">
-                            <div class="flex gap-1 mb-1">
-                                <template x-for="col in gridDimensions.columns" :key="'cell-' + row + '-' + col">
-                                    <template x-for="plot in filteredPlots().filter(p => p.row === row && p.column === col)"
-                                        :key="plot.id">
-                                        <div @click="selectPlot(plot)" @mouseenter="hoveredPlot = plot"
-                                            @mouseleave="hoveredPlot = null"
-                                            :class="['w-12 h-12 sm:w-14 sm:h-14 rounded cursor-pointer transition-all duration-150 flex items-center justify-center text-white text-xs font-bold', getPlotColor(plot.status)]"
-                                            :title="plot.plot_code + ' - ' + plot.status_label">
-                                            <span x-text="plot.plot_code" class="text-[10px] sm:text-xs"></span>
-                                        </div>
-                                    </template>
-                                </template>
+                    <!-- Grid -->
+                    <div class="overflow-x-auto p-4 bg-gray-50 rounded-lg">
+                        <div class="inline-block">
+                            <!-- Column Headers -->
+                            <div style="display: flex; gap: 4px; margin-bottom: 4px; margin-left: 40px;">
+                                @for ($col = 1; $col <= $plotGrid['columns']; $col++)
+                                    <div style="width: 48px; text-align: center; font-weight: 600; color: #6b7280; font-size: 11px;">
+                                        {{ $col }}
+                                    </div>
+                                @endfor
                             </div>
-                        </template>
-                    </div>
-                </div>
 
-                <!-- Empty State -->
-                <div x-show="!loading && plots.length === 0" class="text-center py-12">
-                    <p class="text-base-content/60">Chưa có sơ đồ lô cho nghĩa trang này.</p>
-                </div>
-
-                <!-- Hovered Plot Info -->
-                <div x-show="hoveredPlot" x-transition
-                    class="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-                    <template x-if="hoveredPlot">
-                        <div class="space-y-1 text-sm">
-                            <div><strong>Mã lô:</strong> <span x-text="hoveredPlot.plot_code"></span></div>
-                            <div><strong>Vị trí:</strong> Hàng <span x-text="hoveredPlot.row"></span>, Cột <span
-                                    x-text="hoveredPlot.column"></span></div>
-                            <div><strong>Trạng thái:</strong> <span x-text="hoveredPlot.status_label"></span></div>
-                            <template x-if="hoveredPlot.grave">
-                                <div><strong>Liệt sĩ:</strong> <span x-text="hoveredPlot.grave.deceased_full_name"></span>
-                                </div>
-                            </template>
-                        </div>
-                    </template>
-                </div>
-
-                <!-- Plot Detail Modal -->
-                <div x-show="selectedPlot" @click.away="closeModal()" x-transition
-                    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-                    <div @click.stop class="bg-base-100 rounded-lg shadow-2xl max-w-md w-full p-6">
-                        <template x-if="selectedPlot">
-                            <div>
-                                <h3 class="text-2xl font-bold mb-4" x-text="'Lô ' + selectedPlot.plot_code"></h3>
-
-                                <div class="space-y-3 mb-6">
-                                    <div class="flex justify-between">
-                                        <span class="font-medium">Vị trí:</span>
-                                        <span>Hàng <span x-text="selectedPlot.row"></span>, Cột <span
-                                                x-text="selectedPlot.column"></span></span>
-                                    </div>
-                                    <div class="flex justify-between">
-                                        <span class="font-medium">Trạng thái:</span>
-                                        <span x-text="selectedPlot.status_label"></span>
+                            <!-- Grid Rows -->
+                            @for ($row = 1; $row <= $plotGrid['rows']; $row++)
+                                <div style="display: flex; gap: 4px; margin-bottom: 4px;">
+                                    <!-- Row Label -->
+                                    <div style="width: 36px; display: flex; align-items: center; justify-content: center; font-weight: 600; color: #6b7280; font-size: 13px;">
+                                        {{ chr(64 + $row) }}
                                     </div>
 
-                                    <template x-if="selectedPlot.grave">
-                                        <div class="pt-4 border-t">
-                                            <p class="font-medium mb-2">Thông tin liệt sĩ:</p>
-                                            <p class="text-lg font-bold text-primary"
-                                                x-text="selectedPlot.grave.deceased_full_name"></p>
-                                            <a :href="'/grave/' + selectedPlot.grave.id"
-                                                class="btn btn-primary btn-sm mt-3">
-                                                Xem chi tiết
+                                    <!-- Plot Cells -->
+                                    @for ($col = 1; $col <= $plotGrid['columns']; $col++)
+                                        @if (isset($plotMap[$row][$col]))
+                                            @php
+                                                $plot = $plotMap[$row][$col];
+                                                $backgroundColor = $getPlotColor($plot->status);
+                                                $title = $plot->plot_code . ' - ' . $plot->status_label;
+                                                if ($plot->grave) {
+                                                    $title .= ' (' . $plot->grave->deceased_full_name . ')';
+                                                }
+                                            @endphp
+                                            <a
+                                                href="{{ $plot->grave ? route('grave.show', $plot->grave->id) : '#' }}"
+                                                style="
+                                                    width: 48px;
+                                                    height: 48px;
+                                                    border-radius: 6px;
+                                                    display: flex;
+                                                    align-items: center;
+                                                    justify-content: center;
+                                                    font-size: 10px;
+                                                    font-weight: bold;
+                                                    color: #ffffff;
+                                                    background-color: {{ $backgroundColor }};
+                                                    border: 1px solid rgba(0,0,0,0.1);
+                                                    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+                                                    text-decoration: none;
+                                                    transition: all 0.15s;
+                                                    {{ $plot->grave ? 'cursor: pointer;' : 'cursor: default;' }}
+                                                "
+                                                title="{{ $title }}"
+                                                @if (!$plot->grave) onclick="return false;" @endif
+                                                onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.2)';"
+                                                onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 1px 2px rgba(0,0,0,0.1)';"
+                                            >
+                                                {{ $plot->plot_code }}
                                             </a>
-                                        </div>
-                                    </template>
+                                        @else
+                                            <div style="width: 48px; height: 48px;"></div>
+                                        @endif
+                                    @endfor
                                 </div>
-
-                                <button @click="closeModal()" class="btn btn-ghost w-full">Đóng</button>
-                            </div>
-                        </template>
+                            @endfor
+                        </div>
                     </div>
-                </div>
+
+                    <!-- Stats -->
+                    <div class="text-sm text-gray-600 text-center mt-6">
+                        <span>Tổng số lô: {{ $plotGrid['plots']->count() }}</span>
+                        <span class="mx-2">•</span>
+                        <span>Còn trống: {{ $plotGrid['plots']->where('status', 'available')->count() }}</span>
+                        <span class="mx-2">•</span>
+                        <span>Đã sử dụng: {{ $plotGrid['plots']->where('status', 'occupied')->count() }}</span>
+                        <span class="mx-2">•</span>
+                        <span>Đã đặt trước: {{ $plotGrid['plots']->where('status', 'reserved')->count() }}</span>
+                    </div>
+
+                    <!-- Instructions -->
+                    <div class="alert alert-info mt-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span>Click vào lô màu xám (đã sử dụng) để xem thông tin chi tiết liệt sĩ</span>
+                    </div>
+                @else
+                    <!-- Empty State -->
+                    <div class="text-center py-12">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-16 h-16 mx-auto text-gray-400 mb-4">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z" />
+                        </svg>
+                        <p class="text-gray-600 text-lg font-medium">Chưa có sơ đồ lô cho nghĩa trang này</p>
+                        <p class="text-gray-500 text-sm mt-2">Vui lòng liên hệ quản trị viên để thiết lập lưới lô</p>
+                    </div>
+                @endif
             </div>
         </div>
 
@@ -221,4 +181,3 @@
         </div>
     </div>
 @endsection
-
