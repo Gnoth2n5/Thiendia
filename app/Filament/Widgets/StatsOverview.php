@@ -22,8 +22,8 @@ class StatsOverview extends StatsOverviewWidget
                 ->descriptionIcon('heroicon-m-building-office-2')
                 ->color('primary'),
 
-            Stat::make('Tổng số lăng mộ liệt sĩ', $totalGraves)
-                ->description('Lăng mộ trong hệ thống')
+            Stat::make('Tổng số liệt sĩ', $totalGraves)
+                ->description('Liệt sĩ trong hệ thống')
                 ->descriptionIcon('heroicon-m-rectangle-stack')
                 ->color('success'),
 

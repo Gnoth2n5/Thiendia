@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Graves\Schemas;
 
 use App\Models\Cemetery;
+use App\Models\User;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Placeholder;
@@ -12,7 +13,6 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ViewField;
 use Filament\Forms\Form;
-use App\Models\User;
 
 class GraveForm
 {
@@ -23,7 +23,7 @@ class GraveForm
                 Section::make('Thông tin nghĩa trang')
                     ->schema([
                         Select::make('cemetery_id')
-                            ->label('Mộ tưởng niệm tại nghĩa trang')
+                            ->label('Nghĩa trang an táng')
                             ->options(function () {
                                 $query = Cemetery::query();
 
@@ -44,7 +44,7 @@ class GraveForm
                                 // Chỉ tự động generate khi tạo mới
                                 if ($context === 'create' && $state) {
                                     $nextNumber = \App\Models\Grave::where('cemetery_id', $state)->count() + 1;
-                                    $graveNumber = $state . '-' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+                                    $graveNumber = $state.'-'.str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
                                     $set('grave_number', $graveNumber);
                                 }
                             }),
@@ -63,13 +63,13 @@ class GraveForm
 
                                 return 'Chọn nghĩa trang để xem số lăng mộ';
                             })
-                            ->visible(fn($context) => $context === 'create'),
+                            ->visible(fn ($context) => $context === 'create'),
 
                         TextInput::make('grave_number')
                             ->label('Số lăng mộ')
                             ->disabled()
                             ->dehydrated()
-                            ->visible(fn($context) => $context === 'edit'),
+                            ->visible(fn ($context) => $context === 'edit'),
 
                         TextInput::make('caretaker_name')
                             ->label('Người quản lý mộ')
@@ -197,18 +197,18 @@ class GraveForm
                 Section::make('Thông tin bổ sung')
                     ->schema([
                         Select::make('grave_type')
-                            ->label('Loại lăng mộ')
+                            ->label('Loại mộ')
                             ->options([
-                                'đất' => 'Lăng mộ đất',
-                                'xi_măng' => 'Lăng mộ xi măng',
-                                'đá' => 'Lăng mộ đá',
-                                'gỗ' => 'Lăng mộ gỗ',
+                                'đất' => 'Mộ đất',
+                                'xi_măng' => 'Mộ xi măng',
+                                'đá' => 'Mộ đá',
+                                'gỗ' => 'Mộ gỗ',
                                 'khác' => 'Loại khác',
                             ])
                             ->default('đá'),
 
                         Textarea::make('location_description')
-                            ->label('Mô tả vị trí')
+                            ->label('Vị trí trong nghĩa trang')
                             ->rows(2)
                             ->placeholder('Ví dụ: Khu A, hàng 3, mộ số 15')
                             ->columnSpanFull(),
@@ -216,7 +216,7 @@ class GraveForm
                         Textarea::make('notes')
                             ->label('Ghi chú')
                             ->rows(3)
-                            ->placeholder('Ghi chú thêm về lăng mộ, lịch sử hy sinh, công lao...')
+                            ->placeholder('Ghi chú về tiểu sử, lịch sử hy sinh, công lao...')
                             ->columnSpanFull(),
                     ])
                     ->columns(2)

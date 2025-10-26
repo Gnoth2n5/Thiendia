@@ -18,7 +18,7 @@ class GravesTable
         return $table
             ->columns([
                 TextColumn::make('deceased_full_name')
-                    ->label('Họ và tên liệt sỹ')
+                    ->label('Họ tên liệt sỹ')
                     ->sortable()
                     ->searchable()
                     ->limit(30)

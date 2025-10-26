@@ -19,10 +19,10 @@
                 </div>
             </div>
             <h1 class="text-4xl font-bold text-red-600 mb-4">
-                Tìm kiếm lăng mộ
+                Tìm kiếm liệt sĩ
             </h1>
             <p class="text-lg text-slate-600 max-w-2xl mx-auto">
-                Nhập thông tin để tra cứu lăng mộ tại các nghĩa trang Ninh Bình
+                Nhập thông tin để tra cứu liệt sĩ tại các nghĩa trang Ninh Bình
             </p>
         </div>
     </div>
@@ -398,7 +398,7 @@
                             d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
                     </svg>
                     <h3 class="text-xl font-bold text-neutral mb-2">Bắt đầu tìm kiếm</h3>
-                    <p class="text-base-content/60">Nhập thông tin vào form phía trên để tra cứu lăng mộ</p>
+                    <p class="text-base-content/60">Nhập thông tin vào form phía trên để tra cứu liệt sĩ</p>
                 </div>
             </div>
         @endif
@@ -548,7 +548,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
                     </svg>
                     <h3 class="text-xl font-bold text-red-600 mb-2">Lỗi tải dữ liệu</h3>
-                    <p class="text-gray-600">Không thể tải thông tin lăng mộ. Vui lòng thử lại.</p>
+                    <p class="text-gray-600">Không thể tải thông tin liệt sĩ. Vui lòng thử lại.</p>
                 </div>
             `;
         }

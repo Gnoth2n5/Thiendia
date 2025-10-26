@@ -8,21 +8,23 @@ use App\Filament\Resources\Graves\Pages\ListGraves;
 use App\Filament\Resources\Graves\Schemas\GraveForm;
 use App\Filament\Resources\Graves\Tables\GravesTable;
 use App\Models\Grave;
+use App\Models\User;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
+
 
 class GraveResource extends Resource
 {
     protected static ?string $model = Grave::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-user-circle';
 
-    protected static ?string $navigationLabel = 'Lăng mộ';
+    protected static ?string $navigationLabel = 'Liệt sĩ';
 
-    protected static ?string $modelLabel = 'Lăng mộ';
+    protected static ?string $modelLabel = 'Liệt sĩ';
 
-    protected static ?string $pluralModelLabel = 'Lăng mộ';
+    protected static ?string $pluralModelLabel = 'Liệt sĩ';
 
     protected static ?int $navigationSort = 2;
 
@@ -31,6 +33,7 @@ class GraveResource extends Resource
         $query = parent::getEloquentQuery();
 
         // Nếu là cán bộ xã/phường, chỉ hiển thị lăng mộ của xã/phường mình
+        /** @var User $user */
         $user = auth()->user();
         if ($user && $user->isCommuneStaff()) {
             $query->whereHas('cemetery', function ($q) use ($user) {

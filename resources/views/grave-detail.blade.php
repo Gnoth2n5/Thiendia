@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Chi tiết lăng mộ - ' . $grave->deceased_full_name . ' - Tra cứu liệt sĩ tỉnh Ninh Bình')
+@section('title', 'Liệt sĩ ' . $grave->deceased_full_name . ' - Tra cứu liệt sĩ tỉnh Ninh Bình')
 
 @section('content')
     <!-- Breadcrumb -->
@@ -66,7 +66,7 @@
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <p class="text-sm text-base-content/60 mb-1">Loại lăng mộ</p>
+                                <p class="text-sm text-base-content/60 mb-1">Loại mộ</p>
                                 <p class="font-medium">{{ $grave->grave_type_label }}</p>
                             </div>
 
