@@ -39,10 +39,14 @@ class ManageCemeteryGrid extends Page implements HasForms
 
     public int $gridVersion = 0;
 
-    public function mount(): void
+    public function mount(?int $cemetery = null): void
     {
-        // Get the first cemetery by default
-        $this->cemetery = Cemetery::first();
+        // Get cemetery from URL parameter or first cemetery as default
+        if ($cemetery) {
+            $this->cemetery = Cemetery::findOrFail($cemetery);
+        } else {
+            $this->cemetery = Cemetery::first();
+        }
 
         if ($this->cemetery) {
             $this->loadPlots();
@@ -50,6 +54,7 @@ class ManageCemeteryGrid extends Page implements HasForms
 
         $this->form->fill();
     }
+
 
     public function form(Form $form): Form
     {
