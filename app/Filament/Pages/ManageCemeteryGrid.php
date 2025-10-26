@@ -37,6 +37,8 @@ class ManageCemeteryGrid extends Page implements HasForms
 
     public ?array $gridDimensions = null;
 
+    public int $gridVersion = 0;
+
     public function mount(): void
     {
         // Get the first cemetery by default
@@ -100,6 +102,9 @@ class ManageCemeteryGrid extends Page implements HasForms
                 ] : null,
             ];
         })->toArray();
+
+        // Increment version to force re-render
+        $this->gridVersion++;
     }
 
     protected function getHeaderActions(): array
@@ -189,7 +194,7 @@ class ManageCemeteryGrid extends Page implements HasForms
         ];
     }
 
-    public function togglePlotStatus(int $plotId, string $newStatus): void
+    public function changePlotStatus(int $plotId, string $newStatus): void
     {
         $plot = CemeteryPlot::findOrFail($plotId);
 
@@ -211,6 +216,11 @@ class ManageCemeteryGrid extends Page implements HasForms
             ->title('Đã cập nhật trạng thái lô ' . $plot->plot_code)
             ->success()
             ->send();
+    }
+
+    public function togglePlotStatus(int $plotId, string $newStatus): void
+    {
+        $this->changePlotStatus($plotId, $newStatus);
     }
 
     public function bulkSetStatus(array $plotIds, string $status): void

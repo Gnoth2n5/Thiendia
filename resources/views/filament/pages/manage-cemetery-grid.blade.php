@@ -49,13 +49,13 @@
                 </x-slot>
 
                 <div
+                    wire:key="cemetery-grid-{{ $cemetery->id }}-{{ $gridVersion }}"
                     x-data="{
-                        plots: {{ json_encode($plots ?? []) }},
+                        plots: @js($plots ?? []),
                         selectedPlots: [],
-                        hoveredPlot: null,
-                        maxRow: {{ $gridDimensions['rows'] ?? 0 }},
-                        maxCol: {{ $gridDimensions['columns'] ?? 0 }},
-                        
+                        selectedPlot: null,
+                        maxRow: @js($gridDimensions['rows'] ?? 0),
+                        maxCol: @js($gridDimensions['columns'] ?? 0),
                         
                         getPlotColor(status) {
                             // Return CSS color values
@@ -66,6 +66,13 @@
                                 'unavailable': '#ef4444' // red-500
                             };
                             return colors[status] || '#d1d5db'; // gray-300
+                        },
+                        
+                        selectPlot(plotId) {
+                            const plot = this.plots.find(p => p.id === plotId);
+                            if (plot) {
+                                this.selectedPlot = plot;
+                            }
                         },
                         
                         toggleSelection(plotId) {
@@ -92,6 +99,15 @@
                             
                             $wire.bulkSetStatus(this.selectedPlots, status);
                             this.clearSelection();
+                        },
+                        
+                        changePlotStatus(plotId, newStatus) {
+                            if (!plotId || !newStatus) {
+                                return;
+                            }
+                            
+                            // Call Livewire and let it refresh the component
+                            $wire.changePlotStatus(plotId, newStatus);
                         }
                     }"
                     class="space-y-4"
@@ -128,30 +144,103 @@
                         </div>
                     </div>
 
-                    <!-- Hovered Plot Info - Hiển thị trên đầu -->
+                    <!-- Plot Management Panel - Hiển thị thông tin và quản lý lô -->
                     <div class="mb-4 p-4 rounded-lg border-2" 
-                        :style="hoveredPlot ? 'background-color: #dbeafe; border-color: #3b82f6; height: 140px;' : 'background-color: #f3f4f6; border-color: #d1d5db; height: 140px;'"
+                        :style="selectedPlot ? 'background-color: #dbeafe; border-color: #3b82f6;' : 'background-color: #f3f4f6; border-color: #d1d5db;'"
                         x-show="plots.length > 0"
                         style="transition: background-color 0.2s, border-color 0.2s;">
-                        <template x-if="hoveredPlot">
+                        <template x-if="selectedPlot">
                             <div>
-                                <div class="font-bold text-lg mb-2" x-text="'Lô: ' + hoveredPlot.plot_code" style="color: #1e40af;"></div>
-                                <div class="space-y-1 text-sm">
-                                    <div><strong>Vị trí:</strong> Hàng <span x-text="hoveredPlot.row"></span>, Cột <span x-text="hoveredPlot.column"></span></div>
-                                    <div><strong>Trạng thái:</strong> 
-                                        <span x-text="hoveredPlot.status === 'available' ? 'Còn trống' : 
-                                                     hoveredPlot.status === 'occupied' ? 'Đã sử dụng' : 
-                                                     hoveredPlot.status === 'reserved' ? 'Đã đặt trước' : 'Không khả dụng'"></span>
+                                <div class="flex items-center justify-between mb-4">
+                                    <div class="font-bold text-lg" x-text="'Lô: ' + selectedPlot.plot_code" style="color: #1e40af;"></div>
+                                    <button
+                                        type="button"
+                                        @click="selectedPlot = null"
+                                        class="text-gray-500 hover:text-gray-700"
+                                    >
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <!-- Thông tin lô -->
+                                    <div class="space-y-2">
+                                        <div class="text-sm">
+                                            <strong>Vị trí:</strong> Hàng <span x-text="selectedPlot.row"></span>, Cột <span x-text="selectedPlot.column"></span>
+                                        </div>
+                                        <div class="text-sm">
+                                            <strong>Trạng thái hiện tại:</strong> 
+                                            <span class="px-2 py-1 rounded text-xs font-medium"
+                                                  :style="selectedPlot.status === 'available' ? 'background-color: #dcfce7; color: #166534;' :
+                                                          selectedPlot.status === 'occupied' ? 'background-color: #f3f4f6; color: #374151;' :
+                                                          selectedPlot.status === 'reserved' ? 'background-color: #fef3c7; color: #92400e;' :
+                                                          'background-color: #fee2e2; color: #991b1b;'"
+                                                  x-text="selectedPlot.status === 'available' ? 'Còn trống' : 
+                                                         selectedPlot.status === 'occupied' ? 'Đã sử dụng' : 
+                                                         selectedPlot.status === 'reserved' ? 'Đã đặt trước' : 'Không khả dụng'"></span>
+                                        </div>
+                                        <template x-if="selectedPlot.grave">
+                                            <div class="text-sm">
+                                                <strong>Liệt sĩ:</strong> <span x-text="selectedPlot.grave.deceased_full_name"></span>
+                                            </div>
+                                        </template>
                                     </div>
-                                    <template x-if="hoveredPlot.grave">
-                                        <div><strong>Liệt sĩ:</strong> <span x-text="hoveredPlot.grave.deceased_full_name"></span></div>
-                                    </template>
+                                    
+                                    <!-- Quản lý trạng thái -->
+                                    <div class="space-y-3">
+                                        <div class="text-sm font-medium">Thay đổi trạng thái:</div>
+                                        <div class="flex flex-wrap gap-2">
+                                            <button
+                                                type="button"
+                                                @click="changePlotStatus(selectedPlot.id, 'available')"
+                                                :disabled="selectedPlot.status === 'available'"
+                                                class="px-3 py-1.5 text-xs font-medium rounded"
+                                                :style="selectedPlot.status === 'available' ? 
+                                                        'background-color: #22c55e; color: white; cursor: not-allowed; opacity: 0.6;' :
+                                                        'background-color: #dcfce7; color: #166534; hover:bg-green-200;'"
+                                            >
+                                                Còn trống
+                                            </button>
+                                            <button
+                                                type="button"
+                                                @click="changePlotStatus(selectedPlot.id, 'reserved')"
+                                                :disabled="selectedPlot.status === 'reserved'"
+                                                class="px-3 py-1.5 text-xs font-medium rounded"
+                                                :style="selectedPlot.status === 'reserved' ? 
+                                                        'background-color: #eab308; color: white; cursor: not-allowed; opacity: 0.6;' :
+                                                        'background-color: #fef3c7; color: #92400e; hover:bg-yellow-200;'"
+                                            >
+                                                Đặt trước
+                                            </button>
+                                            <button
+                                                type="button"
+                                                @click="changePlotStatus(selectedPlot.id, 'unavailable')"
+                                                :disabled="selectedPlot.status === 'unavailable'"
+                                                class="px-3 py-1.5 text-xs font-medium rounded"
+                                                :style="selectedPlot.status === 'unavailable' ? 
+                                                        'background-color: #ef4444; color: white; cursor: not-allowed; opacity: 0.6;' :
+                                                        'background-color: #fee2e2; color: #991b1b; hover:bg-red-200;'"
+                                            >
+                                                Không khả dụng
+                                            </button>
+                                        </div>
+                                        <div class="text-xs text-gray-500">
+                                            <template x-if="selectedPlot.status === 'occupied'">
+                                                <span>Lô này đang có mộ, không thể thay đổi trạng thái</span>
+                                            </template>
+                                            <template x-if="selectedPlot.status !== 'occupied'">
+                                                <span>Click vào nút để thay đổi trạng thái lô</span>
+                                            </template>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </template>
-                        <template x-if="!hoveredPlot">
-                            <div style="color: #9ca3af; padding-top: 30px; text-align: center;">
-                                Di chuột vào các ô bên dưới để xem thông tin chi tiết
+                        <template x-if="!selectedPlot">
+                            <div class="text-center text-gray-500">
+                                <p>Click vào một ô trong lưới để quản lý lô mộ</p>
                             </div>
                         </template>
                     </div>
@@ -180,9 +269,7 @@
                                     <template x-for="col in maxCol" :key="'cell-' + row + '-' + col">
                                         <template x-for="plot in plots.filter(p => p.row === row && p.column === col)" :key="plot.id">
                                             <div
-                                                @click="toggleSelection(plot.id)"
-                                                @mouseenter="hoveredPlot = plot"
-                                                @mouseleave="hoveredPlot = null"
+                                                @click="selectPlot(plot.id)"
                                                 :style="{
                                                     width: '48px',
                                                     height: '48px',
@@ -195,8 +282,8 @@
                                                     fontWeight: 'bold',
                                                     color: '#ffffff',
                                                     backgroundColor: getPlotColor(plot.status),
-                                                    border: isSelected(plot.id) ? '3px solid #3b82f6' : '1px solid rgba(0,0,0,0.1)',
-                                                    boxShadow: hoveredPlot && hoveredPlot.id === plot.id ? '0 4px 6px rgba(0,0,0,0.2)' : '0 1px 2px rgba(0,0,0,0.1)',
+                                                    border: selectedPlot && selectedPlot.id === plot.id ? '3px solid #3b82f6' : '1px solid rgba(0,0,0,0.1)',
+                                                    boxShadow: selectedPlot && selectedPlot.id === plot.id ? '0 4px 6px rgba(0,0,0,0.2)' : '0 1px 2px rgba(0,0,0,0.1)',
                                                     transition: 'all 0.15s'
                                                 }"
                                                 :title="plot.plot_code + ' - ' + plot.status + (plot.grave ? ' (' + plot.grave.deceased_full_name + ')' : '')"
