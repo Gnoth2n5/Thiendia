@@ -23,14 +23,22 @@ class HomeController extends Controller
     {
         $query = Grave::with('cemetery', 'plot');
 
-        // Tìm kiếm theo tên người quản lý mộ
-        if ($request->filled('caretaker_name')) {
-            $query->where('caretaker_name', 'like', '%' . $request->caretaker_name . '%');
-        }
-
-        // Tìm kiếm theo tên người đã khuất
+        // Tìm kiếm theo tên liệt sĩ
         if ($request->filled('deceased_name')) {
             $query->where('deceased_full_name', 'like', '%' . $request->deceased_name . '%');
+        }
+
+        // Lọc theo năm sinh
+        if ($request->filled('birth_year')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('birth_year', $request->birth_year)
+                    ->orWhereYear('deceased_birth_date', $request->birth_year);
+            });
+        }
+
+        // Lọc theo năm hy sinh
+        if ($request->filled('death_year')) {
+            $query->whereYear('deceased_death_date', $request->death_year);
         }
 
         // Lọc theo xã (từ cemetery)
@@ -45,6 +53,13 @@ class HomeController extends Controller
             $query->where('cemetery_id', $request->cemetery_id);
         }
 
+        // Lọc theo lô mộ
+        if ($request->filled('plot_code')) {
+            $query->whereHas('plot', function ($q) use ($request) {
+                $q->where('plot_code', 'like', '%' . $request->plot_code . '%');
+            });
+        }
+
         $graves = $query->paginate(12);
         $cemeteries = Cemetery::all();
 
@@ -55,7 +70,28 @@ class HomeController extends Controller
     {
         $grave = Grave::with('cemetery', 'plot')->findOrFail($id);
 
-        return view('grave-detail', compact('grave'));
+        // Load plot grid data if grave has a plot
+        $plotGrid = null;
+        if ($grave->plot) {
+            $cemetery = $grave->cemetery;
+            $dimensions = $cemetery->getGridDimensions();
+
+            $plots = \App\Models\CemeteryPlot::where('cemetery_id', $cemetery->id)
+                ->with('grave:id,plot_id,deceased_full_name')
+                ->orderBy('row')
+                ->orderBy('column')
+                ->get();
+
+            // Build 2D array for easy rendering
+            $plotGrid = [
+                'rows' => $dimensions['rows'],
+                'columns' => $dimensions['columns'],
+                'plots' => $plots,
+                'targetPlotId' => $grave->plot->id,
+            ];
+        }
+
+        return view('grave-detail', compact('grave', 'plotGrid'));
     }
 
     /**
@@ -65,7 +101,22 @@ class HomeController extends Controller
     {
         $cemetery = Cemetery::findOrFail($id);
 
-        return view('cemetery-map', compact('cemetery'));
+        // Load plot grid data
+        $dimensions = $cemetery->getGridDimensions();
+
+        $plots = \App\Models\CemeteryPlot::where('cemetery_id', $cemetery->id)
+            ->with('grave:id,plot_id,deceased_full_name')
+            ->orderBy('row')
+            ->orderBy('column')
+            ->get();
+
+        $plotGrid = [
+            'rows' => $dimensions['rows'],
+            'columns' => $dimensions['columns'],
+            'plots' => $plots,
+        ];
+
+        return view('cemetery-map', compact('cemetery', 'plotGrid'));
     }
 
     /**
