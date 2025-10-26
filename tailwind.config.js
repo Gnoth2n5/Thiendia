@@ -37,17 +37,11 @@ export default {
             },
             fontFamily: {
                 sans: [
-                    "Inter",
-                    "ui-sans-serif",
-                    "system-ui",
-                    "-apple-system",
-                    "BlinkMacSystemFont",
-                    "Segoe UI",
-                    "Roboto",
-                    "Helvetica Neue",
-                    "Arial",
-                    "Noto Sans",
-                    "sans-serif",
+                    "Merriweather",
+                    "ui-serif",
+                    "Georgia",
+                    "Cambria",
+                    "serif",
                 ],
             },
         },
@@ -57,17 +51,17 @@ export default {
         themes: [
             {
                 cemetery: {
-                    primary: "#0f766e", // Xanh ngọc đậm trang trọng
-                    secondary: "#7c3aed", // Tím violet
-                    accent: "#f59e0b", // Vàng amber ấm áp
-                    neutral: "#1e293b", // Xám xanh đậm
-                    "base-100": "#ffffff", // Nền trắng
-                    "base-200": "#f8fafc", // Xám rất nhạt
-                    "base-300": "#e2e8f0", // Xám nhạt
-                    info: "#06b6d4", // Cyan
-                    success: "#059669", // Emerald
-                    warning: "#f59e0b", // Amber
-                    error: "#dc2626", // Đỏ
+                    primary: "#8b0000", // Đỏ trầm
+                    secondary: "#2b2b2b", // Đen nâu
+                    accent: "#d4d0c8", // Xám be
+                    neutral: "#2b2b2b", // Đen nâu
+                    "base-100": "#fafaf8", // Trắng ngà
+                    "base-200": "#f5f3e7", // Be vàng nhạt
+                    "base-300": "#d4d0c8", // Xám be
+                    info: "#2b2b2b", // Đen nâu
+                    success: "#8b0000", // Đỏ trầm
+                    warning: "#8b0000", // Đỏ trầm
+                    error: "#8b0000", // Đỏ trầm
 
                     "--rounded-box": "1rem",
                     "--rounded-btn": "0.5rem",

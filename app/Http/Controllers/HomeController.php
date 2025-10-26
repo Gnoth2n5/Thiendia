@@ -162,4 +162,24 @@ class HomeController extends Controller
             'data' => $wards,
         ]);
     }
+
+    public function contact()
+    {
+        return view('contact');
+    }
+
+    public function guide()
+    {
+        return view('guide');
+    }
+
+    public function privacyPolicy()
+    {
+        return view('privacy-policy');
+    }
+
+    public function termsOfService()
+    {
+        return view('terms-of-service');
+    }
 }

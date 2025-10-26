@@ -6,11 +6,8 @@
     <!-- Page Header -->
     <div class="mb-8">
         <div class="text-center mb-8">
-            <div class="relative inline-block mb-6">
-                <div
-                    class="absolute inset-0 bg-gradient-to-r from-green-400 to-blue-500 rounded-full blur-xl opacity-30 animate-pulse">
-                </div>
-                <div class="relative p-4 bg-gradient-to-br from-purple-500 to-red-500 rounded-full">
+            <div class="inline-block mb-6">
+                <div class="p-4 rounded-full" style="background-color: #8b0000;">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
                         stroke="currentColor" class="h-12 w-12 text-white">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -28,11 +25,11 @@
     </div>
 
     <!-- Search Form -->
-    <div class="card bg-gradient-to-br from-white via-slate-50/50 to-green-50/30 shadow-xl mb-8 border border-green-200/50">
+    <div class="card mb-8 border" style="background-color: #fafaf8; border-color: #d4d0c8; box-shadow: none;">
         <div class="card-body">
-            <h2 class="card-title text-2xl text-slate-800 mb-4">
+            <h2 class="card-title text-2xl mb-4" style="color: #2b2b2b;">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                    stroke="currentColor" class="h-6 w-6 text-green-600">
+                    stroke="currentColor" class="h-6 w-6" style="color: #8b0000;">
                     <path stroke-linecap="round" stroke-linejoin="round"
                         d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z" />
                 </svg>
@@ -133,16 +130,13 @@
                     </div>
                 </div>
 
-                <div class="flex gap-3 justify-end">
-                    <a href="{{ route('search') }}" class="btn btn-ghost gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                            stroke="currentColor" class="h-5 w-5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                        </svg>
-                        Xóa bộ lọc
-                    </a>
+                <div class="flex gap-3 justify-end items-center">
+                    <a href="{{ route('search') }}" class="btn gap-2"
+                        style="background-color: #d4d0c8; color: #2b2b2b; border: none;">Xóa bộ lọc</a>
                     <button type="submit"
-                        class="relative inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-red-500 hover:from-purple-700 hover:to-red-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                        class="inline-flex items-center gap-2 px-6 py-3 text-white font-semibold rounded-lg transition-colors duration-200"
+                        style="background-color: #8b0000;" onmouseover="this.style.backgroundColor='#6b0000'"
+                        onmouseout="this.style.backgroundColor='#8b0000'">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
                             stroke="currentColor" class="h-5 w-5">
                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -169,12 +163,13 @@
 
             @if ($graves->count() > 0)
                 <!-- Table Container -->
-                <div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden mb-8">
+                <div class="rounded-2xl border overflow-hidden mb-8"
+                    style="background-color: #fafaf8; border-color: #d4d0c8;">
                     <!-- Desktop Table -->
                     <div class="hidden lg:block overflow-x-auto">
                         <table class="w-full">
                             <!-- Table Header -->
-                            <thead class="bg-gradient-to-r from-blue-50 to-green-50 border-b border-gray-200">
+                            <thead style="background-color: #8b0000;" class="border-b">
                                 <tr>
                                     <th
                                         class="px-4 py-4 text-left text-sm font-bold text-gray-700 border-r border-gray-200">
@@ -217,8 +212,9 @@
                             <!-- Table Body -->
                             <tbody class="divide-y divide-gray-100">
                                 @foreach ($graves as $index => $grave)
-                                    <tr
-                                        class="hover:bg-gradient-to-r hover:from-blue-50/30 hover:to-green-50/30 transition-all duration-200 group">
+                                    <tr class="transition-all duration-200" style="border-color: #d4d0c8;"
+                                        onmouseover="this.style.backgroundColor='rgba(139,0,0,0.05)'"
+                                        onmouseout="this.style.backgroundColor='transparent'">
                                         <!-- STT -->
                                         <td class="px-4 py-4 text-sm text-gray-600 border-r border-gray-100 font-medium">
                                             {{ $graves->firstItem() + $index }}
@@ -299,7 +295,10 @@
                                             <div class="flex items-center justify-center gap-2">
                                                 <!-- View Details Button -->
                                                 <button onclick="openGraveModal({{ $grave->id }})"
-                                                    class="inline-flex items-center gap-1 px-3 py-2 bg-gradient-to-r from-purple-500 to-red-500 hover:from-purple-600 hover:to-red-600 text-white text-xs font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-200 hover:scale-105">
+                                                    class="inline-flex items-center gap-1 px-3 py-2 text-white text-xs font-medium rounded-lg transition-colors duration-200"
+                                                    style="background-color: #8b0000;"
+                                                    onmouseover="this.style.backgroundColor='#6b0000'"
+                                                    onmouseout="this.style.backgroundColor='#8b0000'">
                                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                         viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
                                                         class="h-3 w-3">
@@ -336,8 +335,10 @@
                     <!-- Mobile Cards -->
                     <div class="lg:hidden">
                         @foreach ($graves as $index => $grave)
-                            <div
-                                class="border-b border-gray-100 last:border-b-0 p-4 hover:bg-gradient-to-r hover:from-blue-50/30 hover:to-green-50/30 transition-all duration-200">
+                            <div class="border-b last:border-b-0 p-4 transition-all duration-200"
+                                style="border-color: #d4d0c8;"
+                                onmouseover="this.style.backgroundColor='rgba(139,0,0,0.05)'"
+                                onmouseout="this.style.backgroundColor='transparent'">
                                 <div class="flex items-start justify-between mb-3">
                                     <div class="flex-1">
                                         <div class="flex items-center gap-2 mb-2">
@@ -418,7 +419,10 @@
                                 <!-- Mobile Actions -->
                                 <div class="flex gap-2">
                                     <button onclick="openGraveModal({{ $grave->id }})"
-                                        class="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 bg-gradient-to-r from-purple-500 to-red-500 hover:from-purple-600 hover:to-red-600 text-white text-sm font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-200">
+                                        class="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 text-white text-sm font-medium rounded-lg transition-colors duration-200"
+                                        style="background-color: #8b0000;"
+                                        onmouseover="this.style.backgroundColor='#6b0000'"
+                                        onmouseout="this.style.backgroundColor='#8b0000'">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                             stroke-width="2" stroke="currentColor" class="h-4 w-4">
                                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -451,26 +455,28 @@
                     {{ $graves->appends(request()->query())->links() }}
                 </div>
             @else
-                <div class="card bg-base-100 shadow-lg border border-base-300">
-                    <div class="card-body text-center py-16">
+                <div class="card shadow-lg border text-center py-16"
+                    style="background-color: #fafaf8; border-color: #d4d0c8;">
+                    <div class="card-body">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="h-16 w-16 mx-auto text-base-content/30 mb-4">
+                            stroke="currentColor" class="h-16 w-16 mx-auto mb-4" style="color: #8b0000; opacity: 0.3;">
                             <path stroke-linecap="round" stroke-linejoin="round"
                                 d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
                         </svg>
-                        <h3 class="text-xl font-bold text-neutral mb-2">Không tìm thấy kết quả</h3>
-                        <p class="text-base-content/60 mb-4">Vui lòng thử lại với thông tin khác hoặc mở rộng tiêu chí tìm
-                            kiếm</p>
-                        <a href="{{ route('search') }}" class="btn btn-ghost">Xóa bộ lọc</a>
+                        <h3 class="text-xl font-bold mb-2" style="color: #2b2b2b;">Không tìm thấy kết quả</h3>
+                        <p class="mb-4" style="color: #2b2b2b; opacity: 0.6;">Vui lòng thử lại với thông tin khác hoặc
+                            mở rộng tiêu chí tìm kiếm</p>
+                        <a href="{{ route('search') }}" class="btn"
+                            style="background-color: #d4d0c8; color: #2b2b2b; border: none;">Xóa bộ lọc</a>
                     </div>
                 </div>
             @endif
         @else
             <!-- Empty State -->
-            <div class="card bg-base-100 shadow-lg border border-base-300">
+            <div class="card shadow-lg border" style="background-color: #fafaf8; border-color: #d4d0c8;">
                 <div class="card-body text-center py-16">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor" class="h-16 w-16 mx-auto text-primary/50 mb-4">
+                        stroke="currentColor" class="h-16 w-16 mx-auto mb-4" style="color: #8b0000; opacity: 0.3;">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
                     </svg>
@@ -495,9 +501,10 @@
             </button>
 
             <!-- Modal Content -->
-            <div class="bg-white rounded-xl shadow-2xl overflow-hidden">
+            <div class="rounded-xl overflow-hidden"
+                style="background-color: #fff; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);">
                 <!-- Modal Header -->
-                <div class="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6">
+                <div class="text-white p-6" style="background-color: #8b0000;">
                     <h2 id="modalTitle" class="text-2xl font-bold">Tiểu Sử Liệt Sĩ</h2>
                 </div>
 
@@ -512,8 +519,8 @@
                     <!-- Content will be populated by JavaScript -->
                     <div id="modalContent" style="display: none;">
                         <!-- Thông tin liệt sĩ -->
-                        <div class="bg-blue-50 rounded-lg p-4 mb-6">
-                            <h3 class="text-lg font-bold text-blue-800 mb-4">Thông tin liệt sĩ</h3>
+                        <div class="rounded-lg p-4 mb-6" style="background-color: #fafaf8;">
+                            <h3 class="text-lg font-bold mb-4" style="color: #8b0000;">Thông tin liệt sĩ</h3>
                             <div class="flex gap-4">
                                 <!-- Photo -->
                                 <div id="deceasedPhoto" class="flex-shrink-0">
@@ -557,8 +564,8 @@
                         </div>
 
                         <!-- Ảnh chụp mộ liệt sĩ -->
-                        <div class="bg-blue-50 rounded-lg p-4 mb-6">
-                            <h3 class="text-lg font-bold text-blue-800 mb-4">Ảnh chụp mộ liệt sĩ</h3>
+                        <div class="rounded-lg p-4 mb-6" style="background-color: #fafaf8;">
+                            <h3 class="text-lg font-bold mb-4" style="color: #8b0000;">Ảnh chụp mộ liệt sĩ</h3>
                             <div id="gravePhotos" class="flex gap-4 justify-center">
                                 <!-- Photos will be populated by JavaScript -->
                             </div>
@@ -571,7 +578,9 @@
                                 Đóng
                             </button>
                             <a id="viewDetailsBtn" href="#"
-                                class="px-6 py-3 bg-gradient-to-r from-purple-500 to-red-500 hover:from-purple-600 hover:to-red-600 text-white font-medium rounded-lg transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl">
+                                class="px-6 py-3 text-white font-medium rounded-lg transition-colors duration-200"
+                                style="background-color: #8b0000;" onmouseover="this.style.backgroundColor='#6b0000'"
+                                onmouseout="this.style.backgroundColor='#8b0000'">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                     stroke-width="2" stroke="currentColor" class="h-5 w-5 inline mr-2">
                                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -1126,7 +1135,7 @@
 </script>
 
 <!-- Image Modal -->
-<div id="imageModal" class="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4"
+<div id="imageModal" class="fixed inset-0 bg-black/40 z-[9999] flex items-center justify-center p-4"
     style="display: none;" onclick="closeImageModal()">
     <div class="relative max-w-6xl w-full max-h-[90vh]">
         <!-- Close Button -->

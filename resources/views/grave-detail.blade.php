@@ -37,6 +37,42 @@
                 </h1>
             </div>
             <p class="text-lg text-slate-600 mb-6">{{ $grave->cemetery->name }}</p>
+
+            <!-- Tribute Memorial Section -->
+            <div class="mt-8 text-center">
+                <!-- Tribute Button -->
+                <button id="tributeBtn"
+                    onclick="openTributeModal({{ $grave->id }}, '{{ $grave->deceased_full_name ?: $grave->owner_name }}')"
+                    class="inline-flex items-center gap-2 px-6 py-3 bg-[#8B7355] hover:bg-[#6B5B47] text-white font-medium border border-[#6B5B47] transition-colors duration-200">
+                    <span class="text-xl">🕯️</span>
+                    <span id="tributeBtnText">Thắp hương tưởng nhớ</span>
+                </button>
+
+                <!-- Tribute Count -->
+                <div id="tributeCount" class="mt-3 text-sm text-gray-600">
+                    Đã có <span id="tributeCountNumber">0</span> người thắp hương tưởng nhớ
+                </div>
+
+                <!-- Social Sharing -->
+                <div class="mt-4 flex justify-center gap-3">
+                    <button
+                        onclick="shareToFacebook('{{ $grave->deceased_full_name ?: $grave->owner_name }}', '{{ route('grave.show', $grave->id) }}')"
+                        class="p-2 text-gray-600 hover:text-blue-600 transition-colors">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                        </svg>
+                    </button>
+                    <button
+                        onclick="shareToTwitter('{{ $grave->deceased_full_name ?: $grave->owner_name }}', '{{ route('grave.show', $grave->id) }}')"
+                        class="p-2 text-gray-600 hover:text-blue-400 transition-colors">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -269,8 +305,8 @@
                                         <div class="flex-shrink-0">
                                             <div
                                                 class="w-32 h-40 bg-gradient-to-br from-slate-200 to-slate-300 rounded-xl flex items-center justify-center shadow-xl ring-4 ring-white/50">
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                    stroke-width="1.5" stroke="currentColor"
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                    viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
                                                     class="h-16 w-16 text-slate-400">
                                                     <path stroke-linecap="round" stroke-linejoin="round"
                                                         d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
@@ -312,16 +348,18 @@
                                     
                                     @if ($grave->deceased_birth_date)
                                         <div class="bg-white/50 rounded-lg p-3">
-                                            <p class="text-xs text-base-content/60 mb-1">Ngày sinh đầy đủ</p>
-                                            <p class="font-bold text-base">{{ $grave->deceased_birth_date->format('d/m/Y') }}
+                                            <p class="text-xs text-base-content/60 mb-1">Ngày sinh</p>
+                                            <p class="font-bold text-lg">
+                                                {{ $grave->deceased_birth_date->format('d/m/Y') }}
                                             </p>
                                         </div>
                                     @endif
 
                                     @if ($grave->deceased_death_date)
                                         <div class="bg-white/50 rounded-lg p-3">
-                                            <p class="text-xs text-base-content/60 mb-1">Ngày hy sinh</p>
-                                            <p class="font-bold text-lg text-error">{{ $grave->deceased_death_date->format('d/m/Y') }}
+                                            <p class="text-xs text-base-content/60 mb-1">Ngày mất</p>
+                                            <p class="font-bold text-lg">
+                                                {{ $grave->deceased_death_date->format('d/m/Y') }}
                                             </p>
                                         </div>
                                     @endif
@@ -614,12 +652,44 @@
                 </div>
             @endif
 
+            <!-- Recent Tributes -->
+            <div
+                class="card bg-gradient-to-br from-white via-slate-50/50 to-green-50/30 shadow-xl border border-green-200/50">
+                <div class="card-body">
+                    <h3 class="font-bold text-lg mb-4 text-slate-800">Lời tưởng niệm gần đây</h3>
+                    <div id="recentTributes" class="space-y-3">
+                        <!-- Tributes will be loaded here -->
+                        <div class="text-center text-gray-500 py-4">
+                            <div class="animate-pulse">Đang tải...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- <!-- Quick Actions -->
+            <div class="card bg-gradient-to-br from-green-50 to-blue-50 border border-green-200/50 shadow-lg">
+                <div class="card-body">
+                    <h3 class="font-bold text-lg mb-3 text-slate-800">Cần hỗ trợ?</h3>
+                    <p class="text-sm text-slate-600 mb-4">
+                        Nếu bạn phát hiện thông tin không chính xác hoặc cần cập nhật, vui lòng gửi yêu cầu sửa đổi.
+                    </p>
+                    <a href="{{ route('modification-request.create', $grave->id) }}"
+                        class="relative inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-red-500 hover:from-purple-700 hover:to-red-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 w-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                            stroke="currentColor" class="h-5 w-5">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                        </svg>
+                        Gửi yêu cầu sửa đổi
+                    </a>
+                </div>
+            </div> --}}
         </div>
     </div>
 
     <!-- Image Modal -->
-    <div id="imageModal" class="fixed inset-0 bg-black/90 hidden z-50 flex items-center justify-center p-4"
-        onclick="closeImageModal()">
+    <div id="imageModal" class="fixed inset-0 bg-black/90 z-[9999] flex items-center justify-center p-4"
+        style="display: none;" onclick="closeImageModal()">
         <div class="relative max-w-6xl w-full max-h-[90vh]">
             <!-- Close Button -->
             <button onclick="closeImageModal()"
@@ -708,7 +778,7 @@
                 document.getElementById('modalImage').src = imageUrl;
                 document.getElementById('imageTitle').textContent = title || 'Hình ảnh';
                 document.getElementById('imageDescription').textContent = description || '';
-                document.getElementById('imageModal').classList.remove('hidden');
+                document.getElementById('imageModal').style.display = 'flex';
                 document.body.style.overflow = 'hidden';
                 return;
             }
@@ -726,7 +796,7 @@
             updateThumbnails();
             updateNavigationButtons();
 
-            document.getElementById('imageModal').classList.remove('hidden');
+            document.getElementById('imageModal').style.display = 'flex';
             document.body.style.overflow = 'hidden';
         }
 
@@ -809,7 +879,7 @@
         }
 
         function closeImageModal() {
-            document.getElementById('imageModal').classList.add('hidden');
+            document.getElementById('imageModal').style.display = 'none';
             document.body.style.overflow = 'auto';
         }
 
@@ -827,7 +897,7 @@
 
         // Keyboard navigation
         document.addEventListener('keydown', function(e) {
-            if (document.getElementById('imageModal').classList.contains('hidden')) return;
+            if (document.getElementById('imageModal').style.display === 'none') return;
 
             console.log('Key pressed:', e.key);
 
@@ -909,4 +979,77 @@
             });
         @endif
     </script>
+
+    <!-- Tribute Modal -->
+    <div id="tributeModal" class="fixed inset-0 bg-black/50 z-[9999] flex items-center justify-center p-4"
+        style="display: none;">
+        <div class="bg-white max-w-md w-full border border-gray-300">
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between p-4 border-b border-gray-200">
+                <h3 id="tributeModalTitle" class="text-lg font-semibold text-gray-800">Thắp hương tưởng nhớ</h3>
+                <button onclick="closeTributeModal()" class="text-gray-400 hover:text-gray-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                        </path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="p-4">
+                <form id="tributeForm" onsubmit="submitTribute(event)">
+                    <!-- Name Field -->
+                    <div class="mb-4">
+                        <label for="tributeName" class="block text-sm font-medium text-gray-700 mb-2">
+                            Họ tên (không bắt buộc)
+                        </label>
+                        <input type="text" id="tributeName" name="name" placeholder="Để trống nếu muốn ẩn danh"
+                            class="w-full px-3 py-2 border border-gray-300 focus:outline-none focus:ring-1 focus:ring-[#8B7355] focus:border-[#8B7355]">
+                    </div>
+
+                    <!-- Message Field -->
+                    <div class="mb-4">
+                        <label for="tributeMessage" class="block text-sm font-medium text-gray-700 mb-2">
+                            Lời tưởng niệm (không bắt buộc)
+                        </label>
+                        <textarea id="tributeMessage" name="message" rows="4" maxlength="500" placeholder="Nhập lời tưởng niệm..."
+                            class="w-full px-3 py-2 border border-gray-300 focus:outline-none focus:ring-1 focus:ring-[#8B7355] focus:border-[#8B7355] resize-none"></textarea>
+                        <div class="text-right text-sm text-gray-500 mt-1">
+                            <span id="charCount">0</span>/500
+                        </div>
+                    </div>
+
+                    <!-- Sound Toggle -->
+                    <div class="mb-4">
+                        <label class="flex items-center">
+                            <input type="checkbox" id="soundToggle" class="mr-2">
+                            <span class="text-sm text-gray-700">Bật âm thanh</span>
+                        </label>
+                    </div>
+
+                    <!-- Error Message -->
+                    <div id="tributeError" class="mb-4 text-red-600 text-sm" style="display: none;"></div>
+                </form>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="flex gap-3 p-4 border-t border-gray-200">
+                <button type="button" onclick="closeTributeModal()"
+                    class="flex-1 px-4 py-2 text-gray-700 border border-gray-300 hover:bg-gray-50 transition-colors">
+                    Hủy
+                </button>
+                <button type="submit" form="tributeForm" id="submitTributeBtn"
+                    class="flex-1 px-4 py-2 bg-[#8B7355] text-white hover:bg-[#6B5B47] transition-colors">
+                    Thắp hương
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Smoke Animation Element -->
+    <div id="smokeAnimation" class="fixed inset-0 pointer-events-none z-[10000]" style="display: none;">
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            <div class="smoke-particle">🕯️</div>
+        </div>
+    </div>
 @endsection

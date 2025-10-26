@@ -33,13 +33,17 @@
 
     <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
 
+    <!-- Google Fonts - Merriweather -->
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
         integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 
     <style>
         body {
-            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Merriweather', serif;
+            background-color: #f5f3e7;
         }
     </style>
 
@@ -49,7 +53,7 @@
 
 <body class="bg-base-200 min-h-screen">
     <!-- Top Bar -->
-    <div class="bg-neutral text-neutral-content py-2 border-b border-base-300">
+    <div class="py-2 border-b border-d4d0c8" style="background-color: #2b2b2b; color: #f5f3e7;">
         <div class="container mx-auto px-4">
             <div class="flex justify-between items-center text-sm">
                 <div class="flex items-center gap-4">
@@ -70,23 +74,20 @@
                         24/7 Hỗ trợ
                     </span>
                 </div>
-                <a href="{{ url('/admin') }}" class="hover:text-accent transition-colors">Đăng nhập quản trị</a>
+                <a href="{{ url('/admin') }}">Đăng nhập quản trị</a>
             </div>
         </div>
     </div>
 
     <!-- Navigation Bar -->
-    <nav class="bg-red-600 shadow-lg sticky top-0 z-50">
+    <nav class="sticky top-0 z-50" style="background: linear-gradient(135deg, #8b0000 0%, #a52a2a 100%);">
         <div class="container mx-auto px-4">
             <div class="flex items-center justify-between h-16">
                 <!-- Logo Section -->
                 <div class="flex items-center gap-4">
-                    <a href="{{ route('home') }}"
-                        class="group flex items-center gap-3 hover:scale-105 transition-transform duration-300">
-                        <div class="relative">
-                            <div class="relative p-2 bg-white/20 rounded-lg">
-                                <img src="{{ asset('images/logo.png') }}" alt="Logo" class="w-10 h-10">
-                            </div>
+                    <a href="{{ route('home') }}" class="flex items-center gap-3">
+                        <div class="p-2 rounded-lg" style="background-color: rgba(245, 243, 231, 0.2);">
+                            <img src="{{ asset('images/logo.png') }}" alt="Logo" class="w-10 h-10">
                         </div>
                         <div class="hidden sm:block text-white">
                             <div class="text-lg font-bold">Hệ thống Tra cứu liệt sĩ</div>
@@ -98,7 +99,10 @@
                 <!-- Desktop Navigation -->
                 <div class="hidden lg:flex items-center space-x-1">
                     <a href="{{ route('home') }}"
-                        class="px-4 py-2 text-white font-semibold hover:bg-red-700 transition-colors duration-300 rounded {{ request()->routeIs('home') ? 'bg-red-700' : '' }}">
+                        class="px-4 py-2 text-white font-semibold rounded transition-colors duration-200 {{ request()->routeIs('home') ? 'bg-[rgba(0,0,0,0.3)]' : '' }}"
+                        style="{{ request()->routeIs('home') ? '' : 'color: #f5f3e7;' }}"
+                        onmouseover="this.style.backgroundColor='rgba(0,0,0,0.3)'"
+                        onmouseout="this.style.backgroundColor='{{ request()->routeIs('home') ? 'rgba(0,0,0,0.3)' : 'transparent' }}'">
                         Trang Chủ
                     </a>
 
@@ -116,7 +120,9 @@
 
                     <div class="relative group">
                         <a href="{{ route('articles.index') }}"
-                            class="px-4 py-2 text-white font-semibold hover:bg-red-700 transition-colors duration-300 rounded flex items-center gap-1 {{ request()->routeIs('articles.*') ? 'bg-red-700' : '' }}">
+                            class="px-4 py-2 text-white font-semibold rounded flex items-center gap-1 {{ request()->routeIs('articles.*') ? 'bg-[rgba(0,0,0,0.3)]' : '' }}"
+                            onmouseover="if(!this.closest('.group').querySelector(':hover ~ div')) this.style.backgroundColor='rgba(0,0,0,0.3)'"
+                            onmouseout="this.style.backgroundColor='{{ request()->routeIs('articles.*') ? 'rgba(0,0,0,0.3)' : 'transparent' }}'">
                             Tin Tức – Sự Kiện
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
                                 stroke="currentColor" class="h-4 w-4">
@@ -124,16 +130,20 @@
                             </svg>
                         </a>
                         <!-- Dropdown menu -->
-                        <div
-                            class="absolute top-full left-0 bg-white shadow-xl rounded-lg py-2 min-w-48 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
+                        <div class="absolute top-full left-0 bg-white shadow-lg rounded py-2 min-w-48 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200"
+                            style="border: 1px solid #d4d0c8;">
                             <a href="{{ route('articles.index') }}"
-                                class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Tất cả tin tức</a>
+                                class="block px-4 py-2 transition-colors hover:bg-gray-100"
+                                style="color: #2b2b2b;">Tất cả tin tức</a>
                             <a href="{{ route('articles.category', 'tin_tuc') }}"
-                                class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Tin tức</a>
+                                class="block px-4 py-2 transition-colors hover:bg-gray-100"
+                                style="color: #2b2b2b;">Tin tức</a>
                             <a href="{{ route('articles.category', 'su_kien') }}"
-                                class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Sự kiện</a>
+                                class="block px-4 py-2 transition-colors hover:bg-gray-100" style="color: #2b2b2b;">Sự
+                                kiện</a>
                             <a href="{{ route('articles.category', 'thong_bao') }}"
-                                class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Thông báo</a>
+                                class="block px-4 py-2 transition-colors hover:bg-gray-100"
+                                style="color: #2b2b2b;">Thông báo</a>
                         </div>
                     </div>
 
@@ -142,12 +152,23 @@
                         </a> --}}
 
                     <a href="{{ route('search') }}"
-                        class="px-4 py-2 text-white font-semibold hover:bg-red-700 transition-colors duration-300 rounded {{ request()->routeIs('search') ? 'bg-red-700' : '' }}">
+                        class="px-4 py-2 text-white font-semibold rounded transition-colors duration-200 {{ request()->routeIs('search') ? 'bg-[rgba(0,0,0,0.3)]' : '' }}"
+                        onmouseover="if(!this.classList.contains('active-link')) this.style.backgroundColor='rgba(0,0,0,0.3)'"
+                        onmouseout="this.style.backgroundColor='{{ request()->routeIs('search') ? 'rgba(0,0,0,0.3)' : 'transparent' }}'">
                         Danh Sách Liệt Sĩ
                     </a>
 
-                    <a href="#contact"
-                        class="px-4 py-2 text-white font-semibold hover:bg-red-700 transition-colors duration-300 rounded">
+                    <a href="{{ route('anniversary.today') }}"
+                        class="px-4 py-2 text-white font-semibold rounded transition-colors duration-200 {{ request()->routeIs('anniversary.*') ? 'bg-[rgba(0,0,0,0.3)]' : '' }}"
+                        onmouseover="if(!this.classList.contains('active-link')) this.style.backgroundColor='rgba(0,0,0,0.3)'"
+                        onmouseout="this.style.backgroundColor='{{ request()->routeIs('anniversary.*') ? 'rgba(0,0,0,0.3)' : 'transparent' }}'">
+                        Ngày Giỗ Hôm Nay
+                    </a>
+
+                    <a href="{{ route('contact') }}"
+                        class="px-4 py-2 text-white font-semibold rounded transition-colors duration-200"
+                        onmouseover="this.style.backgroundColor='rgba(0,0,0,0.3)'"
+                        onmouseout="this.style.backgroundColor='transparent'">
                         Liên Hệ
                     </a>
                 </div>
@@ -155,8 +176,11 @@
                 <!-- Mobile Menu Button -->
                 <div class="lg:hidden">
                     <button type="button"
-                        class="mobile-menu-button inline-flex items-center justify-center p-2 rounded text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white transition-all duration-300"
-                        aria-controls="mobile-menu" aria-expanded="false">
+                        class="mobile-menu-button inline-flex items-center justify-center p-2 rounded text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white transition-all duration-200"
+                        style="background-color: rgba(0,0,0,0.1);"
+                        onmouseover="this.style.backgroundColor='rgba(0,0,0,0.3)'"
+                        onmouseout="this.style.backgroundColor='rgba(0,0,0,0.1)'" aria-controls="mobile-menu"
+                        aria-expanded="false">
                         <span class="sr-only">Mở menu chính</span>
                         <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none"
                             viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
@@ -169,34 +193,81 @@
 
             <!-- Mobile menu -->
             <div class="mobile-menu hidden lg:hidden" id="mobile-menu">
-                <div class="px-2 pt-2 pb-3 space-y-1 bg-red-700 rounded-lg mt-2">
+                <div class="px-2 pt-2 pb-3 space-y-1 rounded-lg mt-2" style="background-color: rgba(0,0,0,0.3);">
                     <a href="{{ route('home') }}"
-                        class="flex items-center gap-3 px-4 py-3 text-white font-semibold hover:bg-red-800 transition-colors duration-300 {{ request()->routeIs('home') ? 'bg-red-800' : '' }}">
+                        class="flex items-center gap-3 px-4 py-3 text-white font-semibold transition-colors duration-200 {{ request()->routeIs('home') ? 'bg-[rgba(0,0,0,0.5)]' : '' }}"
+                        onmouseover="if(!this.classList.contains('active-link')) this.style.backgroundColor='rgba(0,0,0,0.5)'"
+                        onmouseout="this.style.backgroundColor='{{ request()->routeIs('home') ? 'rgba(0,0,0,0.5)' : 'transparent' }}'">
                         Trang Chủ
                     </a>
 
                     <a href="{{ route('articles.index') }}"
-                        class="flex items-center gap-3 px-4 py-3 text-white font-semibold hover:bg-red-800 transition-colors duration-300 {{ request()->routeIs('articles.*') ? 'bg-red-800' : '' }}">
+                        class="flex items-center gap-3 px-4 py-3 text-white font-semibold transition-colors duration-200 {{ request()->routeIs('articles.*') ? 'bg-[rgba(0,0,0,0.5)]' : '' }}"
+                        onmouseover="if(!this.classList.contains('active-link')) this.style.backgroundColor='rgba(0,0,0,0.5)'"
+                        onmouseout="this.style.backgroundColor='{{ request()->routeIs('articles.*') ? 'rgba(0,0,0,0.5)' : 'transparent' }}'">
                         Tin Tức – Sự Kiện
                     </a>
 
                     <a href="#"
-                        class="flex items-center gap-3 px-4 py-3 text-white font-semibold hover:bg-red-800 transition-colors duration-300">
+                        class="flex items-center gap-3 px-4 py-3 text-white font-semibold transition-colors duration-200"
+                        onmouseover="this.style.backgroundColor='rgba(0,0,0,0.5)'"
+                        onmouseout="this.style.backgroundColor='transparent'">
                         Hình Ảnh Hoạt Động
                     </a>
 
                     <a href="{{ route('search') }}"
-                        class="flex items-center gap-3 px-4 py-3 text-white font-semibold hover:bg-red-800 transition-colors duration-300 {{ request()->routeIs('search') ? 'bg-red-800' : '' }}">
+                        class="flex items-center gap-3 px-4 py-3 text-white font-semibold transition-colors duration-200 {{ request()->routeIs('search') ? 'bg-[rgba(0,0,0,0.5)]' : '' }}"
+                        onmouseover="if(!this.classList.contains('active-link')) this.style.backgroundColor='rgba(0,0,0,0.5)'"
+                        onmouseout="this.style.backgroundColor='{{ request()->routeIs('search') ? 'rgba(0,0,0,0.5)' : 'transparent' }}'">
                         Danh Sách Liệt Sĩ
                     </a>
 
+                    <a href="{{ route('anniversary.today') }}"
+                        class="flex items-center gap-3 px-4 py-3 text-white font-semibold transition-colors duration-200 {{ request()->routeIs('anniversary.*') ? 'bg-[rgba(0,0,0,0.5)]' : '' }}"
+                        onmouseover="if(!this.classList.contains('active-link')) this.style.backgroundColor='rgba(0,0,0,0.5)'"
+                        onmouseout="this.style.backgroundColor='{{ request()->routeIs('anniversary.*') ? 'rgba(0,0,0,0.5)' : 'transparent' }}'">
+                        Ngày Giỗ Hôm Nay
+                    </a>
+
                     <a href="#"
-                        class="flex items-center gap-3 px-4 py-3 text-white font-semibold hover:bg-red-800 transition-colors duration-300">
+                        class="flex items-center gap-3 px-4 py-3 text-white font-semibold transition-colors duration-200"
+                        onmouseover="this.style.backgroundColor='rgba(0,0,0,0.5)'"
+                        onmouseout="this.style.backgroundColor='transparent'">
                         Video clip
                     </a>
 
-                    <a href="#contact"
-                        class="flex items-center gap-3 px-4 py-3 text-white font-semibold hover:bg-red-800 transition-colors duration-300">
+                    <a href="{{ route('guide') }}"
+                        class="flex items-center gap-3 px-4 py-3 text-white font-semibold transition-colors duration-200"
+                        onmouseover="this.style.backgroundColor='rgba(0,0,0,0.5)'"
+                        onmouseout="this.style.backgroundColor='transparent'">
+                        Hướng dẫn sử dụng
+                    </a>
+
+                    <a href="{{ route('contact') }}"
+                        class="flex items-center gap-3 px-4 py-3 text-white font-semibold transition-colors duration-200"
+                        onmouseover="this.style.backgroundColor='rgba(0,0,0,0.5)'"
+                        onmouseout="this.style.backgroundColor='transparent'">
+                        Câu hỏi thường gặp
+                    </a>
+
+                    <a href="{{ route('privacy-policy') }}"
+                        class="flex items-center gap-3 px-4 py-3 text-white font-semibold transition-colors duration-200"
+                        onmouseover="this.style.backgroundColor='rgba(0,0,0,0.5)'"
+                        onmouseout="this.style.backgroundColor='transparent'">
+                        Chính sách bảo mật
+                    </a>
+
+                    <a href="{{ route('terms-of-service') }}"
+                        class="flex items-center gap-3 px-4 py-3 text-white font-semibold transition-colors duration-200"
+                        onmouseover="this.style.backgroundColor='rgba(0,0,0,0.5)'"
+                        onmouseout="this.style.backgroundColor='transparent'">
+                        Điều khoản sử dụng
+                    </a>
+
+                    <a href="{{ route('contact') }}"
+                        class="flex items-center gap-3 px-4 py-3 text-white font-semibold transition-colors duration-200"
+                        onmouseover="this.style.backgroundColor='rgba(0,0,0,0.5)'"
+                        onmouseout="this.style.backgroundColor='transparent'">
                         Liên Hệ
                     </a>
                 </div>
@@ -237,15 +308,13 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-neutral text-neutral-content mt-16">
+    <footer class="mt-16" style="background-color: #2b2b2b; color: #f5f3e7;">
         <div class="container mx-auto px-4 py-12">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                 <div class="col-span-1 md:col-span-2">
                     <div class="flex items-center gap-3 mb-4">
-                        <div class="avatar placeholder">
-                            <div class="bg-accent text-accent-content rounded-lg w-12">
-                                <img src="{{ asset('images/logo.png') }}" alt="Logo" class="w-10 h-10">
-                            </div>
+                        <div class="rounded-lg w-12">
+                            <img src="{{ asset('images/logo.png') }}" alt="Logo" class="w-10 h-10">
                         </div>
                         <div>
                             <h3 class="text-lg font-bold">Hệ thống Tra cứu liệt sĩ tỉnh Ninh Bình</h3>
@@ -261,12 +330,15 @@
                 <div>
                     <h4 class="font-bold mb-3">Liên kết nhanh</h4>
                     <ul class="space-y-2 text-sm">
-                        <li><a href="{{ route('home') }}" class="hover:text-accent transition-colors">Trang chủ</a>
+                        <li><a href="{{ route('home') }}" class="hover:text-white transition-colors">Trang chủ</a>
                         </li>
-                        <li><a href="{{ route('search') }}" class="hover:text-accent transition-colors">Tra cứu</a>
+                        <li><a href="{{ route('search') }}" class="hover:text-white transition-colors">Tra cứu</a>
                         </li>
-                        <li><a href="#" class="hover:text-accent transition-colors">Hướng dẫn sử dụng</a></li>
-                        <li><a href="#" class="hover:text-accent transition-colors">Câu hỏi thường gặp</a></li>
+                        <li><a href="{{ route('guide') }}" class="hover:text-white transition-colors">Hướng dẫn sử
+                                dụng</a></li>
+                        <li><a href="{{ route('contact') }}#faq" class="hover:text-white transition-colors">Câu hỏi
+                                thường
+                                gặp</a></li>
                     </ul>
                 </div>
 
@@ -304,13 +376,15 @@
             </div>
         </div>
 
-        <div class="border-t border-base-300/20">
+        <div class="border-t" style="border-color: rgba(212, 208, 200, 0.3);">
             <div class="container mx-auto px-4 py-6">
                 <div class="flex flex-col md:flex-row justify-between items-center gap-4 text-sm opacity-80">
                     <p>© {{ date('Y') }} Hệ thống Tra cứu liệt sĩ tỉnh Ninh Bình. All rights reserved.</p>
                     <div class="flex gap-6">
-                        <a href="#" class="hover:text-accent transition-colors">Chính sách bảo mật</a>
-                        <a href="#" class="hover:text-accent transition-colors">Điều khoản sử dụng</a>
+                        <a href="{{ route('privacy-policy') }}" class="hover:text-white transition-colors">Chính sách
+                            bảo mật</a>
+                        <a href="{{ route('terms-of-service') }}" class="hover:text-white transition-colors">Điều
+                            khoản sử dụng</a>
                     </div>
                 </div>
             </div>
