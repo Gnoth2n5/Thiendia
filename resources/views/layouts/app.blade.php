@@ -146,8 +146,8 @@
                         Danh Sách Liệt Sĩ
                     </a>
 
-                    <a href="#contact"
-                        class="px-4 py-2 text-white font-semibold hover:bg-red-700 transition-colors duration-300 rounded">
+                    <a href="{{ route('contact') }}"
+                        class="px-4 py-2 text-white font-semibold hover:bg-red-700 transition-colors duration-300 rounded {{ request()->routeIs('contact') ? 'bg-red-700' : '' }}">
                         Liên Hệ
                     </a>
                 </div>
@@ -195,8 +195,8 @@
                         Video clip
                     </a>
 
-                    <a href="#contact"
-                        class="flex items-center gap-3 px-4 py-3 text-white font-semibold hover:bg-red-800 transition-colors duration-300">
+                    <a href="{{ route('contact') }}"
+                        class="flex items-center gap-3 px-4 py-3 text-white font-semibold hover:bg-red-800 transition-colors duration-300 {{ request()->routeIs('contact') ? 'bg-red-800' : '' }}">
                         Liên Hệ
                     </a>
                 </div>
@@ -266,7 +266,8 @@
                         <li><a href="{{ route('search') }}" class="hover:text-accent transition-colors">Tra cứu</a>
                         </li>
                         <li><a href="#" class="hover:text-accent transition-colors">Hướng dẫn sử dụng</a></li>
-                        <li><a href="#" class="hover:text-accent transition-colors">Câu hỏi thường gặp</a></li>
+                        <li><a href="{{ route('contact') }}" class="hover:text-accent transition-colors">Câu hỏi
+                                thường gặp</a></li>
                     </ul>
                 </div>
 

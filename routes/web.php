@@ -24,3 +24,6 @@ Route::post('/modification-request/{id}/reject', [ModificationRequestController:
 Route::get('/articles', [ArticleController::class, 'index'])->name('articles.index');
 Route::get('/articles/{slug}', [ArticleController::class, 'show'])->name('articles.show');
 Route::get('/articles/category/{category}', [ArticleController::class, 'category'])->name('articles.category');
+
+// Liên hệ
+Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
