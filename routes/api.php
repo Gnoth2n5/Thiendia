@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\HomeController;
 use App\Models\Cemetery;
+use App\Models\CemeteryPlot;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -45,7 +46,7 @@ Route::get('/cemeteries', function (Request $request) {
 
 // API to get grave details
 Route::get('/graves/{id}', function ($id) {
-    $grave = \App\Models\Grave::with('cemetery')->findOrFail($id);
+    $grave = \App\Models\Grave::with('cemetery', 'plot')->findOrFail($id);
 
     return response()->json([
         'id' => $grave->id,
@@ -72,6 +73,12 @@ Route::get('/graves/{id}', function ($id) {
         'latitude' => $grave->latitude,
         'longitude' => $grave->longitude,
         'contact_info' => $grave->contact_info,
+        'plot' => $grave->plot ? [
+            'id' => $grave->plot->id,
+            'plot_code' => $grave->plot->plot_code,
+            'row' => $grave->plot->row,
+            'column' => $grave->plot->column,
+        ] : null,
         'cemetery' => [
             'id' => $grave->cemetery->id,
             'name' => $grave->cemetery->name,
@@ -79,5 +86,44 @@ Route::get('/graves/{id}', function ($id) {
             'commune' => $grave->cemetery->commune,
             'description' => $grave->cemetery->description,
         ],
+    ]);
+});
+
+// API to get cemetery plots
+Route::get('/cemeteries/{id}/plots', function ($id) {
+    $cemetery = Cemetery::findOrFail($id);
+    $plots = CemeteryPlot::where('cemetery_id', $id)
+        ->with('grave:id,plot_id,deceased_full_name')
+        ->orderBy('row')
+        ->orderBy('column')
+        ->get();
+
+    $dimensions = $cemetery->getGridDimensions();
+
+    return response()->json([
+        'cemetery' => [
+            'id' => $cemetery->id,
+            'name' => $cemetery->name,
+            'address' => $cemetery->address,
+            'commune' => $cemetery->commune,
+        ],
+        'grid' => [
+            'rows' => $dimensions['rows'],
+            'columns' => $dimensions['columns'],
+        ],
+        'plots' => $plots->map(function ($plot) {
+            return [
+                'id' => $plot->id,
+                'plot_code' => $plot->plot_code,
+                'row' => $plot->row,
+                'column' => $plot->column,
+                'status' => $plot->status,
+                'status_label' => $plot->status_label,
+                'grave' => $plot->grave ? [
+                    'id' => $plot->grave->id,
+                    'deceased_full_name' => $plot->grave->deceased_full_name,
+                ] : null,
+            ];
+        }),
     ]);
 });

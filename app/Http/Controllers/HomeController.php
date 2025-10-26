@@ -53,9 +53,19 @@ class HomeController extends Controller
 
     public function show($id)
     {
-        $grave = Grave::with('cemetery')->findOrFail($id);
+        $grave = Grave::with('cemetery', 'plot')->findOrFail($id);
 
         return view('grave-detail', compact('grave'));
+    }
+
+    /**
+     * Display cemetery map with plot grid.
+     */
+    public function cemeteryMap($id)
+    {
+        $cemetery = Cemetery::findOrFail($id);
+
+        return view('cemetery-map', compact('cemetery'));
     }
 
     /**

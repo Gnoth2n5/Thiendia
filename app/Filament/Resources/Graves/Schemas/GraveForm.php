@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Graves\Schemas;
 
 use App\Models\Cemetery;
+use App\Models\CemeteryPlot;
 use App\Models\User;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
@@ -37,7 +38,44 @@ class GraveForm
                             })
                             ->required()
                             ->searchable()
-                            ->preload(),
+                            ->preload()
+                            ->live(),
+
+                        Select::make('plot_id')
+                            ->label('Lô mộ')
+                            ->options(function ($get, $record) {
+                                $cemeteryId = $get('cemetery_id');
+
+                                if (! $cemeteryId) {
+                                    return [];
+                                }
+
+                                // Lấy các lô available hoặc lô hiện tại của grave này
+                                return CemeteryPlot::where('cemetery_id', $cemeteryId)
+                                    ->where(function ($query) use ($record) {
+                                        $query->where('status', 'available')
+                                            ->when($record, function ($q) use ($record) {
+                                                $q->orWhere('id', $record->plot_id);
+                                            });
+                                    })
+                                    ->orderBy('row')
+                                    ->orderBy('column')
+                                    ->get()
+                                    ->mapWithKeys(function ($plot) {
+                                        $label = "{$plot->plot_code} (Hàng {$plot->row}, Cột {$plot->column})";
+                                        if ($plot->status === 'occupied') {
+                                            $label .= ' - Đang sử dụng';
+                                        }
+
+                                        return [$plot->id => $label];
+                                    })
+                                    ->toArray();
+                            })
+                            ->searchable()
+                            ->nullable()
+                            ->helperText('Chọn lô mộ trong nghĩa trang (nếu có)')
+                            ->hint('Tùy chọn')
+                            ->disabled(fn($get) => ! $get('cemetery_id')),
 
                         TextInput::make('caretaker_name')
                             ->label('Người quản lý mộ')

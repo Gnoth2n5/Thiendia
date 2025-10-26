@@ -47,9 +47,9 @@ class UserResource extends Resource
                         Forms\Components\TextInput::make('password')
                             ->label('Mật khẩu')
                             ->password()
-                            ->dehydrateStateUsing(fn($state) => \Illuminate\Support\Facades\Hash::make($state))
-                            ->dehydrated(fn($state) => filled($state))
-                            ->required(fn(string $context): bool => $context === 'create')
+                            ->dehydrateStateUsing(fn ($state) => \Illuminate\Support\Facades\Hash::make($state))
+                            ->dehydrated(fn ($state) => filled($state))
+                            ->required(fn (string $context): bool => $context === 'create')
                             ->maxLength(255)
                             ->helperText('Để trống nếu không muốn thay đổi mật khẩu'),
                     ])
@@ -86,7 +86,7 @@ class UserResource extends Resource
 
                                     return $options;
                                 } catch (\Exception $e) {
-                                    \Illuminate\Support\Facades\Log::error('Error loading wards in UserResource: ' . $e->getMessage());
+                                    \Illuminate\Support\Facades\Log::error('Error loading wards in UserResource: '.$e->getMessage());
 
                                     return [];
                                 }
@@ -94,8 +94,8 @@ class UserResource extends Resource
                             ->searchable()
                             ->placeholder('Chọn xã/phường')
                             ->helperText('Chỉ áp dụng cho vai trò Cán bộ xã/phường')
-                            ->visible(fn(callable $get) => $get('role') === 'commune_staff')
-                            ->required(fn(callable $get) => $get('role') === 'commune_staff'),
+                            ->visible(fn (callable $get) => $get('role') === 'commune_staff')
+                            ->required(fn (callable $get) => $get('role') === 'commune_staff'),
                     ])
                     ->columns(2),
             ]);
@@ -117,7 +117,7 @@ class UserResource extends Resource
 
                 Tables\Columns\BadgeColumn::make('role')
                     ->label('Vai trò')
-                    ->formatStateUsing(fn(string $state): string => match ($state) {
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
                         'admin', 'super_admin' => 'Quản trị viên',
                         'commune_staff' => 'Cán bộ xã/phường',
                         'viewer' => 'Người xem',
@@ -165,7 +165,7 @@ class UserResource extends Resource
 
                             return $options;
                         } catch (\Exception $e) {
-                            \Illuminate\Support\Facades\Log::error('Error loading wards in UserResource filter: ' . $e->getMessage());
+                            \Illuminate\Support\Facades\Log::error('Error loading wards in UserResource filter: '.$e->getMessage());
 
                             return [];
                         }

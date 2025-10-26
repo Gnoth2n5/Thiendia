@@ -96,15 +96,15 @@ class GraveSeeder extends Seeder
                     // Thông tin liệt sĩ
                     'deceased_full_name' => $martyrName,
                     'birth_year' => $birthYear,
-                    'rank_and_unit' => $ranks[array_rand($ranks)] . ', ' . $units[array_rand($units)],
+                    'rank_and_unit' => $ranks[array_rand($ranks)].', '.$units[array_rand($units)],
                     'position' => $positions[array_rand($positions)],
                     'deceased_birth_date' => now()->setYear($birthYear)->setMonth(rand(1, 12))->setDay(rand(1, 28)),
                     'deceased_death_date' => now()->setYear($deathYear)->setMonth(rand(1, 12))->setDay(rand(1, 28)),
                     'deceased_gender' => rand(0, 10) > 2 ? 'nam' : 'nữ',
 
                     // Giấy tờ
-                    'certificate_number' => 'TQGC-' . rand(1000, 9999) . '/' . rand(1945, 1975),
-                    'decision_number' => rand(100, 999) . '/QĐ-BQP',
+                    'certificate_number' => 'TQGC-'.rand(1000, 9999).'/'.rand(1945, 1975),
+                    'decision_number' => rand(100, 999).'/QĐ-BQP',
                     'decision_date' => now()->setYear(rand(1975, 2025))->setMonth(rand(1, 12))->setDay(rand(1, 28)),
 
                     // Thân nhân
@@ -114,7 +114,7 @@ class GraveSeeder extends Seeder
                     // Thông tin mộ
                     'burial_date' => now()->setYear($deathYear)->setMonth(rand(1, 12))->setDay(rand(1, 28)),
                     'grave_type' => 'đá',
-                    'location_description' => 'Khu ' . chr(65 + rand(0, 5)) . ', hàng ' . rand(1, 20) . ', mộ ' . rand(1, 30),
+                    'location_description' => 'Khu '.chr(65 + rand(0, 5)).', hàng '.rand(1, 20).', mộ '.rand(1, 30),
                     'notes' => fake()->optional(0.3)->sentence(),
                 ]);
             }

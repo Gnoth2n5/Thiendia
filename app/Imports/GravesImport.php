@@ -65,7 +65,7 @@ class GravesImport implements SkipsOnError, SkipsOnFailure, ToModel, WithStartRo
         }
 
         // Tìm cemetery theo tên
-        $cemetery = Cemetery::where('name', 'like', '%' . $row[0] . '%')->first();
+        $cemetery = Cemetery::where('name', 'like', '%'.$row[0].'%')->first();
 
         if (! $cemetery) {
             return null;

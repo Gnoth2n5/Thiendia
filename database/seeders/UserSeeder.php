@@ -33,7 +33,7 @@ class UserSeeder extends Seeder
 
         foreach ($sampleWards as $ward) {
             $wardName = $ward['name'];
-            $email = 'canbo.' . strtolower(str_replace(' ', '', $this->removeVietnameseTones($wardName))) . '@gmail.com';
+            $email = 'canbo.'.strtolower(str_replace(' ', '', $this->removeVietnameseTones($wardName))).'@gmail.com';
 
             // Kiểm tra nếu chưa tồn tại
             if (! User::where('email', $email)->exists()) {

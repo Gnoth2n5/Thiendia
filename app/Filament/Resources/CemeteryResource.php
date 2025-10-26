@@ -66,7 +66,7 @@ class CemeteryResource extends Resource
 
                                     return $options;
                                 } catch (\Exception $e) {
-                                    Log::error('Error loading wards in Filament: ' . $e->getMessage());
+                                    Log::error('Error loading wards in Filament: '.$e->getMessage());
 
                                     return [];
                                 }
@@ -145,7 +145,7 @@ class CemeteryResource extends Resource
 
                             return $options;
                         } catch (\Exception $e) {
-                            Log::error('Error loading wards in Filament filter: ' . $e->getMessage());
+                            Log::error('Error loading wards in Filament filter: '.$e->getMessage());
 
                             return [];
                         }

@@ -13,6 +13,9 @@ Route::get('/search', [HomeController::class, 'search'])->name('search');
 // Chi tiết lăng mộ
 Route::get('/grave/{id}', [HomeController::class, 'show'])->name('grave.show');
 
+// Sơ đồ nghĩa trang
+Route::get('/cemetery/{id}/map', [HomeController::class, 'cemeteryMap'])->name('cemetery.map');
+
 // Bài viết
 Route::get('/articles', [ArticleController::class, 'index'])->name('articles.index');
 Route::get('/articles/{slug}', [ArticleController::class, 'show'])->name('articles.show');

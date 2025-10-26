@@ -77,7 +77,7 @@ class MartyrPhotoResource extends Resource
                                     }
                                 }
                             })
-                            ->disabled(fn(string $operation) => $operation === 'edit'),
+                            ->disabled(fn (string $operation) => $operation === 'edit'),
 
                         Forms\Components\Placeholder::make('commune_display')
                             ->label('Xã/Phường')
@@ -122,7 +122,7 @@ class MartyrPhotoResource extends Resource
                             ->required()
                             ->helperText('Kéo thả nhiều ảnh hoặc cả thư mục vào đây. Tối đa 500 ảnh, mỗi ảnh 10MB.')
                             ->columnSpanFull()
-                            ->visible(fn(string $operation) => $operation === 'create'),
+                            ->visible(fn (string $operation) => $operation === 'create'),
 
                         // Edit 1 ảnh khi sửa
                         Forms\Components\FileUpload::make('photo_single')
@@ -147,7 +147,7 @@ class MartyrPhotoResource extends Resource
                             ->required()
                             ->helperText('Thay đổi ảnh. Tối đa 10MB.')
                             ->columnSpanFull()
-                            ->visible(fn(string $operation) => $operation === 'edit'),
+                            ->visible(fn (string $operation) => $operation === 'edit'),
                     ])
                     ->columns(2),
             ]);

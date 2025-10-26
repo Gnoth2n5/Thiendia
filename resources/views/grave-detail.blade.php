@@ -76,6 +76,18 @@
                                     <p class="font-medium">{{ $grave->burial_date->format('d/m/Y') }}</p>
                                 </div>
                             @endif
+
+                            @if ($grave->plot)
+                                <div>
+                                    <p class="text-sm text-base-content/60 mb-1">Lô mộ</p>
+                                    <p class="font-medium text-primary">{{ $grave->plot->plot_code }}</p>
+                                </div>
+
+                                <div>
+                                    <p class="text-sm text-base-content/60 mb-1">Vị trí trong lưới</p>
+                                    <p class="font-medium">Hàng {{ $grave->plot->row }}, Cột {{ $grave->plot->column }}</p>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -376,15 +388,27 @@
 
                     <div class="divider my-2"></div>
 
-                    <a href="{{ route('search', ['cemetery_id' => $grave->cemetery_id]) }}"
-                        class="btn btn-outline btn-sm gap-2 w-full">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                            stroke="currentColor" class="h-4 w-4">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-                        </svg>
-                        Xem nghĩa trang
-                    </a>
+                    <div class="flex flex-col gap-2">
+                        <a href="{{ route('search', ['cemetery_id' => $grave->cemetery_id]) }}"
+                            class="btn btn-outline btn-sm gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                stroke="currentColor" class="h-4 w-4">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                            </svg>
+                            Xem nghĩa trang
+                        </a>
+
+                        <a href="{{ route('cemetery.map', ['id' => $grave->cemetery_id]) }}"
+                            class="btn btn-primary btn-sm gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                stroke="currentColor" class="h-4 w-4">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z" />
+                            </svg>
+                            Xem sơ đồ lô
+                        </a>
+                    </div>
                 </div>
             </div>
 
