@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
-@section('title', 'Hệ thống Tra cứu Thông tin Liệt sĩ Tỉnh Ninh Bình Trực tuyến - Tìm kiếm Lăng mộ Nhanh chóng')
+@section('title', 'Hệ thống Tra cứu Thông tin Liệt sĩ Tỉnh Ninh Bình Trực tuyến - Tìm kiếm Nhanh chóng')
 
 @section('description',
-    'Hệ thống tra cứu thông tin liệt sĩ tỉnh Ninh Bình trực tuyến. Tìm kiếm lăng mộ nhanh chóng,
+    'Hệ thống tra cứu thông tin liệt sĩ tỉnh Ninh Bình trực tuyến. Tìm kiếm nhanh chóng,
     chính xác và tiện lợi. Quản lý dữ liệu nghĩa trang khoa học, minh bạch và hiện đại với công nghệ bản đồ số tiên tiến.')
 
     @push('structured-data')
@@ -12,7 +12,7 @@
   "@context": "https://schema.org",
   "@type": "WebSite",
   "name": "Hệ thống Tra cứu Thông tin Liệt sĩ Tỉnh Ninh Bình",
-  "description": "Hệ thống tra cứu thông tin liệt sĩ tỉnh Ninh Bình trực tuyến. Tìm kiếm lăng mộ nhanh chóng, chính xác và tiện lợi.",
+  "description": "Hệ thống tra cứu thông tin liệt sĩ tỉnh Ninh Bình trực tuyến. Tìm kiếm nhanh chóng, chính xác và tiện lợi.",
   "url": "{{ url('/') }}",
   "potentialAction": {
     "@type": "SearchAction",
@@ -35,7 +35,7 @@
     }
   },
   "inLanguage": "vi",
-  "keywords": "tra cứu liệt sĩ, nghĩa trang Ninh Bình, tìm kiếm lăng mộ, quản lý nghĩa địa"
+  "keywords": "tra cứu liệt sĩ, nghĩa trang Ninh Bình, tìm kiếm liệt sĩ, quản lý nghĩa trang liệt sĩ"
 }
 </script>
 
@@ -68,7 +68,7 @@
     <div class="mb-12">
         <div class="text-center mb-8">
             <h2 class="text-3xl md:text-4xl font-bold text-neutral mb-4">
-                Tra cứu thông tin lăng mộ
+                Tra cứu thông tin liệt sĩ
             </h2>
             <p class="text-lg text-base-content/70 max-w-3xl mx-auto">
                 Tìm kiếm thông tin về người thân đã khuất một cách nhanh chóng và chính xác
@@ -91,56 +91,33 @@
                                 value="{{ request('deceased_name') }}">
                         </div>
 
-                        <!-- Grave Number -->
-                        <div class="form-control">
-                            <label class="label" for="grave_number">
-                                <span class="label-text font-semibold">Số lăng mộ</span>
-                            </label>
-                            <input type="text" name="grave_number" id="grave_number" placeholder="Nhập số lăng mộ..."
-                                class="input input-bordered w-full" value="{{ request('grave_number') }}">
-                        </div>
                     </div>
 
                     <!-- Second Row -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Owner Name -->
+                        <!-- Caretaker Name -->
                         <div class="form-control">
-                            <label class="label" for="owner_name">
-                                <span class="label-text font-semibold">Tên chủ lăng mộ</span>
+                            <label class="label" for="caretaker_name">
+                                <span class="label-text font-semibold">Người quản lý mộ</span>
                             </label>
-                            <input type="text" name="owner_name" id="owner_name" placeholder="Nhập tên chủ lăng mộ..."
-                                class="input input-bordered w-full" value="{{ request('owner_name') }}">
+                            <input type="text" name="caretaker_name" id="caretaker_name" placeholder="Nhập tên người quản lý..."
+                                class="input input-bordered w-full" value="{{ request('caretaker_name') }}">
                         </div>
 
-                        <!-- District -->
-                        <div class="form-control">
-                            <label class="label" for="district">
-                                <span class="label-text font-semibold">Huyện/Thành phố</span>
-                            </label>
-                            <select name="district" id="district" class="select select-bordered w-full">
-                                <option value="">Tất cả huyện/thành phố</option>
-                                @foreach (['Bình Lục', 'Thanh Liêm', 'Lý Nhân', 'Nam Trực', 'Vụ Bản', 'Ý Yên', 'Trực Ninh', 'Xuân Trường', 'Hải Hậu', 'Giao Thủy', 'Nghĩa Hưng', 'Gia Viễn', 'Nho Quan', 'Yên Khánh', 'Yên Mô', 'Kim Sơn', 'Thành phố Phủ Lý', 'Thành phố Nam Định', 'Thành phố Hoa Lư', 'Thành phố Tam Điệp'] as $district)
-                                    <option value="{{ $district }}"
-                                        {{ request('district') == $district ? 'selected' : '' }}>
-                                        {{ $district }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-
-                    <!-- Third Row -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- Commune -->
                         <div class="form-control">
                             <label class="label" for="commune">
                                 <span class="label-text font-semibold">Xã/Phường</span>
                             </label>
                             <select name="commune" id="commune" class="select select-bordered w-full"
-                                {{ request('district') ? '' : 'disabled' }} data-selected="{{ request('commune') }}">
+                                data-selected="{{ request('commune') }}">
                                 <option value="">Tất cả xã/phường</option>
                             </select>
                         </div>
+                    </div>
+
+                    <!-- Third Row -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
                         <!-- Cemetery -->
                         <div class="form-control">
@@ -405,13 +382,13 @@
                     HỆ THỐNG TRA CỨU THÔNG TIN LIỆT SĨ TỈNH NINH BÌNH TRỰC TUYẾN
                 </h1>
                 <p class="text-xl text-gray-600 text-center mb-8">
-                    Tra cứu thông tin lăng mộ nhanh chóng, chính xác và tiện lợi
+                    Tra cứu thông tin liệt sĩ nhanh chóng, chính xác và tiện lợi
                 </p>
 
                 <div class="prose prose-lg max-w-none">
                     <p class="text-lg text-gray-700 leading-relaxed mb-6">
                         Hệ thống Tra cứu thông tin liệt sĩ tỉnh Ninh Bình là nền tảng trực tuyến giúp người dân dễ dàng tra
-                        cứu thông tin người thân đã khuất, xác định vị trí lăng mộ và quản lý dữ liệu nghĩa trang một cách
+                        cứu thông tin liệt sĩ, xác định vị trí an táng và quản lý dữ liệu nghĩa trang một cách
                         khoa học, minh bạch và hiện đại. Với công nghệ bản đồ số tiên tiến, người dùng có thể tìm kiếm thông
                         tin chính xác chỉ bằng vài thao tác đơn giản.
                     </p>
@@ -427,7 +404,7 @@
                     <ul class="list-disc list-inside text-lg text-gray-700 leading-relaxed mb-6 space-y-2">
                         <li>Tra cứu thông tin người đã khuất: Nhập tên, năm sinh, năm mất hoặc khu vực chôn cất để tìm kiếm
                             dễ dàng.</li>
-                        <li>Xác định vị trí lăng mộ trên bản đồ số: Hỗ trợ định vị nhanh chóng, chính xác từng ô mộ.</li>
+                        <li>Xác định vị trí mộ liệt sĩ trên bản đồ số: Hỗ trợ định vị nhanh chóng, chính xác.</li>
                         <li>Quản lý dữ liệu nghĩa trang: Cập nhật, chỉnh sửa thông tin mộ phần, phân khu, hàng, lô dễ dàng.
                         </li>
                         <li>Tích hợp hình ảnh và hồ sơ điện tử: Giúp lưu trữ và bảo tồn thông tin lâu dài.</li>

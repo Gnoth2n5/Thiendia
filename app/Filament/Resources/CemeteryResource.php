@@ -11,7 +11,6 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Log;
 
-
 class CemeteryResource extends Resource
 {
     protected static ?string $model = Cemetery::class;
@@ -26,6 +25,19 @@ class CemeteryResource extends Resource
 
     protected static ?int $navigationSort = 1;
 
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        $query = parent::getEloquentQuery();
+
+        // Nếu là cán bộ xã/phường, chỉ hiển thị nghĩa trang của xã/phường mình
+        $user = auth()->user();
+        if ($user && $user->isCommuneStaff()) {
+            $query->where('commune', $user->commune);
+        }
+
+        return $query;
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -39,73 +51,29 @@ class CemeteryResource extends Resource
                             ->maxLength(255)
                             ->placeholder('Ví dụ: Nghĩa trang Bình Hưng Hòa'),
 
-                        Forms\Components\Select::make('district')
-                            ->label('Huyện/Thành phố')
-                            ->options(function () {
-                                $locations = config('ninhbinh_locations');
-
-                                return array_combine(
-                                    array_keys($locations),
-                                    array_keys($locations)
-                                );
-                            })
-                            ->searchable()
-                            ->live() // Try live() for compatibility with this Filament/Livewire version
-                            // afterStateUpdated receives ($state, $set)
-                            ->afterStateUpdated(function ($state, callable $set) {
-                                // Clear commune when district changes
-                                $set('commune', null);
-                            })
-                            ->placeholder('Chọn huyện/thành phố'),
-
                         Forms\Components\Select::make('commune')
                             ->label('Xã/Phường/Thị trấn')
-                            ->options(function (callable $get) {
-                                $district = $get('district');
+                            ->options(function () {
+                                // Gọi API để lấy danh sách communes
+                                try {
+                                    $controller = new \App\Http\Controllers\HomeController;
+                                    $wards = $controller->fetchAndCacheWards();
 
-                                if (empty($district)) {
+                                    $options = [];
+                                    foreach ($wards as $ward) {
+                                        $options[$ward['name']] = "{$ward['type']} {$ward['name']}";
+                                    }
+
+                                    return $options;
+                                } catch (\Exception $e) {
+                                    Log::error('Error loading wards in Filament: '.$e->getMessage());
+
                                     return [];
                                 }
-
-                                $locations = config('ninhbinh_locations');
-                                if (!is_array($locations)) {
-                                    // Log::warning('ninhbinh_locations config is not an array', ['locations' => $locations]);
-                                    return [];
-                                }
-
-                                $communes = $locations[$district] ?? [];
-
-                                if (!is_array($communes) || empty($communes)) {
-                                    // Log::debug("No communes found for district {$district}", ['communes' => $communes]);
-                                    return [];
-                                }
-
-                                // Log::debug("Cemeteries communes for district {$district}", ['communes' => $communes]);
-
-                                return array_combine(array_values($communes), array_values($communes));
                             })
-                            // ->searchable()
-                            ->disabled(fn(callable $get) => empty($get('district')))
+                            ->searchable()
                             ->placeholder('Chọn xã/phường/thị trấn')
-                            ->helperText(function (callable $get) {
-                                $district = $get('district');
-
-                                if (empty($district)) {
-                                    return 'Chưa chọn huyện/thành phố';
-                                }
-
-                                $locations = config('ninhbinh_locations');
-                                if (!is_array($locations)) {
-                                    return 'Config locations không hợp lệ';
-                                }
-
-                                $communes = $locations[$district] ?? [];
-                                $count = is_array($communes) ? count($communes) : 0;
-
-                                return "Tìm thấy {$count} xã/phường cho \"{$district}\"";
-                            })
-                            ->live(), // try live() instead of reactive()
-
+                            ->helperText('Danh sách xã/phường từ API Ninh Bình'),
 
                         Forms\Components\Textarea::make('address')
                             ->label('Địa chỉ chi tiết')
@@ -128,11 +96,6 @@ class CemeteryResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->label('Tên nghĩa trang')
-                    ->searchable()
-                    ->sortable(),
-
-                Tables\Columns\TextColumn::make('district')
-                    ->label('Huyện/Thành phố')
                     ->searchable()
                     ->sortable(),
 
@@ -168,30 +131,24 @@ class CemeteryResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('district')
-                    ->label('Huyện/Thành phố')
-                    ->options(function () {
-                        $locations = config('ninhbinh_locations');
-
-                        return array_combine(
-                            array_keys($locations),
-                            array_keys($locations)
-                        );
-                    })
-                    ->searchable(),
-
                 Tables\Filters\SelectFilter::make('commune')
                     ->label('Xã/Phường')
                     ->options(function () {
-                        $locations = config('ninhbinh_locations');
-                        $allCommunes = [];
-                        foreach ($locations as $district => $communes) {
-                            foreach ($communes as $commune) {
-                                $allCommunes[$commune] = $commune;
-                            }
-                        }
+                        try {
+                            $controller = new \App\Http\Controllers\HomeController;
+                            $wards = $controller->fetchAndCacheWards();
 
-                        return $allCommunes;
+                            $options = [];
+                            foreach ($wards as $ward) {
+                                $options[$ward['name']] = "{$ward['type']} {$ward['name']}";
+                            }
+
+                            return $options;
+                        } catch (\Exception $e) {
+                            Log::error('Error loading wards in Filament filter: '.$e->getMessage());
+
+                            return [];
+                        }
                     })
                     ->searchable(),
             ])

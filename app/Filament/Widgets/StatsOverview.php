@@ -4,7 +4,6 @@ namespace App\Filament\Widgets;
 
 use App\Models\Cemetery;
 use App\Models\Grave;
-use App\Models\ModificationRequest;
 use Filament\Widgets\StatsOverviewWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 
@@ -14,8 +13,8 @@ class StatsOverview extends StatsOverviewWidget
     {
         $totalCemeteries = Cemetery::count();
         $totalGraves = Grave::count();
-        $occupiedGraves = Grave::where('status', 'đã_sử_dụng')->count();
-        $pendingRequests = ModificationRequest::where('status', 'pending')->count();
+        $totalUsers = \App\Models\User::count();
+        $communeStaff = \App\Models\User::where('role', 'commune_staff')->count();
 
         return [
             Stat::make('Tổng số nghĩa trang', $totalCemeteries)
@@ -23,19 +22,19 @@ class StatsOverview extends StatsOverviewWidget
                 ->descriptionIcon('heroicon-m-building-office-2')
                 ->color('primary'),
 
-            Stat::make('Tổng số lăng mộ', $totalGraves)
-                ->description('Lăng mộ trong hệ thống')
+            Stat::make('Tổng số liệt sĩ', $totalGraves)
+                ->description('Liệt sĩ trong hệ thống')
                 ->descriptionIcon('heroicon-m-rectangle-stack')
                 ->color('success'),
 
-            Stat::make('Lăng mộ đã sử dụng', $occupiedGraves)
-                ->description(sprintf('%.1f%% tổng số lăng mộ', $totalGraves > 0 ? ($occupiedGraves / $totalGraves) * 100 : 0))
-                ->descriptionIcon('heroicon-m-check-circle')
+            Stat::make('Người dùng', $totalUsers)
+                ->description("{$communeStaff} cán bộ xã/phường")
+                ->descriptionIcon('heroicon-m-users')
                 ->color('info'),
 
-            Stat::make('Đơn yêu cầu chờ xử lý', $pendingRequests)
-                ->description('Cần xử lý ngay')
-                ->descriptionIcon('heroicon-m-clock')
+            Stat::make('Xã/Phường', 129)
+                ->description('Được quản lý')
+                ->descriptionIcon('heroicon-m-map-pin')
                 ->color('warning'),
         ];
     }
