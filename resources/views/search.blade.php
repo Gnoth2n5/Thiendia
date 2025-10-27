@@ -39,8 +39,10 @@
                 <!-- Section: Thông tin liệt sĩ -->
                 <div>
                     <h3 class="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-5 w-5 text-red-600">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                            stroke="currentColor" class="h-5 w-5 text-red-600">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
                         </svg>
                         Liệt sĩ
                     </h3>
@@ -60,7 +62,8 @@
                             <select name="birth_year" class="select select-bordered w-full">
                                 <option value="">Chọn năm sinh</option>
                                 @for ($year = 1920; $year <= 1975; $year++)
-                                    <option value="{{ $year }}" {{ request('birth_year') == $year ? 'selected' : '' }}>
+                                    <option value="{{ $year }}"
+                                        {{ request('birth_year') == $year ? 'selected' : '' }}>
                                         {{ $year }}
                                     </option>
                                 @endfor
@@ -74,7 +77,8 @@
                             <select name="death_year" class="select select-bordered w-full">
                                 <option value="">Chọn năm hy sinh</option>
                                 @for ($year = 1945; $year <= 1990; $year++)
-                                    <option value="{{ $year }}" {{ request('death_year') == $year ? 'selected' : '' }}>
+                                    <option value="{{ $year }}"
+                                        {{ request('death_year') == $year ? 'selected' : '' }}>
                                         {{ $year }}
                                     </option>
                                 @endfor
@@ -86,9 +90,12 @@
                 <!-- Section: Nghĩa trang yên nghỉ -->
                 <div>
                     <h3 class="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-5 w-5 text-green-600">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                            stroke="currentColor" class="h-5 w-5 text-green-600">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
                         </svg>
                         Nghĩa trang yên nghỉ
                     </h3>
@@ -97,7 +104,8 @@
                             <label class="label">
                                 <span class="label-text font-medium">Tỉnh/Thành phố</span>
                             </label>
-                            <input type="text" class="input input-bordered w-full bg-gray-100" value="Ninh Bình" readonly>
+                            <input type="text" class="input input-bordered w-full bg-gray-100" value="Ninh Bình"
+                                readonly>
                         </div>
 
                         <div class="form-control">
@@ -156,7 +164,8 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <h2 class="text-xl font-bold text-neutral">Kết quả tìm kiếm</h2>
-                        <p class="text-sm text-base-content/60 search-result-count">Tìm thấy {{ $graves->total() }} liệt sĩ</p>
+                        <p class="text-sm text-base-content/60 search-result-count">Tìm thấy {{ $graves->total() }} liệt
+                            sĩ</p>
                     </div>
                 </div>
             </div>
@@ -171,39 +180,39 @@
                             <!-- Table Header -->
                             <thead style="background-color: #8b0000;" class="border-b">
                                 <tr>
-                                    <th
-                                        class="px-4 py-4 text-left text-sm font-bold text-gray-700 border-r border-gray-200">
+                                    <th class="px-4 py-4 text-left text-sm font-bold text-white border-r"
+                                        style="border-color: rgba(255,255,255,0.2);">
                                         STT
                                     </th>
-                                    <th
-                                        class="px-4 py-4 text-left text-sm font-bold text-gray-700 border-r border-gray-200">
+                                    <th class="px-4 py-4 text-left text-sm font-bold text-white border-r"
+                                        style="border-color: rgba(255,255,255,0.2);">
                                         Họ tên liệt sĩ
                                     </th>
-                                    <th
-                                        class="px-4 py-4 text-left text-sm font-bold text-gray-700 border-r border-gray-200">
+                                    <th class="px-4 py-4 text-left text-sm font-bold text-white border-r"
+                                        style="border-color: rgba(255,255,255,0.2);">
                                         Năm sinh
                                     </th>
-                                    <th
-                                        class="px-4 py-4 text-left text-sm font-bold text-gray-700 border-r border-gray-200">
+                                    <th class="px-4 py-4 text-left text-sm font-bold text-white border-r"
+                                        style="border-color: rgba(255,255,255,0.2);">
                                         Năm hy sinh
                                     </th>
-                                    <th
-                                        class="px-4 py-4 text-left text-sm font-bold text-gray-700 border-r border-gray-200">
+                                    <th class="px-4 py-4 text-left text-sm font-bold text-white border-r"
+                                        style="border-color: rgba(255,255,255,0.2);">
                                         Cấp bậc, đơn vị
                                     </th>
-                                    <th
-                                        class="px-4 py-4 text-left text-sm font-bold text-gray-700 border-r border-gray-200">
+                                    <th class="px-4 py-4 text-left text-sm font-bold text-white border-r"
+                                        style="border-color: rgba(255,255,255,0.2);">
                                         Nghĩa trang
                                     </th>
-                                    <th
-                                        class="px-4 py-4 text-left text-sm font-bold text-gray-700 border-r border-gray-200">
+                                    <th class="px-4 py-4 text-left text-sm font-bold text-white border-r"
+                                        style="border-color: rgba(255,255,255,0.2);">
                                         Xã/Phường
                                     </th>
-                                    <th
-                                        class="px-4 py-4 text-left text-sm font-bold text-gray-700 border-r border-gray-200">
+                                    <th class="px-4 py-4 text-left text-sm font-bold text-white border-r"
+                                        style="border-color: rgba(255,255,255,0.2);">
                                         Lô mộ
                                     </th>
-                                    <th class="px-4 py-4 text-center text-sm font-bold text-gray-700">
+                                    <th class="px-4 py-4 text-center text-sm font-bold text-white">
                                         Thao tác
                                     </th>
                                 </tr>
@@ -282,8 +291,10 @@
                                         <td class="px-4 py-4 text-sm border-r border-gray-100">
                                             @if ($grave->plot)
                                                 <div class="flex flex-col gap-1">
-                                                    <span class="font-bold text-blue-700">{{ $grave->plot->plot_code }}</span>
-                                                    <span class="text-xs text-gray-500">Hàng {{ $grave->plot->row }}, Cột {{ $grave->plot->column }}</span>
+                                                    <span
+                                                        class="font-bold text-blue-700">{{ $grave->plot->plot_code }}</span>
+                                                    <span class="text-xs text-gray-500">Hàng {{ $grave->plot->row }}, Cột
+                                                        {{ $grave->plot->column }}</span>
                                                 </div>
                                             @else
                                                 <span class="text-gray-400">-</span>
@@ -313,7 +324,10 @@
                                                 <!-- Map Location Button -->
                                                 <button
                                                     onclick="openCemeteryMapModal({{ $grave->cemetery_id }}, {{ $grave->plot_id ?? 'null' }})"
-                                                    class="inline-flex items-center gap-1 px-3 py-2 bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white text-xs font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-200 hover:scale-105">
+                                                    class="inline-flex items-center gap-1 px-3 py-2 text-white text-xs font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-200 shrink-0 whitespace-nowrap"
+                                                    style="background-color: #059669;"
+                                                    onmouseover="this.style.backgroundColor='#047857'"
+                                                    onmouseout="this.style.backgroundColor='#059669'">
                                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                         viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
                                                         class="h-3 w-3">
@@ -434,7 +448,10 @@
                                     </button>
                                     <button
                                         onclick="openCemeteryMapModal({{ $grave->cemetery_id }}, {{ $grave->plot_id ?? 'null' }})"
-                                        class="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white text-sm font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-200">
+                                        class="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 text-white text-sm font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-200"
+                                        style="background-color: #059669;"
+                                        onmouseover="this.style.backgroundColor='#047857'"
+                                        onmouseout="this.style.backgroundColor='#059669'">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                             stroke-width="2" stroke="currentColor" class="h-4 w-4">
                                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -597,15 +614,19 @@
         </div>
     </div>
     <!-- Cemetery Map Modal -->
-    <div id="cemeteryMapModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden items-center justify-center p-4"
+    <div id="cemeteryMapModal"
+        class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden items-center justify-center p-4"
         onclick="closeCemeteryMapModal()">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-hidden" onclick="event.stopPropagation()">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-hidden"
+            onclick="event.stopPropagation()">
             <!-- Modal Header -->
             <div class="bg-gradient-to-r from-green-500 to-blue-500 p-6">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center gap-3 text-white">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-8 w-8">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 6.75V15m6-6v8.25m.503 3.498 4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 0 0-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0z" />
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                            stroke="currentColor" class="h-8 w-8">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M9 6.75V15m6-6v8.25m.503 3.498 4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 0 0-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0z" />
                         </svg>
                         <div>
                             <h3 class="text-2xl font-bold">Sơ đồ lưới nghĩa trang</h3>
@@ -626,18 +647,24 @@
             <div class="p-6 overflow-y-auto" style="max-height: calc(90vh - 100px);">
                 <!-- Loading -->
                 <div id="mapLoading" class="text-center py-12">
-                    <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-green-500 border-t-transparent"></div>
+                    <div
+                        class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-green-500 border-t-transparent">
+                    </div>
                     <p class="mt-4 text-gray-600">Đang tải sơ đồ...</p>
                 </div>
 
                 <!-- Map Content -->
                 <div id="mapContent" class="hidden space-y-4">
                     <!-- Target Plot Banner -->
-                    <div id="targetPlotBanner" class="hidden p-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg shadow-lg">
+                    <div id="targetPlotBanner"
+                        class="hidden p-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg shadow-lg">
                         <div class="flex items-center gap-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-8 w-8 flex-shrink-0">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                stroke="currentColor" class="h-8 w-8 flex-shrink-0">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
                             </svg>
                             <div class="flex-1">
                                 <div class="font-bold text-lg" id="targetPlotInfo">Vị trí liệt sĩ</div>
@@ -671,7 +698,7 @@
                     </div>
 
                     <!-- Hovered Plot Info -->
-                    <div id="mapHoverInfo" class="p-4 rounded-lg border-2 transition-all" 
+                    <div id="mapHoverInfo" class="p-4 rounded-lg border-2 transition-all"
                         style="background-color: #f3f4f6; border-color: #d1d5db; height: 140px; overflow: hidden;">
                         <div class="text-center text-gray-500" style="padding-top: 45px;">
                             Di chuột vào các ô để xem thông tin
@@ -797,32 +824,32 @@
         const modal = document.getElementById('cemeteryMapModal');
         const loading = document.getElementById('mapLoading');
         const content = document.getElementById('mapContent');
-        
+
         targetPlotId = plotId;
-        
+
         // Show modal and loading
         modal.style.display = 'flex';
         loading.style.display = 'block';
         content.classList.add('hidden');
         document.body.style.overflow = 'hidden';
-        
+
         try {
             // Fetch cemetery plots data
             const response = await fetch(`/api/cemeteries/${cemeteryId}/plots`);
             const data = await response.json();
-            
+
             currentCemeteryGrid = data;
-            
+
             // Update cemetery name
             document.getElementById('mapCemeteryName').textContent = data.cemetery.name;
-            
+
             // Render grid
             renderCemeteryGrid(data, plotId);
-            
+
             // Show content
             loading.style.display = 'none';
             content.classList.remove('hidden');
-            
+
             // Auto-show target plot info if exists
             if (plotId) {
                 const targetPlot = data.plots.find(p => p.id === plotId);
@@ -831,11 +858,12 @@
                     const banner = document.getElementById('targetPlotBanner');
                     const bannerInfo = document.getElementById('targetPlotInfo');
                     banner.classList.remove('hidden');
-                    bannerInfo.textContent = `📍 Vị trí liệt sĩ: Lô ${targetPlot.plot_code} - Hàng ${targetPlot.row}, Cột ${targetPlot.column}`;
-                    
+                    bannerInfo.textContent =
+                        `📍 Vị trí liệt sĩ: Lô ${targetPlot.plot_code} - Hàng ${targetPlot.row}, Cột ${targetPlot.column}`;
+
                     // Show plot info
                     showPlotInfo(targetPlot);
-                    
+
                     // Auto scroll to highlighted plot
                     setTimeout(() => {
                         scrollToHighlightedPlot();
@@ -860,51 +888,56 @@
 
     function renderCemeteryGrid(data, highlightPlotId = null) {
         const container = document.getElementById('mapGridContainer');
-        const { grid, plots } = data;
-        
+        const {
+            grid,
+            plots
+        } = data;
+
         if (!grid.rows || !grid.columns || plots.length === 0) {
             container.innerHTML = '<p class="text-center text-gray-500 py-8">Nghĩa trang chưa có lưới lô</p>';
             return;
         }
-        
+
         // Build plot map for quick lookup
         const plotMap = {};
         plots.forEach(plot => {
             const key = `${plot.row}-${plot.column}`;
             plotMap[key] = plot;
         });
-        
+
         // Build grid HTML
         let gridHTML = '<div class="inline-block">';
-        
+
         // Column headers
         gridHTML += '<div style="display: flex; gap: 4px; margin-bottom: 4px; margin-left: 40px;">';
         for (let col = 1; col <= grid.columns; col++) {
-            gridHTML += `<div style="width: 40px; text-align: center; font-weight: 600; color: #6b7280; font-size: 11px;">${col}</div>`;
+            gridHTML +=
+                `<div style="width: 40px; text-align: center; font-weight: 600; color: #6b7280; font-size: 11px;">${col}</div>`;
         }
         gridHTML += '</div>';
-        
+
         // Grid rows
         for (let row = 1; row <= grid.rows; row++) {
             gridHTML += '<div style="display: flex; gap: 4px; margin-bottom: 4px;">';
-            
+
             // Row label
             const rowLabel = String.fromCharCode(64 + row); // A, B, C...
-            gridHTML += `<div style="width: 36px; display: flex; align-items: center; justify-content: center; font-weight: 600; color: #6b7280; font-size: 13px;">${rowLabel}</div>`;
-            
+            gridHTML +=
+                `<div style="width: 36px; display: flex; align-items: center; justify-content: center; font-weight: 600; color: #6b7280; font-size: 13px;">${rowLabel}</div>`;
+
             // Plot cells
             for (let col = 1; col <= grid.columns; col++) {
                 const plot = plotMap[`${row}-${col}`];
-                
+
                 if (plot) {
                     const isHighlighted = highlightPlotId && plot.id === highlightPlotId;
                     const color = isHighlighted ? '#3b82f6' : getPlotColor(plot.status);
                     const border = isHighlighted ? '3px solid #1e40af' : '1px solid rgba(0,0,0,0.1)';
                     const shadow = isHighlighted ? '0 4px 12px rgba(59, 130, 246, 0.5)' : '0 1px 2px rgba(0,0,0,0.1)';
                     const plotId = `plot-${plot.id}`;
-                    
+
                     gridHTML += `
-                        <div 
+                        <div
                             id="${plotId}"
                             data-plot-id="${plot.id}"
                             onmouseenter="showPlotInfo(${JSON.stringify(plot).replace(/"/g, '&quot;')})"
@@ -934,17 +967,17 @@
                     gridHTML += '<div style="width: 40px; height: 40px;"></div>';
                 }
             }
-            
+
             gridHTML += '</div>';
         }
-        
+
         gridHTML += '</div>';
         container.innerHTML = gridHTML;
     }
-    
+
     function scrollToHighlightedPlot() {
         if (!targetPlotId) return;
-        
+
         const targetElement = document.getElementById(`plot-${targetPlotId}`);
         if (targetElement) {
             targetElement.scrollIntoView({
@@ -977,7 +1010,7 @@
 
     function showPlotInfo(plot) {
         const infoBox = document.getElementById('mapHoverInfo');
-        
+
         let html = `
             <div class="flex flex-col justify-center" style="min-height: 108px;">
                 <div class="font-bold text-base mb-2" style="color: #1e40af;">Lô ${plot.plot_code}</div>
@@ -985,16 +1018,16 @@
                     <div><strong>Vị trí:</strong> Hàng ${plot.row}, Cột ${plot.column}</div>
                     <div><strong>Trạng thái:</strong> ${getStatusLabel(plot.status)}</div>
         `;
-        
+
         if (plot.grave) {
             html += `<div class="mt-1 text-sm"><strong>👤 Liệt sĩ:</strong> ${plot.grave.deceased_full_name}</div>`;
         }
-        
+
         html += `
                 </div>
             </div>
         `;
-        
+
         infoBox.style.backgroundColor = '#dbeafe';
         infoBox.style.borderColor = '#3b82f6';
         infoBox.innerHTML = html;
@@ -1004,7 +1037,8 @@
         const infoBox = document.getElementById('mapHoverInfo');
         infoBox.style.backgroundColor = '#f3f4f6';
         infoBox.style.borderColor = '#d1d5db';
-        infoBox.innerHTML = '<div class="text-center text-gray-500 flex items-center justify-center" style="min-height: 108px;">Di chuột vào các ô để xem thông tin</div>';
+        infoBox.innerHTML =
+            '<div class="text-center text-gray-500 flex items-center justify-center" style="min-height: 108px;">Di chuột vào các ô để xem thông tin</div>';
     }
 
     // Image modal functions (reused from grave-detail.blade.php)

@@ -157,6 +157,9 @@ window.submitTribute = async function (event) {
             // Show smoke animation
             showSmokeAnimation();
 
+            // Play temple bell sound
+            playTempleSound();
+
             // Show success notification
             showSuccessNotification(
                 data.message || "Cảm ơn bạn đã thắp hương tưởng nhớ"
@@ -221,6 +224,21 @@ function showSmokeAnimation() {
     setTimeout(() => {
         document.body.removeChild(smoke);
     }, 3000);
+}
+
+/**
+ * Play temple bell sound
+ */
+function playTempleSound() {
+    try {
+        const audio = new Audio("/sounds/temple_bell.mp3");
+        audio.volume = 0.5; // Set volume to 50%
+        audio.play().catch((error) => {
+            console.log("Could not play temple bell sound:", error);
+        });
+    } catch (error) {
+        console.log("Error playing temple bell sound:", error);
+    }
 }
 
 /**
