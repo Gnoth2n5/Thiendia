@@ -1,0 +1,33 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('cemeteries', function (Blueprint $table) {
+            $table->id();
+            $table->string('name')->comment('Tên nghĩa trang');
+            $table->string('commune')->nullable()->comment('Xã/Phường/Thị trấn');
+            $table->text('address')->comment('Địa chỉ chi tiết');
+            $table->text('description')->nullable()->comment('Mô tả');
+            $table->timestamps();
+
+            $table->index('commune');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('cemeteries');
+    }
+};
