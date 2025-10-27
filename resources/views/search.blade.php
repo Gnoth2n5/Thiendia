@@ -15,7 +15,7 @@
                     </svg>
                 </div>
             </div>
-            <h1 class="text-4xl font-bold text-red-600 mb-4">
+            <h1 class="text-4xl font-bold text-black mb-4">
                 Tìm kiếm liệt sĩ
             </h1>
             <p class="text-lg text-slate-600 max-w-2xl mx-auto">
@@ -620,7 +620,7 @@
         <div class="bg-white rounded-2xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-hidden"
             onclick="event.stopPropagation()">
             <!-- Modal Header -->
-            <div class="bg-gradient-to-r from-green-500 to-blue-500 p-6">
+            <div class="p-6" style="background-color: #8b0000;">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center gap-3 text-white">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
@@ -629,12 +629,15 @@
                                 d="M9 6.75V15m6-6v8.25m.503 3.498 4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 0 0-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0z" />
                         </svg>
                         <div>
-                            <h3 class="text-2xl font-bold">Sơ đồ lưới nghĩa trang</h3>
+                            <h3 class="text-2xl font-bold" style="font-family: 'Merriweather', serif;">Sơ đồ lưới nghĩa
+                                trang</h3>
                             <p class="text-sm opacity-90" id="mapCemeteryName">Đang tải...</p>
                         </div>
                     </div>
-                    <button onclick="closeCemeteryMapModal()"
-                        class="text-white hover:bg-white/20 rounded-lg p-2 transition">
+                    <button onclick="closeCemeteryMapModal()" class="text-white rounded-lg p-2 transition"
+                        style="background-color: rgba(255,255,255,0.1);"
+                        onmouseover="this.style.backgroundColor='rgba(255,255,255,0.2)'"
+                        onmouseout="this.style.backgroundColor='rgba(255,255,255,0.1)'">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
                             stroke="currentColor" class="h-6 w-6">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
@@ -644,20 +647,20 @@
             </div>
 
             <!-- Modal Content -->
-            <div class="p-6 overflow-y-auto" style="max-height: calc(90vh - 100px);">
+            <div class="p-6 overflow-y-auto" style="max-height: calc(90vh - 100px); background-color: #f5f3e7;">
                 <!-- Loading -->
                 <div id="mapLoading" class="text-center py-12">
-                    <div
-                        class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-green-500 border-t-transparent">
+                    <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-t-transparent"
+                        style="border-top-color: #8b0000; border-color: rgba(139,0,0,0.2);">
                     </div>
-                    <p class="mt-4 text-gray-600">Đang tải sơ đồ...</p>
+                    <p class="mt-4" style="color: #2b2b2b;">Đang tải sơ đồ...</p>
                 </div>
 
                 <!-- Map Content -->
                 <div id="mapContent" class="hidden space-y-4">
                     <!-- Target Plot Banner -->
-                    <div id="targetPlotBanner"
-                        class="hidden p-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg shadow-lg">
+                    <div id="targetPlotBanner" class="hidden p-4 text-white rounded-lg shadow-lg"
+                        style="background-color: #8b0000;">
                         <div class="flex items-center gap-3">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
                                 stroke="currentColor" class="h-8 w-8 flex-shrink-0">
@@ -674,39 +677,41 @@
                     </div>
 
                     <!-- Legend -->
-                    <div class="flex items-center gap-4 text-sm p-3 bg-gray-50 rounded-lg">
+                    <div class="flex items-center gap-4 text-sm p-3 rounded-lg"
+                        style="background-color: #ffffff; border: 1px solid #d4d0c8;">
                         <div class="flex items-center gap-2">
                             <div class="w-4 h-4 rounded" style="background-color: #3b82f6;"></div>
-                            <span>Lô này</span>
+                            <span style="color: #2b2b2b;">Lô này</span>
                         </div>
                         <div class="flex items-center gap-2">
                             <div class="w-4 h-4 rounded" style="background-color: #22c55e;"></div>
-                            <span>Trống</span>
+                            <span style="color: #2b2b2b;">Trống</span>
                         </div>
                         <div class="flex items-center gap-2">
                             <div class="w-4 h-4 rounded" style="background-color: #6b7280;"></div>
-                            <span>Đã dùng</span>
+                            <span style="color: #2b2b2b;">Đã dùng</span>
                         </div>
                         <div class="flex items-center gap-2">
                             <div class="w-4 h-4 rounded" style="background-color: #eab308;"></div>
-                            <span>Đặt trước</span>
+                            <span style="color: #2b2b2b;">Đặt trước</span>
                         </div>
                         <div class="flex items-center gap-2">
                             <div class="w-4 h-4 rounded" style="background-color: #ef4444;"></div>
-                            <span>Không dùng</span>
+                            <span style="color: #2b2b2b;">Không dùng</span>
                         </div>
                     </div>
 
                     <!-- Hovered Plot Info -->
                     <div id="mapHoverInfo" class="p-4 rounded-lg border-2 transition-all"
-                        style="background-color: #f3f4f6; border-color: #d1d5db; height: 140px; overflow: hidden;">
-                        <div class="text-center text-gray-500" style="padding-top: 45px;">
+                        style="background-color: #fafaf8; border-color: #d4d0c8; height: 140px; overflow: hidden;">
+                        <div class="text-center" style="padding-top: 45px; color: #2b2b2b; opacity: 0.7;">
                             Di chuột vào các ô để xem thông tin
                         </div>
                     </div>
 
                     <!-- Grid Container -->
-                    <div id="mapGridContainer" class="overflow-x-auto p-4 bg-white rounded-lg border-2 border-gray-200">
+                    <div id="mapGridContainer" class="overflow-x-auto p-4 rounded-lg border-2"
+                        style="background-color: #ffffff; border-color: #d4d0c8;">
                         <!-- Grid will be rendered here -->
                     </div>
                 </div>
@@ -990,10 +995,10 @@
 
     function getPlotColor(status) {
         const colors = {
-            'available': '#22c55e',
-            'occupied': '#6b7280',
-            'reserved': '#eab308',
-            'unavailable': '#ef4444'
+            'available': '#22c55e', // Xanh lá cho lô trống
+            'occupied': '#6b7280', // Xám cho đã dùng
+            'reserved': '#eab308', // Vàng cho đặt trước
+            'unavailable': '#ef4444' // Đỏ cho không dùng
         };
         return colors[status] || '#d1d5db';
     }
@@ -1013,14 +1018,15 @@
 
         let html = `
             <div class="flex flex-col justify-center" style="min-height: 108px;">
-                <div class="font-bold text-base mb-2" style="color: #1e40af;">Lô ${plot.plot_code}</div>
-                <div class="space-y-1 text-sm">
+                <div class="font-bold text-base mb-2" style="color: #8b0000;">Lô ${plot.plot_code}</div>
+                <div class="space-y-1 text-sm" style="color: #2b2b2b;">
                     <div><strong>Vị trí:</strong> Hàng ${plot.row}, Cột ${plot.column}</div>
                     <div><strong>Trạng thái:</strong> ${getStatusLabel(plot.status)}</div>
         `;
 
         if (plot.grave) {
-            html += `<div class="mt-1 text-sm"><strong>👤 Liệt sĩ:</strong> ${plot.grave.deceased_full_name}</div>`;
+            html +=
+                `<div class="mt-1 text-sm" style="color: #2b2b2b;"><strong>👤 Liệt sĩ:</strong> ${plot.grave.deceased_full_name}</div>`;
         }
 
         html += `
@@ -1028,17 +1034,17 @@
             </div>
         `;
 
-        infoBox.style.backgroundColor = '#dbeafe';
-        infoBox.style.borderColor = '#3b82f6';
+        infoBox.style.backgroundColor = '#f5f3e7';
+        infoBox.style.borderColor = '#8b0000';
         infoBox.innerHTML = html;
     }
 
     function hidePlotInfo() {
         const infoBox = document.getElementById('mapHoverInfo');
-        infoBox.style.backgroundColor = '#f3f4f6';
-        infoBox.style.borderColor = '#d1d5db';
+        infoBox.style.backgroundColor = '#fafaf8';
+        infoBox.style.borderColor = '#d4d0c8';
         infoBox.innerHTML =
-            '<div class="text-center text-gray-500 flex items-center justify-center" style="min-height: 108px;">Di chuột vào các ô để xem thông tin</div>';
+            '<div class="text-center flex items-center justify-center" style="min-height: 108px; color: #2b2b2b; opacity: 0.7;">Di chuột vào các ô để xem thông tin</div>';
     }
 
     // Image modal functions (reused from grave-detail.blade.php)

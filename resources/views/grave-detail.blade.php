@@ -1044,7 +1044,7 @@
                     <!-- Sound Toggle -->
                     <div class="mb-4">
                         <label class="flex items-center">
-                            <input type="checkbox" id="soundToggle" class="mr-2">
+                            <input type="checkbox" checked id="soundToggle" class="mr-2">
                             <span class="text-sm" style="color: #2b2b2b;">Bật âm thanh</span>
                         </label>
                     </div>
