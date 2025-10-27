@@ -5,6 +5,11 @@ use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
+// Login redirect for Filament
+Route::get('/login', function () {
+    return redirect()->route('filament.admin.auth.login');
+})->name('login');
+
 // Trang chủ công khai
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -27,15 +32,15 @@ Route::get('/articles/category/{category}', [ArticleController::class, 'category
 
 // Các trang chính sách và hỗ trợ
 Route::get('/privacy-policy', function () {
-  return view('privacy-policy');
+    return view('privacy-policy');
 })->name('privacy-policy');
 
 Route::get('/terms-of-service', function () {
-  return view('terms-of-service');
+    return view('terms-of-service');
 })->name('terms-of-service');
 
 Route::get('/guide', function () {
-  return view('guide');
+    return view('guide');
 })->name('guide');
 
 Route::get('/contact', [App\Http\Controllers\ContactController::class, 'index'])->name('contact');
