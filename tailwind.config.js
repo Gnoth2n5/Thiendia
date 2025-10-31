@@ -51,7 +51,7 @@ export default {
         themes: [
             {
                 cemetery: {
-                    primary: "#8b0000", // Đỏ trầm
+                    primary: "#3b82f6", // Blue 500
                     secondary: "#2b2b2b", // Đen nâu
                     accent: "#d4d0c8", // Xám be
                     neutral: "#2b2b2b", // Đen nâu

@@ -27,11 +27,11 @@
                     <div class="space-y-6">
                         @if ($contactSetting && $contactSetting->phone)
                             <!-- Phone -->
-                            <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-red-600">
+                            <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-600">
                                 <div class="flex items-start gap-4">
-                                    <div class="bg-red-100 p-3 rounded-full">
+                                    <div class="bg-blue-100 p-3 rounded-full">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                            stroke-width="2" stroke="currentColor" class="h-6 w-6 text-red-600">
+                                            stroke-width="2" stroke="currentColor" class="h-6 w-6 text-blue-600">
                                             <path stroke-linecap="round" stroke-linejoin="round"
                                                 d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" />
                                         </svg>
@@ -147,14 +147,14 @@
                         <div>
                             <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Họ và tên *</label>
                             <input type="text" id="name" name="name" required value="{{ old('name') }}"
-                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                                 placeholder="Nhập họ và tên của bạn">
                         </div>
                         <div>
                             <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">Số điện thoại
                                 *</label>
                             <input type="tel" id="phone" name="phone" required value="{{ old('phone') }}"
-                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                                 placeholder="Nhập số điện thoại">
                         </div>
                     </div>
@@ -162,14 +162,14 @@
                     <div>
                         <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
                         <input type="email" id="email" name="email" value="{{ old('email') }}"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                             placeholder="Nhập địa chỉ email">
                     </div>
 
                     <div>
                         <label for="subject" class="block text-sm font-medium text-gray-700 mb-2">Chủ đề *</label>
                         <select id="subject" name="subject" required
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors">
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
                             <option value="">Chọn chủ đề</option>
                             <option value="tra_cuu" {{ old('subject') == 'tra_cuu' ? 'selected' : '' }}>Tra cứu thông tin
                                 liệt sĩ
@@ -187,26 +187,26 @@
                         <label for="message" class="block text-sm font-medium text-gray-700 mb-2">Nội dung tin nhắn
                             *</label>
                         <textarea id="message" name="message" rows="5" required
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors resize-none"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none"
                             placeholder="Nhập nội dung tin nhắn của bạn...">{{ old('message') }}</textarea>
                     </div>
 
                     <div class="flex items-start gap-3">
                         <input type="checkbox" id="privacy" name="privacy" required
                             {{ old('privacy') ? 'checked' : '' }}
-                            class="mt-1 h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded">
+                            class="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
                         <label for="privacy" class="text-sm text-gray-600">
                             Tôi đồng ý với <a href="{{ route('privacy-policy') }}"
-                                class="text-red-600 hover:underline">chính
+                                class="text-blue-600 hover:underline">chính
                                 sách bảo mật</a>
                             và
-                            <a href="{{ route('terms-of-service') }}" class="text-red-600 hover:underline">điều khoản sử
+                            <a href="{{ route('terms-of-service') }}" class="text-blue-600 hover:underline">điều khoản sử
                                 dụng</a> của hệ thống.
                         </label>
                     </div>
 
                     <button type="submit"
-                        class="w-full bg-red-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-red-700 focus:ring-4 focus:ring-red-200 transition-all duration-200">
+                        class="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 focus:ring-4 focus:ring-blue-200 transition-all duration-200">
                         Gửi Tin Nhắn
                     </button>
                 </form>

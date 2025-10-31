@@ -80,7 +80,7 @@
     </div>
 
     <!-- Navigation Bar -->
-    <nav class="sticky top-0 z-50" style="background: linear-gradient(135deg, #8b0000 0%, #a52a2a 100%);">
+    <nav class="sticky top-0 z-50" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);">
         <div class="container mx-auto px-4">
             <div class="flex items-center justify-between h-16">
                 <!-- Logo Section -->
