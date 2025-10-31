@@ -7,7 +7,7 @@
     <div class="mb-8">
         <div class="text-center mb-8">
             <div class="inline-block mb-6">
-                <div class="p-4 rounded-full" style="background-color: #8b0000;">
+                <div class="p-4 rounded-full" style="background-color: #3b82f6;">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
                         stroke="currentColor" class="h-12 w-12 text-white">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -29,7 +29,7 @@
         <div class="card-body">
             <h2 class="card-title text-2xl mb-4" style="color: #2b2b2b;">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                    stroke="currentColor" class="h-6 w-6" style="color: #8b0000;">
+                    stroke="currentColor" class="h-6 w-6" style="color: #3b82f6;">
                     <path stroke-linecap="round" stroke-linejoin="round"
                         d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z" />
                 </svg>
@@ -40,7 +40,7 @@
                 <div>
                     <h3 class="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                            stroke="currentColor" class="h-5 w-5 text-red-600">
+                            stroke="currentColor" class="h-5 w-5 text-blue-600">
                             <path stroke-linecap="round" stroke-linejoin="round"
                                 d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
                         </svg>
@@ -143,8 +143,8 @@
                         style="background-color: #d4d0c8; color: #2b2b2b; border: none;">Xóa bộ lọc</a>
                     <button type="submit"
                         class="inline-flex items-center gap-2 px-6 py-3 text-white font-semibold rounded-lg transition-colors duration-200"
-                        style="background-color: #8b0000;" onmouseover="this.style.backgroundColor='#6b0000'"
-                        onmouseout="this.style.backgroundColor='#8b0000'">
+                        style="background-color: #3b82f6;" onmouseover="this.style.backgroundColor='#1e40af'"
+                        onmouseout="this.style.backgroundColor='#3b82f6'">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
                             stroke="currentColor" class="h-5 w-5">
                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -178,7 +178,7 @@
                     <div class="hidden lg:block overflow-x-auto">
                         <table class="w-full">
                             <!-- Table Header -->
-                            <thead style="background-color: #8b0000;" class="border-b">
+                            <thead style="background-color: #3b82f6;" class="border-b">
                                 <tr>
                                     <th class="px-4 py-4 text-left text-sm font-bold text-white border-r"
                                         style="border-color: rgba(255,255,255,0.2);">
@@ -222,7 +222,7 @@
                             <tbody class="divide-y divide-gray-100">
                                 @foreach ($graves as $index => $grave)
                                     <tr class="transition-all duration-200" style="border-color: #d4d0c8;"
-                                        onmouseover="this.style.backgroundColor='rgba(139,0,0,0.05)'"
+                                        onmouseover="this.style.backgroundColor='rgba(59,130,246,0.08)'"
                                         onmouseout="this.style.backgroundColor='transparent'">
                                         <!-- STT -->
                                         <td class="px-4 py-4 text-sm text-gray-600 border-r border-gray-100 font-medium">
@@ -307,9 +307,9 @@
                                                 <!-- View Details Button -->
                                                 <button onclick="openGraveModal({{ $grave->id }})"
                                                     class="inline-flex items-center gap-1 px-3 py-2 text-white text-xs font-medium rounded-lg transition-colors duration-200"
-                                                    style="background-color: #8b0000;"
-                                                    onmouseover="this.style.backgroundColor='#6b0000'"
-                                                    onmouseout="this.style.backgroundColor='#8b0000'">
+                                                    style="background-color: #3b82f6;"
+                                                    onmouseover="this.style.backgroundColor='#1e40af'"
+                                                    onmouseout="this.style.backgroundColor='#3b82f6'">
                                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                         viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
                                                         class="h-3 w-3">
@@ -351,7 +351,7 @@
                         @foreach ($graves as $index => $grave)
                             <div class="border-b last:border-b-0 p-4 transition-all duration-200"
                                 style="border-color: #d4d0c8;"
-                                onmouseover="this.style.backgroundColor='rgba(139,0,0,0.05)'"
+                                onmouseover="this.style.backgroundColor='rgba(59,130,246,0.08)'"
                                 onmouseout="this.style.backgroundColor='transparent'">
                                 <div class="flex items-start justify-between mb-3">
                                     <div class="flex-1">
@@ -434,9 +434,9 @@
                                 <div class="flex gap-2">
                                     <button onclick="openGraveModal({{ $grave->id }})"
                                         class="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 text-white text-sm font-medium rounded-lg transition-colors duration-200"
-                                        style="background-color: #8b0000;"
-                                        onmouseover="this.style.backgroundColor='#6b0000'"
-                                        onmouseout="this.style.backgroundColor='#8b0000'">
+                                        style="background-color: #3b82f6;"
+                                        onmouseover="this.style.backgroundColor='#1e40af'"
+                                        onmouseout="this.style.backgroundColor='#3b82f6'">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                             stroke-width="2" stroke="currentColor" class="h-4 w-4">
                                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -476,7 +476,7 @@
                     style="background-color: #fafaf8; border-color: #d4d0c8;">
                     <div class="card-body">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="h-16 w-16 mx-auto mb-4" style="color: #8b0000; opacity: 0.3;">
+                            stroke="currentColor" class="h-16 w-16 mx-auto mb-4" style="color: #3b82f6; opacity: 0.3;">
                             <path stroke-linecap="round" stroke-linejoin="round"
                                 d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
                         </svg>
@@ -493,7 +493,7 @@
             <div class="card shadow-lg border" style="background-color: #fafaf8; border-color: #d4d0c8;">
                 <div class="card-body text-center py-16">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor" class="h-16 w-16 mx-auto mb-4" style="color: #8b0000; opacity: 0.3;">
+                        stroke="currentColor" class="h-16 w-16 mx-auto mb-4" style="color: #3b82f6; opacity: 0.3;">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
                     </svg>

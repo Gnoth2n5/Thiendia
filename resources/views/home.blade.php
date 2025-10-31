@@ -159,9 +159,9 @@
                     <!-- Search Button -->
                     <div class="flex justify-center pt-4">
                         <button type="submit" class="btn btn-lg px-12 gap-3"
-                            style="background-color: #8b0000; color: #f5f3e7; border: none;"
-                            onmouseover="this.style.backgroundColor='#6b0000'"
-                            onmouseout="this.style.backgroundColor='#8b0000'">
+                            style="background-color: #3b82f6; color: #f5f3e7; border: none;"
+                            onmouseover="this.style.backgroundColor='#1e40af'"
+                            onmouseout="this.style.backgroundColor='#3b82f6'">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
                                 stroke="currentColor" class="h-6 w-6">
                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -179,7 +179,7 @@
     <div class="mb-20">
         <div class="text-center mb-12">
             <div class="inline-block mb-6">
-                <div class="p-4 rounded-2xl" style="background-color: #8b0000;">
+                <div class="p-4 rounded-2xl" style="background-color: #3b82f6;">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
                         stroke="currentColor" class="h-10 w-10 text-white">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -188,7 +188,7 @@
                 </div>
             </div>
 
-            <h2 class="text-4xl font-bold mb-4" style="color: #8b0000;">
+            <h2 class="text-4xl font-bold mb-4" style="color: #3b82f6;">
                 Tin tức & Bài viết mới
             </h2>
             <p class="text-lg max-w-2xl mx-auto" style="color: #2b2b2b;">
@@ -207,7 +207,7 @@
                 @foreach ($latestArticles->take(2) as $article)
                     <div class="group relative overflow-hidden rounded-xl border"
                         style="background-color: #fafaf8; border-color: #d4d0c8; transition: box-shadow 0.2s ease;"
-                        onmouseover="this.style.boxShadow='0 4px 6px rgba(139, 0, 0, 0.1)'"
+                        onmouseover="this.style.boxShadow='0 4px 6px rgba(59, 130, 246, 0.12)'"
                         onmouseout="this.style.boxShadow='none'">
                         <div class="relative grid grid-cols-1 md:grid-cols-2 gap-0">
                             <!-- Image Section -->
@@ -217,7 +217,7 @@
                                         class="w-full h-64 md:h-full object-cover">
                                 @else
                                     <div class="w-full h-64 md:h-full flex items-center justify-center"
-                                        style="background-color: #8b0000;">
+                                        style="background-color: #3b82f6;">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                             stroke-width="2" stroke="currentColor" class="h-16 w-16 text-white">
                                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -234,7 +234,7 @@
                                     <div class="mb-3">
                                         <span
                                             class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium text-white"
-                                            style="background-color: #8b0000;">
+                                            style="background-color: #3b82f6;">
                                             @switch($article->category)
                                                 @case('tin_tuc')
                                                     📰 Tin tức
@@ -292,9 +292,9 @@
                                     <!-- Action Button -->
                                     <a href="{{ route('articles.show', $article->slug) }}"
                                         class="inline-flex items-center justify-center px-4 py-3 text-white font-semibold rounded-lg transition-colors duration-200"
-                                        style="background-color: #8b0000;"
-                                        onmouseover="this.style.backgroundColor='#6b0000'"
-                                        onmouseout="this.style.backgroundColor='#8b0000'">
+                                        style="background-color: #3b82f6;"
+                                        onmouseover="this.style.backgroundColor='#1e40af'"
+                                        onmouseout="this.style.backgroundColor='#3b82f6'">
                                         <span>Đọc tiếp</span>
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                             stroke-width="2" stroke="currentColor" class="h-4 w-4 ml-1">
@@ -317,7 +317,7 @@
                         @foreach ($latestArticles->skip(2) as $article)
                             <div class="group relative overflow-hidden rounded-lg border"
                                 style="background-color: #fafaf8; border-color: #d4d0c8; transition: box-shadow 0.2s ease;"
-                                onmouseover="this.style.boxShadow='0 2px 4px rgba(139, 0, 0, 0.1)'"
+                                onmouseover="this.style.boxShadow='0 2px 4px rgba(59, 130, 246, 0.12)'"
                                 onmouseout="this.style.boxShadow='none'">
                                 <div class="p-4">
                                     <div class="flex gap-3">
@@ -328,7 +328,7 @@
                                                     class="w-16 h-16 object-cover rounded-lg">
                                             @else
                                                 <div class="w-16 h-16 rounded-lg flex items-center justify-center"
-                                                    style="background-color: #8b0000;">
+                                                    style="background-color: #3b82f6;">
                                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                         viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
                                                         class="h-6 w-6 text-white">
@@ -344,7 +344,7 @@
                                             <div class="mb-1">
                                                 <span
                                                     class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium text-white"
-                                                    style="background-color: #8b0000;">
+                                                    style="background-color: #3b82f6;">
                                                     {{ $article->category_label }}
                                                 </span>
                                             </div>
@@ -376,8 +376,8 @@
         <div class="text-center mt-12">
             <a href="{{ route('articles.index') }}"
                 class="inline-flex items-center gap-3 px-8 py-4 text-white font-bold text-lg rounded-lg transition-colors duration-200"
-                style="background-color: #8b0000;" onmouseover="this.style.backgroundColor='#6b0000'"
-                onmouseout="this.style.backgroundColor='#8b0000'">
+                style="background-color: #3b82f6;" onmouseover="this.style.backgroundColor='#1e40af'"
+                onmouseout="this.style.backgroundColor='#3b82f6'">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
                     stroke="currentColor" class="h-6 w-6">
                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -411,14 +411,14 @@
                         tin chính xác chỉ bằng vài thao tác đơn giản.
                     </p>
 
-                    <h2 class="text-3xl font-bold mb-6" style="color: #8b0000;">Giới thiệu hệ thống</h2>
+                    <h2 class="text-3xl font-bold mb-6" style="color: #3b82f6;">Giới thiệu hệ thống</h2>
                     <p class="text-lg leading-relaxed mb-6" style="color: #2b2b2b;">
                         Hệ thống được xây dựng nhằm số hóa dữ liệu nghĩa địa, phục vụ công tác quản lý, tra cứu và bảo tồn
                         thông tin người đã khuất. Đây là giải pháp tối ưu cho các địa phương, ban quản lý nghĩa trang, cũng
                         như thân nhân có nhu cầu tìm kiếm và cập nhật thông tin mộ phần.
                     </p>
 
-                    <h2 class="text-3xl font-bold mb-6" style="color: #8b0000;">Tính năng nổi bật</h2>
+                    <h2 class="text-3xl font-bold mb-6" style="color: #3b82f6;">Tính năng nổi bật</h2>
                     <ul class="list-disc list-inside text-lg leading-relaxed mb-6 space-y-2" style="color: #2b2b2b;">
                         <li>Tra cứu thông tin người đã khuất: Nhập tên, năm sinh, năm mất hoặc khu vực chôn cất để tìm kiếm
                             dễ dàng.</li>
@@ -430,7 +430,7 @@
                         </li>
                     </ul>
 
-                    <h2 class="text-3xl font-bold mb-6" style="color: #8b0000;">Lợi ích mang lại</h2>
+                    <h2 class="text-3xl font-bold mb-6" style="color: #3b82f6;">Lợi ích mang lại</h2>
                     <ul class="list-disc list-inside text-lg leading-relaxed mb-6 space-y-2" style="color: #2b2b2b;">
                         <li>Đối với người dân: Dễ dàng tìm kiếm thông tin người thân mà không cần đến trực tiếp nghĩa trang.
                         </li>
@@ -440,13 +440,13 @@
                             dân cư và di sản văn hóa tâm linh.</li>
                     </ul>
 
-                    <h2 class="text-3xl font-bold mb-6" style="color: #8b0000;">Tầm nhìn và sứ mệnh</h2>
+                    <h2 class="text-3xl font-bold mb-6" style="color: #3b82f6;">Tầm nhìn và sứ mệnh</h2>
                     <p class="text-lg leading-relaxed mb-6" style="color: #2b2b2b;">
                         Chúng tôi hướng tới mục tiêu xây dựng hệ thống tra cứu và quản lý nghĩa địa toàn diện, góp phần gìn
                         giữ giá trị văn hóa truyền thống và tạo thuận tiện cho người dân trong hành trình tưởng nhớ tổ tiên.
                     </p>
 
-                    <h2 class="text-3xl font-bold mb-6" style="color: #8b0000;">Liên hệ</h2>
+                    <h2 class="text-3xl font-bold mb-6" style="color: #3b82f6;">Liên hệ</h2>
                     <p class="text-lg leading-relaxed mb-6" style="color: #2b2b2b;">
                         Nếu bạn là ban quản lý nghĩa trang, chính quyền địa phương hoặc người dân muốn sử dụng hệ thống, hãy
                         liên hệ với chúng tôi để được tư vấn và hỗ trợ triển khai:

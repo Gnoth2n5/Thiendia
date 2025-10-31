@@ -18,7 +18,7 @@
 }
 
 .btn-error {
-    @apply bg-red-600 text-white;
+    @apply bg-blue-600 text-white;
 }
 
 /* Tribute Smoke Animation - Simplified */
@@ -52,7 +52,7 @@
 }
 
 .memorial-button {
-    background-color: #8b0000;
+    background-color: #3b82f6;
     color: #f5f3e7;
     border: none;
     padding: 0.5rem 1.5rem;
@@ -61,5 +61,5 @@
 }
 
 .memorial-button:hover {
-    background-color: #6b0000;
+    background-color: #1e40af;
 }

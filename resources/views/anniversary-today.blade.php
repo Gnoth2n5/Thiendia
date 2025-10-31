@@ -12,7 +12,7 @@
         }
 
         .anniversary-header {
-            background: linear-gradient(135deg, #8b0000 0%, #a52a2a 100%);
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
             color: #f5f3e7;
             padding: 3rem 0;
             margin-bottom: 2rem;
@@ -40,11 +40,11 @@
         }
 
         .martyr-card:hover {
-            box-shadow: 0 4px 6px rgba(139, 0, 0, 0.1);
+            box-shadow: 0 4px 6px rgba(59, 130, 246, 0.12);
         }
 
         .tribute-btn {
-            background-color: #8b0000;
+            background-color: #3b82f6;
             color: #f5f3e7;
             border: none;
             padding: 0.5rem 1.5rem;
@@ -56,7 +56,7 @@
         }
 
         .tribute-btn:hover:not(:disabled) {
-            background-color: #6b0000;
+            background-color: #1e40af;
         }
 
         .tribute-btn:disabled {
@@ -65,7 +65,7 @@
         }
 
         .tribute-count {
-            color: #8b0000;
+            color: #3b82f6;
             font-weight: 700;
             font-size: 0.9rem;
         }
@@ -93,7 +93,7 @@
         }
 
         thead {
-            background-color: #8b0000;
+            background-color: #3b82f6;
             color: #f5f3e7;
         }
 
@@ -114,7 +114,7 @@
             padding: 4rem 2rem;
             background-color: #fff;
             border-radius: 0.5rem;
-            color: #8b0000;
+            color: #3b82f6;
         }
     </style>
 @endpush
@@ -272,8 +272,8 @@
                             Hủy
                         </button>
                         <button type="submit" id="submitTributeBtn" class="flex-1 px-4 py-2 text-white rounded"
-                            style="background-color: #8b0000;" onmouseover="this.style.backgroundColor='#6b0000'"
-                            onmouseout="this.style.backgroundColor='#8b0000'">
+                            style="background-color: #3b82f6;" onmouseover="this.style.backgroundColor='#1e40af'"
+                            onmouseout="this.style.backgroundColor='#3b82f6'">
                             Thắp hương
                         </button>
                     </div>
