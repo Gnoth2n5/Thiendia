@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\AnniversaryController;
+// use App\Http\Controllers\AnniversaryController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
@@ -16,8 +16,8 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 // Tìm kiếm lăng mộ
 Route::get('/search', [HomeController::class, 'search'])->name('search');
 
-// Ngày giỗ hôm nay
-Route::get('/today-death-anniversary', [AnniversaryController::class, 'index'])->name('anniversary.today');
+// Ngày giỗ hôm nay - TẠM THỜI TẮT
+// Route::get('/today-death-anniversary', [AnniversaryController::class, 'index'])->name('anniversary.today');
 
 // Chi tiết lăng mộ
 Route::get('/grave/{id}', [HomeController::class, 'show'])->name('grave.show');

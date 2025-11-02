@@ -158,12 +158,13 @@
                         Danh Sách Liệt Sĩ
                     </a>
 
-                    <a href="{{ route('anniversary.today') }}"
+                    {{-- Ngày Giỗ Hôm Nay - TẠM THỜI TẮT --}}
+                    {{-- <a href="{{ route('anniversary.today') }}"
                         class="px-4 py-2 text-white font-semibold rounded transition-colors duration-200 {{ request()->routeIs('anniversary.*') ? 'bg-[rgba(0,0,0,0.3)]' : '' }}"
                         onmouseover="if(!this.classList.contains('active-link')) this.style.backgroundColor='rgba(0,0,0,0.3)'"
                         onmouseout="this.style.backgroundColor='{{ request()->routeIs('anniversary.*') ? 'rgba(0,0,0,0.3)' : 'transparent' }}'">
                         Ngày Giỗ Hôm Nay
-                    </a>
+                    </a> --}}
 
                     <a href="{{ route('contact') }}"
                         class="px-4 py-2 text-white font-semibold rounded transition-colors duration-200"
@@ -222,12 +223,13 @@
                         Danh Sách Liệt Sĩ
                     </a>
 
-                    <a href="{{ route('anniversary.today') }}"
+                    {{-- Ngày Giỗ Hôm Nay - TẠM THỜI TẮT --}}
+                    {{-- <a href="{{ route('anniversary.today') }}"
                         class="flex items-center gap-3 px-4 py-3 text-white font-semibold transition-colors duration-200 {{ request()->routeIs('anniversary.*') ? 'bg-[rgba(0,0,0,0.5)]' : '' }}"
                         onmouseover="if(!this.classList.contains('active-link')) this.style.backgroundColor='rgba(0,0,0,0.5)'"
                         onmouseout="this.style.backgroundColor='{{ request()->routeIs('anniversary.*') ? 'rgba(0,0,0,0.5)' : 'transparent' }}'">
                         Ngày Giỗ Hôm Nay
-                    </a>
+                    </a> --}}
 
                     <a href="#"
                         class="flex items-center gap-3 px-4 py-3 text-white font-semibold transition-colors duration-200"

@@ -536,12 +536,19 @@
                     <!-- Content will be populated by JavaScript -->
                     <div id="modalContent" style="display: none;">
                         <!-- Thông tin liệt sĩ -->
-                        <div class="rounded-lg p-4 mb-6" style="background-color: #fafaf8;">
-                            <h3 class="text-lg font-bold mb-4" style="color: #8b0000;">Thông tin liệt sĩ</h3>
+                        <div class="rounded-lg p-4 mb-4" style="background-color: #fafaf8;">
+                            <h3 class="text-lg font-bold mb-4" style="color: #8b0000;">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                    stroke="currentColor" class="h-5 w-5 inline mr-2">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                                </svg>
+                                Thông tin liệt sĩ
+                            </h3>
                             <div class="flex gap-4">
                                 <!-- Photo -->
                                 <div id="deceasedPhoto" class="flex-shrink-0">
-                                    <div class="w-24 h-32 bg-gray-200 rounded-lg flex items-center justify-center">
+                                    <div class="w-32 h-40 bg-gray-200 rounded-lg flex items-center justify-center">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                             stroke-width="1.5" stroke="currentColor" class="h-8 w-8 text-gray-400">
                                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -550,40 +557,160 @@
                                     </div>
                                 </div>
 
-                                <!-- Info -->
-                                <div class="flex-1 space-y-2">
-                                    <div>
-                                        <span class="text-sm text-gray-600">Liệt sĩ:</span>
+                                <!-- Info Grid -->
+                                <div class="flex-1 grid grid-cols-2 gap-x-4 gap-y-3">
+                                    <div class="col-span-2">
+                                        <span class="text-sm text-gray-600">Họ và tên:</span>
                                         <p id="deceasedName" class="font-bold text-lg text-red-600"></p>
                                     </div>
                                     <div>
+                                        <span class="text-sm text-gray-600">Giới tính:</span>
+                                        <p id="deceasedGender" class="font-medium text-gray-900"></p>
+                                    </div>
+                                    <div>
                                         <span class="text-sm text-gray-600">Năm sinh:</span>
-                                        <p id="deceasedBirth" class="font-medium"></p>
+                                        <p id="deceasedBirth" class="font-medium text-gray-900"></p>
                                     </div>
-                                    <div>
-                                        <span class="text-sm text-gray-600">Năm hy sinh:</span>
-                                        <p id="deceasedDeath" class="font-medium"></p>
+                                    <div class="col-span-2">
+                                        <span class="text-sm text-gray-600">Ngày hy sinh:</span>
+                                        <p id="deceasedDeath" class="font-medium text-gray-900"></p>
                                     </div>
-                                    <div>
-                                        <span class="text-sm text-gray-600">Quê quán:</span>
-                                        <p id="deceasedHometown" class="font-medium"></p>
+                                    <div class="col-span-2">
+                                        <span class="text-sm text-gray-600">Cấp bậc, chức vụ:</span>
+                                        <p id="rankAndUnit" class="font-medium text-gray-900"></p>
                                     </div>
-                                    <div>
-                                        <span class="text-sm text-gray-600">Nghĩa trang:</span>
-                                        <p id="cemeteryName" class="font-medium"></p>
-                                    </div>
-                                    <div>
-                                        <span class="text-sm text-gray-600">Vị trí:</span>
-                                        <p id="graveLocation" class="font-medium"></p>
+                                    <div class="col-span-2" id="positionRow" style="display: none;">
+                                        <span class="text-sm text-gray-600">Chức vụ:</span>
+                                        <p id="position" class="font-medium text-gray-900"></p>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
+                        <!-- Thông tin nghĩa trang -->
+                        <div class="rounded-lg p-4 mb-4" style="background-color: #fafaf8;">
+                            <h3 class="text-lg font-bold mb-4" style="color: #8b0000;">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                    stroke="currentColor" class="h-5 w-5 inline mr-2">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+                                </svg>
+                                Thông tin nghĩa trang
+                            </h3>
+                            <div class="grid grid-cols-2 gap-x-4 gap-y-3">
+                                <div class="col-span-2">
+                                        <span class="text-sm text-gray-600">Nghĩa trang:</span>
+                                    <p id="cemeteryName" class="font-medium text-gray-900"></p>
+                                </div>
+                                <div class="col-span-2">
+                                    <span class="text-sm text-gray-600">Địa chỉ:</span>
+                                    <p id="cemeteryAddress" class="font-medium text-gray-900"></p>
+                                    </div>
+                                    <div>
+                                    <span class="text-sm text-gray-600">Lô mộ:</span>
+                                    <p id="plotCode" class="font-medium text-blue-700"></p>
+                                    </div>
+                                <div>
+                                    <span class="text-sm text-gray-600">Vị trí lô:</span>
+                                    <p id="plotPosition" class="font-medium text-gray-900"></p>
+                                </div>
+                                <div class="col-span-2" id="locationDescRow" style="display: none;">
+                                    <span class="text-sm text-gray-600">Mô tả vị trí:</span>
+                                    <p id="locationDesc" class="font-medium text-gray-900"></p>
+                            </div>
+                                <div id="graveTypeRow" style="display: none;">
+                                    <span class="text-sm text-gray-600">Loại mộ:</span>
+                                    <p id="graveType" class="font-medium text-gray-900"></p>
+                                </div>
+                                <div id="burialDateRow" style="display: none;">
+                                    <span class="text-sm text-gray-600">Ngày an táng:</span>
+                                    <p id="burialDate" class="font-medium text-gray-900"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Thông tin hành chính -->
+                        <div id="adminInfoSection" class="rounded-lg p-4 mb-4" style="background-color: #fafaf8; display: none;">
+                            <h3 class="text-lg font-bold mb-4" style="color: #8b0000;">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                    stroke="currentColor" class="h-5 w-5 inline mr-2">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                                </svg>
+                                Thông tin hành chính
+                            </h3>
+                            <div class="grid grid-cols-2 gap-x-4 gap-y-3">
+                                <div id="certificateRow" style="display: none;">
+                                    <span class="text-sm text-gray-600">Số giấy chứng nhận:</span>
+                                    <p id="certificateNumber" class="font-medium text-gray-900"></p>
+                                </div>
+                                <div id="decisionNumberRow" style="display: none;">
+                                    <span class="text-sm text-gray-600">Số quyết định:</span>
+                                    <p id="decisionNumber" class="font-medium text-gray-900"></p>
+                                </div>
+                                <div id="decisionDateRow" style="display: none;" class="col-span-2">
+                                    <span class="text-sm text-gray-600">Ngày quyết định:</span>
+                                    <p id="decisionDate" class="font-medium text-gray-900"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Thông tin thân nhân -->
+                        <div id="familyInfoSection" class="rounded-lg p-4 mb-4" style="background-color: #fafaf8; display: none;">
+                            <h3 class="text-lg font-bold mb-4" style="color: #8b0000;">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                    stroke="currentColor" class="h-5 w-5 inline mr-2">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" />
+                                </svg>
+                                Thông tin thân nhân
+                            </h3>
+                            <div class="space-y-3">
+                                <div id="nextOfKinRow" style="display: none;">
+                                    <span class="text-sm text-gray-600">Người thân:</span>
+                                    <p id="nextOfKin" class="font-medium text-gray-900"></p>
+                                </div>
+                                <div id="relationshipRow" style="display: none;">
+                                    <span class="text-sm text-gray-600">Quan hệ:</span>
+                                    <p id="relationship" class="font-medium text-gray-900"></p>
+                                </div>
+                                <div id="caretakerRow" style="display: none;">
+                                    <span class="text-sm text-gray-600">Người chăm sóc mộ:</span>
+                                    <p id="caretaker" class="font-medium text-gray-900"></p>
+                                </div>
+                                <div id="contactInfoRow" style="display: none;">
+                                    <span class="text-sm text-gray-600">Thông tin liên hệ:</span>
+                                    <div id="contactInfo" class="font-medium text-gray-900"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Ghi chú -->
+                        <div id="notesSection" class="rounded-lg p-4 mb-4" style="background-color: #fafaf8; display: none;">
+                            <h3 class="text-lg font-bold mb-3" style="color: #8b0000;">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                    stroke="currentColor" class="h-5 w-5 inline mr-2">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m3.75 9v6m3-3H9m1.5-12H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                                </svg>
+                                Ghi chú
+                            </h3>
+                            <p id="notes" class="text-sm text-gray-700 whitespace-pre-wrap"></p>
+                        </div>
+
                         <!-- Ảnh chụp mộ liệt sĩ -->
-                        <div class="rounded-lg p-4 mb-6" style="background-color: #fafaf8;">
-                            <h3 class="text-lg font-bold mb-4" style="color: #8b0000;">Ảnh chụp mộ liệt sĩ</h3>
-                            <div id="gravePhotos" class="flex gap-4 justify-center">
+                        <div class="rounded-lg p-4 mb-4" style="background-color: #fafaf8;">
+                            <h3 class="text-lg font-bold mb-4" style="color: #8b0000;">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                    stroke="currentColor" class="h-5 w-5 inline mr-2">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+                                </svg>
+                                Ảnh chụp mộ liệt sĩ
+                            </h3>
+                            <div id="gravePhotos" class="flex gap-4 justify-center flex-wrap">
                                 <!-- Photos will be populated by JavaScript -->
                             </div>
                         </div>
@@ -765,30 +892,199 @@
     function populateModalContent(grave) {
         // Update title
         document.getElementById('modalTitle').textContent =
-            `Tiểu Sử Liệt Sĩ - ${grave.deceased_full_name || grave.owner_name}`;
+            `Tiểu Sử Liệt Sĩ - ${grave.deceased_full_name || grave.owner_name || 'Chưa rõ'}`;
 
-        // Update deceased info
-        document.getElementById('deceasedName').textContent = grave.deceased_full_name || grave.owner_name;
-        document.getElementById('deceasedBirth').textContent = grave.deceased_birth_date || '-';
+        // === THÔNG TIN LIỆT SĨ ===
+        document.getElementById('deceasedName').textContent = grave.deceased_full_name || grave.owner_name || '-';
+        
+        // Giới tính
+        const genderText = grave.deceased_gender === 'male' ? 'Nam' : 
+                          grave.deceased_gender === 'female' ? 'Nữ' : 
+                          grave.deceased_gender || '-';
+        document.getElementById('deceasedGender').textContent = genderText;
+
+        // Năm sinh
+        let birthText = '-';
+        if (grave.birth_year) {
+            birthText = grave.birth_year;
+        } else if (grave.deceased_birth_date) {
+            birthText = grave.deceased_birth_date;
+        }
+        document.getElementById('deceasedBirth').textContent = birthText;
+
+        // Ngày hy sinh
         document.getElementById('deceasedDeath').textContent = grave.deceased_death_date || '-';
-        document.getElementById('deceasedHometown').textContent = grave.cemetery.commune;
-        document.getElementById('cemeteryName').textContent = grave.cemetery.name;
-        document.getElementById('graveLocation').textContent = grave.location_description || '-';
 
-        // Update view details button URL
-        document.getElementById('viewDetailsBtn').href = `/grave/${grave.id}`;
+        // Cấp bậc, đơn vị
+        document.getElementById('rankAndUnit').textContent = grave.rank_and_unit || '-';
 
-        // Update deceased photo
+        // Chức vụ (ẩn nếu không có)
+        if (grave.position) {
+            document.getElementById('positionRow').style.display = 'block';
+            document.getElementById('position').textContent = grave.position;
+        } else {
+            document.getElementById('positionRow').style.display = 'none';
+        }
+
+        // Ảnh liệt sĩ
         const photoContainer = document.getElementById('deceasedPhoto');
         if (grave.deceased_photo) {
             photoContainer.innerHTML = `
-                <img src="${grave.deceased_photo}" alt="${grave.deceased_full_name}"
-                     class="w-24 h-32 object-cover rounded-lg cursor-pointer"
+                <img src="${grave.deceased_photo}" alt="${grave.deceased_full_name || 'Liệt sĩ'}"
+                     class="w-32 h-40 object-cover rounded-lg cursor-pointer shadow-md hover:shadow-xl transition-shadow"
                      onclick="openImageModal('${grave.deceased_photo}')">
+            `;
+        } else {
+            photoContainer.innerHTML = `
+                <div class="w-32 h-40 bg-gray-200 rounded-lg flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                        stroke-width="1.5" stroke="currentColor" class="h-8 w-8 text-gray-400">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                    </svg>
+                </div>
             `;
         }
 
-        // Update grave photos
+        // === THÔNG TIN NGHĨA TRANG ===
+        document.getElementById('cemeteryName').textContent = grave.cemetery?.name || '-';
+        
+        // Địa chỉ nghĩa trang
+        let addressParts = [];
+        if (grave.cemetery?.address) addressParts.push(grave.cemetery.address);
+        if (grave.cemetery?.commune) addressParts.push(grave.cemetery.commune);
+        if (grave.cemetery?.district) addressParts.push(grave.cemetery.district);
+        if (grave.cemetery?.province) addressParts.push(grave.cemetery.province);
+        document.getElementById('cemeteryAddress').textContent = addressParts.length > 0 ? addressParts.join(', ') : '-';
+
+        // Lô mộ
+        document.getElementById('plotCode').textContent = grave.plot?.plot_code || '-';
+        
+        // Vị trí lô
+        if (grave.plot) {
+            document.getElementById('plotPosition').textContent = `Hàng ${grave.plot.row}, Cột ${grave.plot.column}`;
+        } else {
+            document.getElementById('plotPosition').textContent = '-';
+        }
+
+        // Mô tả vị trí
+        if (grave.location_description) {
+            document.getElementById('locationDescRow').style.display = 'block';
+            document.getElementById('locationDesc').textContent = grave.location_description;
+        } else {
+            document.getElementById('locationDescRow').style.display = 'none';
+        }
+
+        // Loại mộ
+        if (grave.grave_type) {
+            document.getElementById('graveTypeRow').style.display = 'block';
+            const graveTypeLabel = {
+                'đất': 'Lăng mộ đất',
+                'xi_măng': 'Lăng mộ xi măng',
+                'đá': 'Lăng mộ đá',
+                'gỗ': 'Lăng mộ gỗ',
+                'khác': 'Loại khác'
+            };
+            document.getElementById('graveType').textContent = graveTypeLabel[grave.grave_type] || grave.grave_type;
+        } else {
+            document.getElementById('graveTypeRow').style.display = 'none';
+        }
+
+        // Ngày an táng
+        if (grave.burial_date) {
+            document.getElementById('burialDateRow').style.display = 'block';
+            document.getElementById('burialDate').textContent = grave.burial_date;
+        } else {
+            document.getElementById('burialDateRow').style.display = 'none';
+        }
+
+        // === THÔNG TIN HÀNH CHÍNH ===
+        let hasAdminInfo = false;
+
+        if (grave.certificate_number) {
+            document.getElementById('certificateRow').style.display = 'block';
+            document.getElementById('certificateNumber').textContent = grave.certificate_number;
+            hasAdminInfo = true;
+        } else {
+            document.getElementById('certificateRow').style.display = 'none';
+        }
+
+        if (grave.decision_number) {
+            document.getElementById('decisionNumberRow').style.display = 'block';
+            document.getElementById('decisionNumber').textContent = grave.decision_number;
+            hasAdminInfo = true;
+        } else {
+            document.getElementById('decisionNumberRow').style.display = 'none';
+        }
+
+        if (grave.decision_date) {
+            document.getElementById('decisionDateRow').style.display = 'block';
+            document.getElementById('decisionDate').textContent = grave.decision_date;
+            hasAdminInfo = true;
+        } else {
+            document.getElementById('decisionDateRow').style.display = 'none';
+        }
+
+        document.getElementById('adminInfoSection').style.display = hasAdminInfo ? 'block' : 'none';
+
+        // === THÔNG TIN THÂN NHÂN ===
+        let hasFamilyInfo = false;
+
+        if (grave.next_of_kin) {
+            document.getElementById('nextOfKinRow').style.display = 'block';
+            document.getElementById('nextOfKin').textContent = grave.next_of_kin;
+            hasFamilyInfo = true;
+        } else {
+            document.getElementById('nextOfKinRow').style.display = 'none';
+        }
+
+        if (grave.deceased_relationship) {
+            document.getElementById('relationshipRow').style.display = 'block';
+            document.getElementById('relationship').textContent = grave.deceased_relationship;
+            hasFamilyInfo = true;
+        } else {
+            document.getElementById('relationshipRow').style.display = 'none';
+        }
+
+        if (grave.caretaker_name) {
+            document.getElementById('caretakerRow').style.display = 'block';
+            document.getElementById('caretaker').textContent = grave.caretaker_name;
+            hasFamilyInfo = true;
+        } else {
+            document.getElementById('caretakerRow').style.display = 'none';
+        }
+
+        // Thông tin liên hệ
+        if (grave.contact_info && (grave.contact_info.phone || grave.contact_info.email || grave.contact_info.address)) {
+            document.getElementById('contactInfoRow').style.display = 'block';
+            let contactHtml = '<div class="space-y-1">';
+            if (grave.contact_info.phone) {
+                contactHtml += `<div><strong>SĐT:</strong> ${grave.contact_info.phone}</div>`;
+            }
+            if (grave.contact_info.email) {
+                contactHtml += `<div><strong>Email:</strong> ${grave.contact_info.email}</div>`;
+            }
+            if (grave.contact_info.address) {
+                contactHtml += `<div><strong>Địa chỉ:</strong> ${grave.contact_info.address}</div>`;
+            }
+            contactHtml += '</div>';
+            document.getElementById('contactInfo').innerHTML = contactHtml;
+            hasFamilyInfo = true;
+        } else {
+            document.getElementById('contactInfoRow').style.display = 'none';
+        }
+
+        document.getElementById('familyInfoSection').style.display = hasFamilyInfo ? 'block' : 'none';
+
+        // === GHI CHÚ ===
+        if (grave.notes) {
+            document.getElementById('notesSection').style.display = 'block';
+            document.getElementById('notes').textContent = grave.notes;
+        } else {
+            document.getElementById('notesSection').style.display = 'none';
+        }
+
+        // === ẢNH CHỤP MỘ ===
         const photosContainer = document.getElementById('gravePhotos');
         if (grave.grave_photos && grave.grave_photos.length > 0) {
             photosContainer.innerHTML = grave.grave_photos.map(photo => `
@@ -806,7 +1102,7 @@
             `).join('');
         } else {
             photosContainer.innerHTML = `
-                <div class="text-center text-gray-500 py-8">
+                <div class="text-center text-gray-500 py-8 w-full">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-12 w-12 mx-auto mb-2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
                     </svg>
@@ -814,6 +1110,9 @@
                 </div>
             `;
         }
+
+        // Update view details button URL
+        document.getElementById('viewDetailsBtn').href = `/grave/${grave.id}`;
     }
 
     function closeGraveModal() {
