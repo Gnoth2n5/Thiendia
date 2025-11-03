@@ -2,8 +2,10 @@
 
 namespace App\Services;
 
+use App\Models\Cemetery;
 use App\Models\CemeteryPlot;
 use App\Models\Grave;
+use App\Models\MartyrPhoto;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -13,6 +15,8 @@ class GravesImportParser
     protected string $filePath;
 
     protected int $cemeteryId;
+
+    protected ?string $commune = null;
 
     protected array $rows = [];
 
@@ -26,6 +30,12 @@ class GravesImportParser
     {
         $this->filePath = $filePath;
         $this->cemeteryId = $cemeteryId;
+
+        // Lấy commune từ cemetery
+        $cemetery = Cemetery::find($cemeteryId);
+        if ($cemetery) {
+            $this->commune = $cemetery->commune;
+        }
     }
 
     /**
@@ -148,24 +158,49 @@ class GravesImportParser
         }
         $validatedData['plot_id'] = $plotId;
 
-        // 11: Ảnh liệt sỹ - URL duy nhất
+        // 11: Ảnh liệt sỹ - Tên file hoặc path hoặc URL
         $deceasedPhoto = ! empty($data[11]) ? trim((string) $data[11]) : null;
-        if ($deceasedPhoto && ! $this->isValidUrl($deceasedPhoto)) {
-            $errors[] = 'URL ảnh liệt sỹ không hợp lệ';
+        if ($deceasedPhoto) {
+            if ($this->isValidUrl($deceasedPhoto)) {
+                // URL đầy đủ - giữ nguyên
+                $validatedData['deceased_photo'] = $deceasedPhoto;
+            } elseif (str_contains($deceasedPhoto, '/')) {
+                // Đã có path đầy đủ (ví dụ: martyr-photos/ly-nhan/file.jpg) - giữ nguyên
+                $validatedData['deceased_photo'] = $deceasedPhoto;
+            } else {
+                // Chỉ có tên file - build path theo commune
+                if ($this->commune) {
+                    $storagePath = MartyrPhoto::generateStoragePath($this->commune);
+                    $validatedData['deceased_photo'] = "{$storagePath}/{$deceasedPhoto}";
+                } else {
+                    $validatedData['deceased_photo'] = "martyr-photos/{$deceasedPhoto}";
+                }
+            }
+        } else {
+            $validatedData['deceased_photo'] = null;
         }
-        $validatedData['deceased_photo'] = $deceasedPhoto;
 
-        // 12: Ảnh mộ - nhiều URLs cách nhau bằng dấu phẩy
+        // 12: Ảnh mộ - Nhiều tên file/path/URLs cách nhau bằng dấu phẩy
         $gravePhotos = [];
         if (! empty($data[12])) {
-            $photoUrls = array_map('trim', explode(',', (string) $data[12]));
-            foreach ($photoUrls as $url) {
-                if (! empty($url)) {
-                    if (! $this->isValidUrl($url)) {
-                        $errors[] = "URL ảnh mộ không hợp lệ: {$url}";
-                        break;
+            $photoItems = array_map('trim', explode(',', (string) $data[12]));
+            foreach ($photoItems as $item) {
+                if (! empty($item)) {
+                    if ($this->isValidUrl($item)) {
+                        // URL đầy đủ - giữ nguyên
+                        $gravePhotos[] = $item;
+                    } elseif (str_contains($item, '/')) {
+                        // Đã có path đầy đủ (ví dụ: martyr-photos/ly-nhan/file.jpg) - giữ nguyên
+                        $gravePhotos[] = $item;
+                    } else {
+                        // Chỉ có tên file - build path theo commune
+                        if ($this->commune) {
+                            $storagePath = MartyrPhoto::generateStoragePath($this->commune);
+                            $gravePhotos[] = "{$storagePath}/{$item}";
+                        } else {
+                            $gravePhotos[] = "martyr-photos/{$item}";
+                        }
                     }
-                    $gravePhotos[] = $url;
                 }
             }
         }
