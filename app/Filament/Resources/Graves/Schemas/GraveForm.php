@@ -144,6 +144,14 @@ class GraveForm
                             ->label('Ảnh liệt sỹ')
                             ->image()
                             ->directory('deceased-photos')
+                            ->getUploadedFileNameForStorageUsing(function ($file): string {
+                                // Tạo tên file ngắn: timestamp-random.extension
+                                $timestamp = now()->timestamp;
+                                $random = strtolower(substr(md5(uniqid()), 0, 6));
+                                $extension = $file->getClientOriginalExtension();
+
+                                return "{$timestamp}-{$random}.{$extension}";
+                            })
                             ->visibility('public')
                             ->imageEditor()
                             ->imageEditorAspectRatios([
@@ -158,6 +166,14 @@ class GraveForm
                             ->image()
                             ->multiple()
                             ->directory('grave-photos')
+                            ->getUploadedFileNameForStorageUsing(function ($file): string {
+                                // Tạo tên file ngắn: timestamp-random.extension
+                                $timestamp = now()->timestamp;
+                                $random = strtolower(substr(md5(uniqid()), 0, 6));
+                                $extension = $file->getClientOriginalExtension();
+
+                                return "{$timestamp}-{$random}.{$extension}";
+                            })
                             ->visibility('public')
                             ->imageEditor()
                             ->reorderable()
