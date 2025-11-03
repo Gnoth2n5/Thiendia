@@ -48,7 +48,18 @@ class ImportGraves extends Page implements HasForms
             ->schema([
                 Select::make('cemetery_id')
                     ->label('Nghĩa trang')
-                    ->options(Cemetery::pluck('name', 'id'))
+                    ->options(function () {
+                        /** @var \App\Models\User $user */
+                        $user = auth()->user();
+                        $query = Cemetery::query();
+
+                        // Nếu là cán bộ xã/phường, chỉ hiển thị nghĩa trang của xã/phường mình
+                        if ($user->isCommuneStaff()) {
+                            $query->where('commune', $user->commune);
+                        }
+
+                        return $query->pluck('name', 'id');
+                    })
                     ->searchable()
                     ->required()
                     ->helperText('Chọn nghĩa trang để import liệt sỹ'),
@@ -105,6 +116,31 @@ class ImportGraves extends Page implements HasForms
             return;
         }
 
+        // Kiểm tra quyền truy cập nghĩa trang
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
+        $cemetery = Cemetery::find($data['cemetery_id']);
+
+        if (! $cemetery) {
+            Notification::make()
+                ->title('Lỗi')
+                ->danger()
+                ->body('Không tìm thấy nghĩa trang.')
+                ->send();
+
+            return;
+        }
+
+        if ($user->isCommuneStaff() && $cemetery->commune !== $user->commune) {
+            Notification::make()
+                ->title('Không có quyền')
+                ->danger()
+                ->body('Bạn không có quyền import vào nghĩa trang này.')
+                ->send();
+
+            return;
+        }
+
         try {
             // Get file path
             $file = $data['file'];
@@ -154,6 +190,31 @@ class ImportGraves extends Page implements HasForms
 
         try {
             $data = $this->form->getState();
+
+            // Kiểm tra quyền truy cập nghĩa trang lần nữa trước khi lưu
+            /** @var \App\Models\User $user */
+            $user = auth()->user();
+            $cemetery = Cemetery::find($data['cemetery_id']);
+
+            if (! $cemetery) {
+                Notification::make()
+                    ->title('Lỗi')
+                    ->danger()
+                    ->body('Không tìm thấy nghĩa trang.')
+                    ->send();
+
+                return;
+            }
+
+            if ($user->isCommuneStaff() && $cemetery->commune !== $user->commune) {
+                Notification::make()
+                    ->title('Không có quyền')
+                    ->danger()
+                    ->body('Bạn không có quyền import vào nghĩa trang này.')
+                    ->send();
+
+                return;
+            }
 
             // Get file path
             $file = $data['file'];
@@ -206,5 +267,14 @@ class ImportGraves extends Page implements HasForms
             GraveResource::getUrl('index') => 'Liệt sỹ',
             '#' => 'Import từ Excel',
         ];
+    }
+
+    public static function canAccess(): bool
+    {
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
+
+        // Cho phép admin và cán bộ xã/phường import liệt sỹ
+        return $user->isAdmin() || $user->isCommuneStaff();
     }
 }
