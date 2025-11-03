@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Graves;
 
 use App\Filament\Resources\Graves\Pages\CreateGrave;
 use App\Filament\Resources\Graves\Pages\EditGrave;
+use App\Filament\Resources\Graves\Pages\ImportGraves;
 use App\Filament\Resources\Graves\Pages\ListGraves;
 use App\Filament\Resources\Graves\Schemas\GraveForm;
 use App\Filament\Resources\Graves\Tables\GravesTable;
@@ -66,6 +67,7 @@ class GraveResource extends Resource
             'index' => ListGraves::route('/'),
             'create' => CreateGrave::route('/create'),
             'edit' => EditGrave::route('/{record}/edit'),
+            'import' => ImportGraves::route('/import'),
         ];
     }
 }
