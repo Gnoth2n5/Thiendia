@@ -147,21 +147,21 @@ class ContactSettingResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-            Tables\Filters\TernaryFilter::make('is_active')
+                Tables\Filters\TernaryFilter::make('is_active')
                     ->label('Trạng thái')
                     ->placeholder('Tất cả')
                     ->trueLabel('Đang kích hoạt')
                     ->falseLabel('Không kích hoạt'),
-        ])
+            ])
             ->actions([
-            Tables\Actions\EditAction::make(),
-            Tables\Actions\DeleteAction::make(),
-        ])
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
+            ])
             ->bulkActions([
-            Tables\Actions\BulkActionGroup::make([
+                Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
-            ]),
-        ])
+                ]),
+            ])
             ->defaultSort('created_at', 'desc');
     }
 
@@ -179,5 +179,23 @@ class ContactSettingResource extends Resource
             'create' => Pages\CreateContactSetting::route('/create'),
             'edit' => Pages\EditContactSetting::route('/{record}/edit'),
         ];
+    }
+
+    public static function canAccess(): bool
+    {
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
+
+        // Chỉ cho phép admin truy cập cài đặt liên hệ
+        return $user->isAdmin();
+    }
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
+
+        // Chỉ hiển thị menu cho admin
+        return $user->isAdmin();
     }
 }
