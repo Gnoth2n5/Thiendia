@@ -41,11 +41,24 @@ class ManageCemeteryGrid extends Page implements HasForms
 
     public function mount(?int $cemetery = null): void
     {
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
+
         // Get cemetery from URL parameter or first cemetery as default
         if ($cemetery) {
             $this->cemetery = Cemetery::findOrFail($cemetery);
+
+            // Kiểm tra quyền truy cập nghĩa trang
+            if ($user->isCommuneStaff() && $this->cemetery->commune !== $user->commune) {
+                abort(403, 'Bạn không có quyền truy cập nghĩa trang này.');
+            }
         } else {
-            $this->cemetery = Cemetery::first();
+            // Lấy nghĩa trang đầu tiên theo quyền của user
+            $query = Cemetery::query();
+            if ($user->isCommuneStaff()) {
+                $query->where('commune', $user->commune);
+            }
+            $this->cemetery = $query->first();
         }
 
         if ($this->cemetery) {
@@ -54,7 +67,6 @@ class ManageCemeteryGrid extends Page implements HasForms
 
         $this->form->fill();
     }
-
 
     public function form(Form $form): Form
     {
@@ -121,17 +133,43 @@ class ManageCemeteryGrid extends Page implements HasForms
                 ->form([
                     \Filament\Forms\Components\Select::make('cemetery_id')
                         ->label('Nghĩa trang')
-                        ->options(Cemetery::pluck('name', 'id'))
+                        ->options(function () {
+                            /** @var \App\Models\User $user */
+                            $user = auth()->user();
+                            $query = Cemetery::query();
+
+                            // Nếu là cán bộ xã/phường, chỉ hiển thị nghĩa trang của xã/phường mình
+                            if ($user->isCommuneStaff()) {
+                                $query->where('commune', $user->commune);
+                            }
+
+                            return $query->pluck('name', 'id');
+                        })
                         ->required()
                         ->searchable()
                         ->default($this->cemetery->id),
                 ])
                 ->action(function (array $data): void {
-                    $this->cemetery = Cemetery::findOrFail($data['cemetery_id']);
+                    /** @var \App\Models\User $user */
+                    $user = auth()->user();
+                    $cemetery = Cemetery::findOrFail($data['cemetery_id']);
+
+                    // Kiểm tra quyền truy cập
+                    if ($user->isCommuneStaff() && $cemetery->commune !== $user->commune) {
+                        Notification::make()
+                            ->title('Không có quyền truy cập')
+                            ->danger()
+                            ->body('Bạn không có quyền truy cập nghĩa trang này.')
+                            ->send();
+
+                        return;
+                    }
+
+                    $this->cemetery = $cemetery;
                     $this->loadPlots();
 
                     Notification::make()
-                        ->title('Đã chuyển sang nghĩa trang: ' . $this->cemetery->name)
+                        ->title('Đã chuyển sang nghĩa trang: '.$this->cemetery->name)
                         ->success()
                         ->send();
                 }),
@@ -218,7 +256,7 @@ class ManageCemeteryGrid extends Page implements HasForms
         $this->loadPlots();
 
         Notification::make()
-            ->title('Đã cập nhật trạng thái lô ' . $plot->plot_code)
+            ->title('Đã cập nhật trạng thái lô '.$plot->plot_code)
             ->success()
             ->send();
     }
@@ -247,6 +285,7 @@ class ManageCemeteryGrid extends Page implements HasForms
         /** @var \App\Models\User $user */
         $user = auth()->user();
 
-        return $user->isAdmin();
+        // Cho phép admin và cán bộ xã/phường truy cập
+        return $user->isAdmin() || $user->isCommuneStaff();
     }
 }
