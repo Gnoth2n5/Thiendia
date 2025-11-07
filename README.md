@@ -1,66 +1,90 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Tra Cứu Liệt Sĩ Nghĩa Trang Ninh Bình
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Dự án cung cấp hệ thống tra cứu thông tin liệt sĩ và quản lý nghĩa trang Ninh Bình, hỗ trợ trực quan hóa sơ đồ lô mộ, theo dõi thông tin liệt sĩ và quản trị dữ liệu tập trung cho cán bộ địa phương. Ứng dụng được xây dựng trên nền tảng Laravel 12, tận dụng Filament Panel để mang lại trải nghiệm quản trị hiện đại và dễ sử dụng.
 
-## About Laravel
+## Chức năng chính
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+-   Quản lý thông tin nghĩa trang, khu vực, kích thước lưới lô mộ.
+-   Hiển thị sơ đồ lưới trực quan với trạng thái từng lô (trống, đã sử dụng, đặt trước, không khả dụng).
+-   Gán và quản lý thông tin mộ, liệt sĩ, gia đình.
+-   Tìm kiếm nâng cao với nhiều tiêu chí lọc.
+-   Hỗ trợ thao tác hàng loạt và các tác vụ quản trị khác thông qua Filament.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Công nghệ và phiên bản
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+-   PHP 8.3.7
+-   Laravel Framework 12.x
+-   Filament 4.x
+-   Livewire 3.x
+-   Tailwind CSS 4.x
+-   PHPUnit 11.x
 
-## Learning Laravel
+## Yêu cầu hệ thống
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+-   PHP >= 8.2 (khuyến nghị 8.3)
+-   Composer >= 2.6
+-   Node.js >= 18 và npm >= 9
+-   MySQL/MariaDB hoặc PostgreSQL
+-   Tiện ích mở rộng PHP: `BCMath`, `Ctype`, `Fileinfo`, `JSON`, `Mbstring`, `OpenSSL`, `PDO`, `Tokenizer`, `XML`
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## Cài đặt
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```bash
+git clone github_url
+cd ''
 
-## Laravel Sponsors
+composer install
+npm install
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+cp .env.example .env
+php artisan key:generate
 
-### Premium Partners
+# Cấu hình kết nối cơ sở dữ liệu trong .env
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+php artisan migrate --seed
+php artisan storage:link
 
-## Contributing
+# Biên dịch tài sản giao diện
+npm run build # hoặc npm run dev trong môi trường phát triển
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Chạy ứng dụng
 
-## Code of Conduct
+```bash
+php artisan serve
+# Trong một tab khác
+npm run dev
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Truy cập trình duyệt tại `http://127.0.0.1:8000`.
 
-## Security Vulnerabilities
+## Kiểm thử và chất lượng mã
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+-   Chạy test: `php artisan test`
+-   Kiểm tra đơn vị cụ thể: `php artisan test --filter=TenTest`
+-   Định dạng mã PHP: `vendor/bin/pint --dirty`
 
-## License
+## Cấu trúc thư mục đáng chú ý
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+-   `app/Models`: Định nghĩa mô hình dữ liệu (Nghĩa trang, Lô mộ, Mộ, ...).
+-   `app/Filament`: Cấu hình panel quản trị, resource, widget và trang tùy chỉnh.
+-   `resources/views`: Blade template cho các trang giao diện công khai và thành phần tùy chỉnh.
+-   `resources/views/filament/forms/components`: Các thành phần Blade mở rộng cho Filament (ví dụ: lưới ô lô mộ).
+
+## Quy trình phát triển đề xuất
+
+1. Tạo nhánh mới cho mỗi chức năng hoặc lỗi.
+2. Cập nhật/test đầy đủ trước khi tạo pull request.
+3. Đảm bảo mã tuân thủ chuẩn Laravel và chuẩn dự án (Filament, Tailwind v4).
+4. Miêu tả rõ thay đổi trong pull request, đính kèm ảnh chụp màn hình khi có cập nhật giao diện.
+
+## Tài liệu và đường dẫn hữu ích
+
+-   [Laravel Documentation](https://laravel.com/docs)
+-   [Filament Documentation](https://filamentphp.com/docs)
+-   [Livewire Documentation](https://livewire.laravel.com/)
+-   [Tailwind CSS Documentation](https://tailwindcss.com/)
+
+## Giấy phép
+
+Dự án phát triển nội bộ. Nếu cần chia sẻ ra bên ngoài, vui lòng liên hệ nhóm phụ trách để được cấp quyền.
