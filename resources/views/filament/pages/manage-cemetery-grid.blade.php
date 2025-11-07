@@ -178,6 +178,13 @@
                                     return;
                                 }
                                 
+                                const plot = this.plots.find(p => p.id === plotId);
+
+                                if (plot?.grave) {
+                                    console.warn('[CemeteryGrid] Plot has grave, status change blocked');
+                                    return;
+                                }
+
                                 // Call Livewire and let it refresh the component
                                 $wire.changePlotStatus(plotId, newStatus);
                             } catch (error) {
@@ -282,9 +289,9 @@
                                             <button
                                                 type="button"
                                                 @click="changePlotStatus(selectedPlot.id, 'available')"
-                                                :disabled="selectedPlot.status === 'available'"
+                                                :disabled="selectedPlot.status === 'available' || selectedPlot.grave"
                                                 class="px-3 py-1.5 text-xs font-medium rounded"
-                                                :style="selectedPlot.status === 'available' ? 
+                                                :style="selectedPlot.status === 'available' || selectedPlot.grave ? 
                                                         'background-color: #22c55e; color: white; cursor: not-allowed; opacity: 0.6;' :
                                                         'background-color: #dcfce7; color: #166534; hover:bg-green-200;'"
                                             >
@@ -293,9 +300,9 @@
                                             <button
                                                 type="button"
                                                 @click="changePlotStatus(selectedPlot.id, 'reserved')"
-                                                :disabled="selectedPlot.status === 'reserved'"
+                                                :disabled="selectedPlot.status === 'reserved' || selectedPlot.grave"
                                                 class="px-3 py-1.5 text-xs font-medium rounded"
-                                                :style="selectedPlot.status === 'reserved' ? 
+                                                :style="selectedPlot.status === 'reserved' || selectedPlot.grave ? 
                                                         'background-color: #eab308; color: white; cursor: not-allowed; opacity: 0.6;' :
                                                         'background-color: #fef3c7; color: #92400e; hover:bg-yellow-200;'"
                                             >
@@ -304,9 +311,9 @@
                                             <button
                                                 type="button"
                                                 @click="changePlotStatus(selectedPlot.id, 'unavailable')"
-                                                :disabled="selectedPlot.status === 'unavailable'"
+                                                :disabled="selectedPlot.status === 'unavailable' || selectedPlot.grave"
                                                 class="px-3 py-1.5 text-xs font-medium rounded"
-                                                :style="selectedPlot.status === 'unavailable' ? 
+                                                :style="selectedPlot.status === 'unavailable' || selectedPlot.grave ? 
                                                         'background-color: #ef4444; color: white; cursor: not-allowed; opacity: 0.6;' :
                                                         'background-color: #fee2e2; color: #991b1b; hover:bg-red-200;'"
                                             >
@@ -314,10 +321,10 @@
                                             </button>
                                         </div>
                                         <div class="text-xs text-gray-500">
-                                            <template x-if="selectedPlot.status === 'occupied'">
+                                            <template x-if="selectedPlot.grave">
                                                 <span>Lô này đang có mộ, không thể thay đổi trạng thái</span>
                                             </template>
-                                            <template x-if="selectedPlot.status !== 'occupied'">
+                                            <template x-if="!selectedPlot.grave">
                                                 <span>Click vào nút để thay đổi trạng thái lô</span>
                                             </template>
                                         </div>
