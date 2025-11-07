@@ -508,21 +508,24 @@
     <div id="graveModal" class="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4"
         style="display: none;" onclick="closeGraveModal()">
         <div class="relative max-w-4xl w-full max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">
-            <!-- Close Button -->
-            <button onclick="closeGraveModal()"
-                class="absolute -top-12 right-0 text-white hover:text-gray-300 transition-colors z-10">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                    stroke="currentColor" class="w-10 h-10">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                </svg>
-            </button>
 
             <!-- Modal Content -->
             <div class="rounded-xl overflow-hidden"
                 style="background-color: #fff; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);">
                 <!-- Modal Header -->
-                <div class="text-white p-6" style="background-color: #8b0000;">
-                    <h2 id="modalTitle" class="text-2xl font-bold">Tiểu Sử Liệt Sĩ</h2>
+                <div class="text-white p-6" style="background-color: #3b82f6;">
+                    <div class="flex items-center justify-between gap-4">
+                        <h2 id="modalTitle" class="text-2xl font-bold">Tiểu Sử Liệt Sĩ</h2>
+                        <button onclick="closeGraveModal()" class="text-white rounded-lg p-2 transition"
+                            style="background-color: rgba(255,255,255,0.1);"
+                            onmouseover="this.style.backgroundColor='rgba(255,255,255,0.2)'"
+                            onmouseout="this.style.backgroundColor='rgba(255,255,255,0.1)';">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
+                                stroke="currentColor" class="h-6 w-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Modal Body -->
@@ -537,7 +540,7 @@
                     <div id="modalContent" style="display: none;">
                         <!-- Thông tin liệt sĩ -->
                         <div class="rounded-lg p-4 mb-4" style="background-color: #fafaf8;">
-                            <h3 class="text-lg font-bold mb-4" style="color: #8b0000;">
+                            <h3 class="text-lg font-bold mb-4" style="color: #3b82f6;">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                     stroke-width="2" stroke="currentColor" class="h-5 w-5 inline mr-2">
                                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -589,7 +592,7 @@
 
                         <!-- Thông tin nghĩa trang -->
                         <div class="rounded-lg p-4 mb-4" style="background-color: #fafaf8;">
-                            <h3 class="text-lg font-bold mb-4" style="color: #8b0000;">
+                            <h3 class="text-lg font-bold mb-4" style="color: #3b82f6;">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                     stroke-width="2" stroke="currentColor" class="h-5 w-5 inline mr-2">
                                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -634,7 +637,7 @@
                         <!-- Thông tin hành chính -->
                         <div id="adminInfoSection" class="rounded-lg p-4 mb-4"
                             style="background-color: #fafaf8; display: none;">
-                            <h3 class="text-lg font-bold mb-4" style="color: #8b0000;">
+                            <h3 class="text-lg font-bold mb-4" style="color: #3b82f6;">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                     stroke-width="2" stroke="currentColor" class="h-5 w-5 inline mr-2">
                                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -661,7 +664,7 @@
                         <!-- Thông tin thân nhân -->
                         <div id="familyInfoSection" class="rounded-lg p-4 mb-4"
                             style="background-color: #fafaf8; display: none;">
-                            <h3 class="text-lg font-bold mb-4" style="color: #8b0000;">
+                            <h3 class="text-lg font-bold mb-4" style="color: #3b82f6;">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                     stroke-width="2" stroke="currentColor" class="h-5 w-5 inline mr-2">
                                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -692,7 +695,7 @@
                         <!-- Ghi chú -->
                         <div id="notesSection" class="rounded-lg p-4 mb-4"
                             style="background-color: #fafaf8; display: none;">
-                            <h3 class="text-lg font-bold mb-3" style="color: #8b0000;">
+                            <h3 class="text-lg font-bold mb-3" style="color: #3b82f6;">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                     stroke-width="2" stroke="currentColor" class="h-5 w-5 inline mr-2">
                                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -705,7 +708,7 @@
 
                         <!-- Ảnh chụp mộ liệt sĩ -->
                         <div class="rounded-lg p-4 mb-4" style="background-color: #fafaf8;">
-                            <h3 class="text-lg font-bold mb-4" style="color: #8b0000;">
+                            <h3 class="text-lg font-bold mb-4" style="color: #3b82f6;">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                     stroke-width="2" stroke="currentColor" class="h-5 w-5 inline mr-2">
                                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -726,8 +729,8 @@
                             </button>
                             <a id="viewDetailsBtn" href="#"
                                 class="px-6 py-3 text-white font-medium rounded-lg transition-colors duration-200"
-                                style="background-color: #8b0000;" onmouseover="this.style.backgroundColor='#6b0000'"
-                                onmouseout="this.style.backgroundColor='#8b0000'">
+                                style="background-color: #3b82f6;" onmouseover="this.style.backgroundColor='#6b0000'"
+                                onmouseout="this.style.backgroundColor='#3b82f6'">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                     stroke-width="2" stroke="currentColor" class="h-5 w-5 inline mr-2">
                                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -750,7 +753,7 @@
         <div class="bg-white rounded-2xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-hidden"
             onclick="event.stopPropagation()">
             <!-- Modal Header -->
-            <div class="p-6" style="background-color: #8b0000;">
+            <div class="p-6" style="background-color: #3b82f6;">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center gap-3 text-white">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
@@ -781,7 +784,7 @@
                 <!-- Loading -->
                 <div id="mapLoading" class="text-center py-12">
                     <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-t-transparent"
-                        style="border-top-color: #8b0000; border-color: rgba(139,0,0,0.2);">
+                        style="border-top-color: #3b82f6; border-color: rgba(139,0,0,0.2);">
                     </div>
                     <p class="mt-4" style="color: #2b2b2b;">Đang tải sơ đồ...</p>
                 </div>
@@ -790,7 +793,7 @@
                 <div id="mapContent" class="hidden space-y-4">
                     <!-- Target Plot Banner -->
                     <div id="targetPlotBanner" class="hidden p-4 text-white rounded-lg shadow-lg"
-                        style="background-color: #8b0000;">
+                        style="background-color: #3b82f6;">
                         <div class="flex items-center gap-3">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
                                 stroke="currentColor" class="h-8 w-8 flex-shrink-0">
@@ -1322,7 +1325,7 @@
 
         let html = `
             <div class="flex flex-col justify-center" style="min-height: 108px;">
-                <div class="font-bold text-base mb-2" style="color: #8b0000;">Lô ${plot.plot_code}</div>
+                <div class="font-bold text-base mb-2" style="color: #3b82f6;">Lô ${plot.plot_code}</div>
                 <div class="space-y-1 text-sm" style="color: #2b2b2b;">
                     <div><strong>Vị trí:</strong> Hàng ${plot.row}, Cột ${plot.column}</div>
                     <div><strong>Trạng thái:</strong> ${getStatusLabel(plot.status)}</div>
@@ -1339,7 +1342,7 @@
         `;
 
         infoBox.style.backgroundColor = '#f5f3e7';
-        infoBox.style.borderColor = '#8b0000';
+        infoBox.style.borderColor = '#3b82f6';
         infoBox.innerHTML = html;
     }
 
