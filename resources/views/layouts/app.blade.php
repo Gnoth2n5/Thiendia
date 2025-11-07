@@ -49,6 +49,7 @@
 
     @stack('styles')
     @stack('structured-data')
+    @filamentStyles
 </head>
 
 <body class="bg-base-200 min-h-screen">
@@ -57,7 +58,7 @@
         <div class="container mx-auto px-4">
             <div class="flex justify-between items-center text-sm">
                 <div class="flex items-center gap-4">
-                    
+
                 </div>
                 <a href="{{ url('/admin') }}">Đăng nhập quản trị</a>
             </div>
@@ -118,11 +119,11 @@
                         <div class="absolute top-full left-0 bg-white shadow-lg rounded py-2 min-w-48 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200"
                             style="border: 1px solid #d4d0c8;">
                             <a href="{{ route('articles.index') }}"
-                                class="block px-4 py-2 transition-colors hover:bg-gray-100"
-                                style="color: #2b2b2b;">Tất cả tin tức</a>
+                                class="block px-4 py-2 transition-colors hover:bg-gray-100" style="color: #2b2b2b;">Tất
+                                cả tin tức</a>
                             <a href="{{ route('articles.category', 'tin_tuc') }}"
-                                class="block px-4 py-2 transition-colors hover:bg-gray-100"
-                                style="color: #2b2b2b;">Tin tức</a>
+                                class="block px-4 py-2 transition-colors hover:bg-gray-100" style="color: #2b2b2b;">Tin
+                                tức</a>
                             <a href="{{ route('articles.category', 'su_kien') }}"
                                 class="block px-4 py-2 transition-colors hover:bg-gray-100" style="color: #2b2b2b;">Sự
                                 kiện</a>
@@ -194,12 +195,12 @@
                         Tin Tức – Sự Kiện
                     </a>
 
-                    <a href="#"
+                    {{-- <a href="#"
                         class="flex items-center gap-3 px-4 py-3 text-white font-semibold transition-colors duration-200"
                         onmouseover="this.style.backgroundColor='rgba(0,0,0,0.5)'"
                         onmouseout="this.style.backgroundColor='transparent'">
                         Hình Ảnh Hoạt Động
-                    </a>
+                    </a> --}}
 
                     <a href="{{ route('search') }}"
                         class="flex items-center gap-3 px-4 py-3 text-white font-semibold transition-colors duration-200 {{ request()->routeIs('search') ? 'bg-[rgba(0,0,0,0.5)]' : '' }}"
@@ -216,12 +217,12 @@
                         Ngày Giỗ Hôm Nay
                     </a> --}}
 
-                    <a href="#"
+                    {{-- <a href="#"
                         class="flex items-center gap-3 px-4 py-3 text-white font-semibold transition-colors duration-200"
                         onmouseover="this.style.backgroundColor='rgba(0,0,0,0.5)'"
                         onmouseout="this.style.backgroundColor='transparent'">
                         Video clip
-                    </a>
+                    </a> --}}
 
                     <a href="{{ route('guide') }}"
                         class="flex items-center gap-3 px-4 py-3 text-white font-semibold transition-colors duration-200"
@@ -448,6 +449,7 @@
             }
         });
     </script>
+    @filamentScripts
 </body>
 
 </html>

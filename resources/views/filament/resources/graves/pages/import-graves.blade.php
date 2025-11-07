@@ -16,7 +16,7 @@
         </x-filament-panels::form>
     @else
         {{-- Step 2: Preview Table --}}
-        <div class="space-y-4">
+        <div class="space-y-4 filament-body" >
             {{-- Summary --}}
             <div class="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 p-4">
                 <div class="flex items-center justify-between">
@@ -27,10 +27,10 @@
                         <p class="text-sm text-gray-600 dark:text-gray-400">
                             Tổng: <span class="font-semibold">{{ count($previewData) }}</span> dòng
                             @if ($errorCount > 0)
-                                | <span class="text-red-600 font-semibold">{{ $errorCount }}</span> lỗi
+                                | <span style="color: rgb(255, 35, 35); font-weight: bold;" class="text-red-600 font-semibold">{{ $errorCount }}</span> lỗi
                             @endif
                             @if ($successCount > 0)
-                                | <span class="text-green-600 font-semibold">{{ $successCount }}</span> hợp lệ
+                                | <span style="color: rgb(28, 188, 28); font-weight: bold;" class="text-green-600 font-semibold">{{ $successCount }}</span> hợp lệ
                             @endif
                         </p>
                     </div>
@@ -118,13 +118,13 @@
                                 </td>
                                 <td class="px-3 py-3 text-sm">
                                     @if ($row['is_valid'])
-                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100">
+                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100" style="color: rgb(28, 188, 28); font-weight: bold;">
                                             ✓ OK
                                         </span>
                                     @else
                                         <div class="space-y-1">
                                             @foreach ($row['errors'] as $error)
-                                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100">
+                                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100" style="color: rgb(255, 35, 35); font-weight: bold;">
                                                     {{ $error }}
                                                 </span>
                                             @endforeach
