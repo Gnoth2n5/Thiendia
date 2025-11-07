@@ -12,24 +12,20 @@ class CemeteryPlotSeeder extends Seeder
      */
     public function run(): void
     {
-        // Get first 3 cemeteries
-        $cemeteries = Cemetery::take(3)->get();
+        // Lấy nghĩa trang xã Lý Nhân
+        $cemetery = Cemetery::where('commune', 'Lý Nhân')->first();
 
-        foreach ($cemeteries as $cemetery) {
-            // Create different grid sizes for each cemetery
-            $gridSize = match ($cemetery->id % 3) {
-                1 => ['rows' => 8, 'columns' => 10],  // 80 plots
-                2 => ['rows' => 10, 'columns' => 15], // 150 plots
-                default => ['rows' => 6, 'columns' => 8],  // 48 plots
-            };
-
+        if ($cemetery) {
+            // Tạo lưới lô: 15 hàng dọc x 8 cột ngang = 120 lô
             $cemetery->initializePlots(
-                rows: $gridSize['rows'],
-                columns: $gridSize['columns'],
+                rows: 15,
+                columns: 8,
                 clearExisting: true
             );
 
-            $this->command->info("Created {$gridSize['rows']}x{$gridSize['columns']} grid for: {$cemetery->name}");
+            $this->command->info("Created 15x8 grid (120 plots) for: {$cemetery->name}");
+        } else {
+            $this->command->error('Cemetery not found! Please run CemeterySeeder first.');
         }
     }
 }

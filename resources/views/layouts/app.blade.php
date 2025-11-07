@@ -49,6 +49,7 @@
 
     @stack('styles')
     @stack('structured-data')
+    @filamentStyles
 </head>
 
 <body class="bg-base-200 min-h-screen">
@@ -57,22 +58,7 @@
         <div class="container mx-auto px-4">
             <div class="flex justify-between items-center text-sm">
                 <div class="flex items-center gap-4">
-                    <span class="flex items-center gap-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                            stroke="currentColor" class="h-4 w-4">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" />
-                        </svg>
-                        Hotline: 1900-xxxx
-                    </span>
-                    <span class="flex items-center gap-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                            stroke="currentColor" class="h-4 w-4">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                        </svg>
-                        24/7 Hỗ trợ
-                    </span>
+
                 </div>
                 <a href="{{ url('/admin') }}">Đăng nhập quản trị</a>
             </div>
@@ -87,7 +73,7 @@
                 <div class="flex items-center gap-4">
                     <a href="{{ route('home') }}" class="flex items-center gap-3">
                         <div class="p-2 rounded-lg" style="background-color: rgba(245, 243, 231, 0.2);">
-                            <img src="{{ asset('images/logo.png') }}" alt="Logo" class="w-10 h-10">
+                            <img src="{{ asset('images/logo1.png') }}" alt="Logo" class="w-10 h-10">
                         </div>
                         <div class="hidden sm:block text-white">
                             <div class="text-lg font-bold">Hệ thống Tra cứu liệt sĩ</div>
@@ -133,11 +119,11 @@
                         <div class="absolute top-full left-0 bg-white shadow-lg rounded py-2 min-w-48 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200"
                             style="border: 1px solid #d4d0c8;">
                             <a href="{{ route('articles.index') }}"
-                                class="block px-4 py-2 transition-colors hover:bg-gray-100"
-                                style="color: #2b2b2b;">Tất cả tin tức</a>
+                                class="block px-4 py-2 transition-colors hover:bg-gray-100" style="color: #2b2b2b;">Tất
+                                cả tin tức</a>
                             <a href="{{ route('articles.category', 'tin_tuc') }}"
-                                class="block px-4 py-2 transition-colors hover:bg-gray-100"
-                                style="color: #2b2b2b;">Tin tức</a>
+                                class="block px-4 py-2 transition-colors hover:bg-gray-100" style="color: #2b2b2b;">Tin
+                                tức</a>
                             <a href="{{ route('articles.category', 'su_kien') }}"
                                 class="block px-4 py-2 transition-colors hover:bg-gray-100" style="color: #2b2b2b;">Sự
                                 kiện</a>
@@ -209,12 +195,12 @@
                         Tin Tức – Sự Kiện
                     </a>
 
-                    <a href="#"
+                    {{-- <a href="#"
                         class="flex items-center gap-3 px-4 py-3 text-white font-semibold transition-colors duration-200"
                         onmouseover="this.style.backgroundColor='rgba(0,0,0,0.5)'"
                         onmouseout="this.style.backgroundColor='transparent'">
                         Hình Ảnh Hoạt Động
-                    </a>
+                    </a> --}}
 
                     <a href="{{ route('search') }}"
                         class="flex items-center gap-3 px-4 py-3 text-white font-semibold transition-colors duration-200 {{ request()->routeIs('search') ? 'bg-[rgba(0,0,0,0.5)]' : '' }}"
@@ -231,12 +217,12 @@
                         Ngày Giỗ Hôm Nay
                     </a> --}}
 
-                    <a href="#"
+                    {{-- <a href="#"
                         class="flex items-center gap-3 px-4 py-3 text-white font-semibold transition-colors duration-200"
                         onmouseover="this.style.backgroundColor='rgba(0,0,0,0.5)'"
                         onmouseout="this.style.backgroundColor='transparent'">
                         Video clip
-                    </a>
+                    </a> --}}
 
                     <a href="{{ route('guide') }}"
                         class="flex items-center gap-3 px-4 py-3 text-white font-semibold transition-colors duration-200"
@@ -323,10 +309,10 @@
                             <p class="text-sm opacity-80">Tra cứu thông tin trực tuyến</p>
                         </div>
                     </div>
-                    <p class="text-sm opacity-80 max-w-md">
+                    {{-- <p class="text-sm opacity-80 max-w-md">
                         Hệ thống cung cấp dịch vụ tra cứu thông tin liệt sĩ, quản lý nghĩa trang hiện đại,
                         giúp người dân dễ dàng tìm kiếm và tưởng nhớ công ơn các anh hùng liệt sĩ.
-                    </p>
+                    </p> --}}
                 </div>
 
                 <div>
@@ -463,6 +449,7 @@
             }
         });
     </script>
+    @filamentScripts
 </body>
 
 </html>

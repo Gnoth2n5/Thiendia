@@ -49,38 +49,104 @@
                 </x-slot>
 
                 <div
-                    wire:key="cemetery-grid-{{ $cemetery->id }}-{{ $gridVersion }}"
+                    wire:key="cemetery-grid-{{ $cemetery->id }}-{{ $gridVersion }}-{{ now()->timestamp }}"
                     x-data="{
                         plots: @js($plots ?? []),
+                        plotMap: {},
                         selectedPlots: [],
                         selectedPlot: null,
                         maxRow: @js($gridDimensions['rows'] ?? 0),
                         maxCol: @js($gridDimensions['columns'] ?? 0),
+                        isRendering: false,
+                        renderError: null,
+                        
+                        init() {
+                            try {
+                                console.log('[CemeteryGrid] Initialized with', this.plots.length, 'plots');
+                                this.buildPlotMap();
+                                this.setupLivewireListeners();
+                            } catch (error) {
+                                console.error('[CemeteryGrid] Init error:', error);
+                                this.renderError = error.message;
+                            }
+                        },
+                        
+                        buildPlotMap() {
+                            this.plotMap = {};
+                            this.plots.forEach(plot => {
+                                const key = `${plot.row}-${plot.column}`;
+                                this.plotMap[key] = plot;
+                            });
+                        },
+                        
+                        setupLivewireListeners() {
+                            document.addEventListener('livewire:update', () => {
+                                this.scheduleRender();
+                            });
+                        },
+                        
+                        scheduleRender() {
+                            if (this.isRendering) return;
+                            
+                            this.isRendering = true;
+                            requestAnimationFrame(() => {
+                                try {
+                                    this.buildPlotMap();
+                                    this.isRendering = false;
+                                } catch (error) {
+                                    console.error('[CemeteryGrid] Render error:', error);
+                                    this.renderError = error.message;
+                                    this.isRendering = false;
+                                }
+                            });
+                        },
+                        
+                        getPlotByPosition(row, col) {
+                            try {
+                                const key = `${row}-${col}`;
+                                return this.plotMap[key] || null;
+                            } catch (error) {
+                                console.error('[CemeteryGrid] Error getting plot:', error);
+                                return null;
+                            }
+                        },
                         
                         getPlotColor(status) {
-                            // Return CSS color values
-                            const colors = {
-                                'available': '#22c55e',  // green-500
-                                'occupied': '#6b7280',   // gray-500
-                                'reserved': '#eab308',   // yellow-500
-                                'unavailable': '#ef4444' // red-500
-                            };
-                            return colors[status] || '#d1d5db'; // gray-300
+                            try {
+                                const colors = {
+                                    'available': '#22c55e',  // green-500
+                                    'occupied': '#6b7280',   // gray-500
+                                    'reserved': '#eab308',   // yellow-500
+                                    'unavailable': '#ef4444' // red-500
+                                };
+                                return colors[status] || '#d1d5db'; // gray-300
+                            } catch (error) {
+                                console.error('[CemeteryGrid] Error getting color:', error);
+                                return '#d1d5db';
+                            }
                         },
                         
                         selectPlot(plotId) {
-                            const plot = this.plots.find(p => p.id === plotId);
-                            if (plot) {
-                                this.selectedPlot = plot;
+                            try {
+                                const plot = this.plots.find(p => p.id === plotId);
+                                if (plot) {
+                                    this.selectedPlot = plot;
+                                }
+                            } catch (error) {
+                                console.error('[CemeteryGrid] Error selecting plot:', error);
                             }
                         },
                         
                         toggleSelection(plotId) {
-                            const index = this.selectedPlots.indexOf(plotId);
-                            if (index > -1) {
-                                this.selectedPlots.splice(index, 1);
-                            } else {
-                                this.selectedPlots.push(plotId);
+                            try {
+                                const index = this.selectedPlots.indexOf(plotId);
+                                if (index > -1) {
+                                    this.selectedPlots.splice(index, 1);
+                                } else {
+                                    this.selectedPlots.push(plotId);
+                                }
+                            } catch (error) {
+                                console.error('[CemeteryGrid] Error toggling selection:', error);
                             }
                         },
                         
@@ -93,25 +159,53 @@
                         },
                         
                         bulkSetStatus(status) {
-                            if (this.selectedPlots.length === 0) {
-                                return;
+                            try {
+                                if (this.selectedPlots.length === 0) {
+                                    return;
+                                }
+                                
+                                $wire.bulkSetStatus(this.selectedPlots, status);
+                                this.clearSelection();
+                            } catch (error) {
+                                console.error('[CemeteryGrid] Error bulk setting status:', error);
+                                this.renderError = 'Không thể cập nhật. Vui lòng thử lại.';
                             }
-                            
-                            $wire.bulkSetStatus(this.selectedPlots, status);
-                            this.clearSelection();
                         },
                         
                         changePlotStatus(plotId, newStatus) {
-                            if (!plotId || !newStatus) {
-                                return;
+                            try {
+                                if (!plotId || !newStatus) {
+                                    return;
+                                }
+                                
+                                const plot = this.plots.find(p => p.id === plotId);
+
+                                if (plot?.grave) {
+                                    console.warn('[CemeteryGrid] Plot has grave, status change blocked');
+                                    return;
+                                }
+
+                                // Call Livewire and let it refresh the component
+                                $wire.changePlotStatus(plotId, newStatus);
+                            } catch (error) {
+                                console.error('[CemeteryGrid] Error changing status:', error);
+                                this.renderError = 'Không thể thay đổi trạng thái. Vui lòng thử lại.';
                             }
-                            
-                            // Call Livewire and let it refresh the component
-                            $wire.changePlotStatus(plotId, newStatus);
                         }
                     }"
                     class="space-y-4"
                 >
+                    <!-- Error Banner -->
+                    <div x-show="renderError" x-transition class="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                        <div class="flex items-center gap-2 text-red-700 dark:text-red-300">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span class="font-semibold">Lỗi render:</span>
+                            <span x-text="renderError"></span>
+                        </div>
+                    </div>
+                    
                     <!-- Bulk Actions -->
                     <div x-show="selectedPlots.length > 0" class="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
                         <div class="flex items-center justify-between">
@@ -195,9 +289,9 @@
                                             <button
                                                 type="button"
                                                 @click="changePlotStatus(selectedPlot.id, 'available')"
-                                                :disabled="selectedPlot.status === 'available'"
+                                                :disabled="selectedPlot.status === 'available' || selectedPlot.grave"
                                                 class="px-3 py-1.5 text-xs font-medium rounded"
-                                                :style="selectedPlot.status === 'available' ? 
+                                                :style="selectedPlot.status === 'available' || selectedPlot.grave ? 
                                                         'background-color: #22c55e; color: white; cursor: not-allowed; opacity: 0.6;' :
                                                         'background-color: #dcfce7; color: #166534; hover:bg-green-200;'"
                                             >
@@ -206,9 +300,9 @@
                                             <button
                                                 type="button"
                                                 @click="changePlotStatus(selectedPlot.id, 'reserved')"
-                                                :disabled="selectedPlot.status === 'reserved'"
+                                                :disabled="selectedPlot.status === 'reserved' || selectedPlot.grave"
                                                 class="px-3 py-1.5 text-xs font-medium rounded"
-                                                :style="selectedPlot.status === 'reserved' ? 
+                                                :style="selectedPlot.status === 'reserved' || selectedPlot.grave ? 
                                                         'background-color: #eab308; color: white; cursor: not-allowed; opacity: 0.6;' :
                                                         'background-color: #fef3c7; color: #92400e; hover:bg-yellow-200;'"
                                             >
@@ -217,9 +311,9 @@
                                             <button
                                                 type="button"
                                                 @click="changePlotStatus(selectedPlot.id, 'unavailable')"
-                                                :disabled="selectedPlot.status === 'unavailable'"
+                                                :disabled="selectedPlot.status === 'unavailable' || selectedPlot.grave"
                                                 class="px-3 py-1.5 text-xs font-medium rounded"
-                                                :style="selectedPlot.status === 'unavailable' ? 
+                                                :style="selectedPlot.status === 'unavailable' || selectedPlot.grave ? 
                                                         'background-color: #ef4444; color: white; cursor: not-allowed; opacity: 0.6;' :
                                                         'background-color: #fee2e2; color: #991b1b; hover:bg-red-200;'"
                                             >
@@ -227,10 +321,10 @@
                                             </button>
                                         </div>
                                         <div class="text-xs text-gray-500">
-                                            <template x-if="selectedPlot.status === 'occupied'">
+                                            <template x-if="selectedPlot.grave">
                                                 <span>Lô này đang có mộ, không thể thay đổi trạng thái</span>
                                             </template>
-                                            <template x-if="selectedPlot.status !== 'occupied'">
+                                            <template x-if="!selectedPlot.grave">
                                                 <span>Click vào nút để thay đổi trạng thái lô</span>
                                             </template>
                                         </div>
@@ -265,32 +359,35 @@
                                         <span x-text="String.fromCharCode(64 + row)"></span>
                                     </div>
 
-                                    <!-- Plot Cells -->
+                                    <!-- Plot Cells - Using plotMap for O(1) lookup -->
                                     <template x-for="col in maxCol" :key="'cell-' + row + '-' + col">
-                                        <template x-for="plot in plots.filter(p => p.row === row && p.column === col)" :key="plot.id">
-                                            <div
-                                                @click="selectPlot(plot.id)"
-                                                :style="{
-                                                    width: '48px',
-                                                    height: '48px',
-                                                    borderRadius: '6px',
-                                                    cursor: 'pointer',
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    fontSize: '10px',
-                                                    fontWeight: 'bold',
-                                                    color: '#ffffff',
-                                                    backgroundColor: getPlotColor(plot.status),
-                                                    border: selectedPlot && selectedPlot.id === plot.id ? '3px solid #3b82f6' : '1px solid rgba(0,0,0,0.1)',
-                                                    boxShadow: selectedPlot && selectedPlot.id === plot.id ? '0 4px 6px rgba(0,0,0,0.2)' : '0 1px 2px rgba(0,0,0,0.1)',
-                                                    transition: 'all 0.15s'
-                                                }"
-                                                :title="plot.plot_code + ' - ' + plot.status + (plot.grave ? ' (' + plot.grave.deceased_full_name + ')' : '')"
-                                            >
-                                                <span x-text="plot.plot_code"></span>
-                                            </div>
-                                        </template>
+                                        <div
+                                            x-data="{ plot: getPlotByPosition(row, col) }"
+                                            @click="plot && selectPlot(plot.id)"
+                                            :style="plot ? {
+                                                width: '48px',
+                                                height: '48px',
+                                                borderRadius: '6px',
+                                                cursor: 'pointer',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                fontSize: '10px',
+                                                fontWeight: 'bold',
+                                                color: '#ffffff',
+                                                backgroundColor: getPlotColor(plot.status),
+                                                border: selectedPlot && selectedPlot.id === plot.id ? '3px solid #3b82f6' : '1px solid rgba(0,0,0,0.1)',
+                                                boxShadow: selectedPlot && selectedPlot.id === plot.id ? '0 4px 6px rgba(0,0,0,0.2)' : '0 1px 2px rgba(0,0,0,0.1)',
+                                                transition: 'all 0.15s'
+                                            } : {
+                                                width: '48px',
+                                                height: '48px',
+                                                backgroundColor: 'transparent'
+                                            }"
+                                            :title="plot ? (plot.plot_code + ' - ' + plot.status + (plot.grave ? ' (' + plot.grave.deceased_full_name + ')' : '')) : ''"
+                                        >
+                                            <span x-show="plot" x-text="plot ? plot.plot_code : ''"></span>
+                                        </div>
                                     </template>
                                 </div>
                             </template>

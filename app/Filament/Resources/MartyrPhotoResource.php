@@ -113,6 +113,14 @@ class MartyrPhotoResource extends Resource
 
                                 return 'martyr-photos/temp';
                             })
+                            ->getUploadedFileNameForStorageUsing(function ($file): string {
+                                // Tạo tên file ngắn gọn: timestamp-random.extension
+                                $timestamp = now()->timestamp;
+                                $random = strtolower(substr(md5(uniqid()), 0, 6));
+                                $extension = $file->getClientOriginalExtension();
+
+                                return "{$timestamp}-{$random}.{$extension}";
+                            })
                             ->visibility('public')
                             ->reorderable()
                             ->appendFiles()
@@ -134,6 +142,14 @@ class MartyrPhotoResource extends Resource
                                 }
 
                                 return 'martyr-photos/temp';
+                            })
+                            ->getUploadedFileNameForStorageUsing(function ($file): string {
+                                // Tạo tên file ngắn gọn: timestamp-random.extension
+                                $timestamp = now()->timestamp;
+                                $random = strtolower(substr(md5(uniqid()), 0, 6));
+                                $extension = $file->getClientOriginalExtension();
+
+                                return "{$timestamp}-{$random}.{$extension}";
                             })
                             ->visibility('public')
                             ->imageEditor()
@@ -174,6 +190,17 @@ class MartyrPhotoResource extends Resource
                     ->sortable()
                     ->searchable(),
 
+                Tables\Columns\TextColumn::make('filename')
+                    ->label('Tên file')
+                    ->getStateUsing(fn (MartyrPhoto $record) => basename($record->photo_path))
+                    ->copyable()
+                    ->copyMessage('Đã copy tên file!')
+                    ->copyMessageDuration(2000)
+                    ->searchable(query: function ($query, $search) {
+                        return $query->where('photo_path', 'like', "%{$search}%");
+                    })
+                    ->toggleable(),
+
                 Tables\Columns\TextColumn::make('uploader.name')
                     ->label('Người upload')
                     ->sortable()
@@ -193,6 +220,37 @@ class MartyrPhotoResource extends Resource
                     ->preload(),
             ])
             ->actions([
+                Tables\Actions\Action::make('copyFilename')
+                    ->label('Copy tên file')
+                    ->icon('heroicon-o-clipboard-document')
+                    ->color('gray')
+                    ->action(function (MartyrPhoto $record) {
+                        $filename = basename($record->photo_path);
+
+                        // Hiển thị notification với tên file
+                        \Filament\Notifications\Notification::make()
+                            ->title('Tên file')
+                            ->body($filename)
+                            ->success()
+                            ->persistent()
+                            ->actions([
+                                \Filament\Notifications\Actions\Action::make('copy')
+                                    ->label('Copy')
+                                    ->button()
+                                    ->close()
+                                    ->extraAttributes([
+                                        'x-on:click' => "
+                                            navigator.clipboard.writeText('{$filename}');
+                                            new FilamentNotification()
+                                                .title('Đã copy!')
+                                                .success()
+                                                .send();
+                                            close();
+                                        ",
+                                    ]),
+                            ])
+                            ->send();
+                    }),
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),

@@ -98,7 +98,7 @@
                                 </label>
                                 <select name="birth_year" id="birth_year" class="select select-bordered w-full">
                                     <option value="">Chọn năm sinh</option>
-                                    @for ($year = 1920; $year <= 1975; $year++)
+                                    @for ($year = 1820; $year <= 1995; $year++)
                                         <option value="{{ $year }}" {{ request('birth_year') == $year ? 'selected' : '' }}>
                                             {{ $year }}
                                         </option>
@@ -112,7 +112,7 @@
                                 </label>
                                 <select name="death_year" id="death_year" class="select select-bordered w-full">
                                     <option value="">Chọn năm hy sinh</option>
-                                    @for ($year = 1945; $year <= 1990; $year++)
+                                    @for ($year = 1825; $year <= 2005; $year++)
                                         <option value="{{ $year }}" {{ request('death_year') == $year ? 'selected' : '' }}>
                                             {{ $year }}
                                         </option>

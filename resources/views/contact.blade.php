@@ -166,22 +166,14 @@
                             placeholder="Nhập địa chỉ email">
                     </div>
 
-                    <div>
-                        <label for="subject" class="block text-sm font-medium text-gray-700 mb-2">Chủ đề *</label>
-                        <select id="subject" name="subject" required
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
-                            <option value="">Chọn chủ đề</option>
-                            <option value="tra_cuu" {{ old('subject') == 'tra_cuu' ? 'selected' : '' }}>Tra cứu thông tin
-                                liệt sĩ
-                            </option>
-                            <option value="sua_doi" {{ old('subject') == 'sua_doi' ? 'selected' : '' }}>Yêu cầu sửa đổi
-                                thông tin
-                            </option>
-                            <option value="ho_tro" {{ old('subject') == 'ho_tro' ? 'selected' : '' }}>Hỗ trợ kỹ thuật
-                            </option>
-                            <option value="khac" {{ old('subject') == 'khac' ? 'selected' : '' }}>Khác</option>
-                        </select>
-                    </div>
+                    <select id="subject" name="subject" required class="select select-bordered w-full">
+                        <option value="">Chọn chủ đề</option>
+                        <option value="tra_cuu">Tra cứu thông tin liệt sĩ</option>
+                        <option value="sua_doi">Yêu cầu sửa đổi thông tin</option>
+                        <option value="ho_tro">Hỗ trợ kỹ thuật</option>
+                        <option value="khac">Khác</option>
+                    </select>
+
 
                     <div>
                         <label for="message" class="block text-sm font-medium text-gray-700 mb-2">Nội dung tin nhắn

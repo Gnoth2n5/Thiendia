@@ -5,92 +5,191 @@
     
     $plots = [];
     $gridDimensions = ['rows' => 0, 'columns' => 0];
+    $plotMap = [];
     
     if ($cemeteryId) {
         $cemetery = \App\Models\Cemetery::find($cemeteryId);
         if ($cemetery) {
             $gridDimensions = $cemetery->getGridDimensions();
-            $plots = \App\Models\CemeteryPlot::where('cemetery_id', $cemeteryId)
+            $plotsCollection = \App\Models\CemeteryPlot::where('cemetery_id', $cemeteryId)
                 ->with('grave:id,plot_id,deceased_full_name')
                 ->orderBy('row')
                 ->orderBy('column')
-                ->get()
-                ->map(function ($plot) {
-                    return [
-                        'id' => $plot->id,
-                        'plot_code' => $plot->plot_code,
-                        'row' => $plot->row,
-                        'column' => $plot->column,
-                        'status' => $plot->status,
-                        'grave' => $plot->grave ? [
-                            'id' => $plot->grave->id,
-                            'deceased_full_name' => $plot->grave->deceased_full_name,
-                        ] : null,
-                    ];
-                })
-                ->toArray();
+                ->get();
+            
+            $plots = $plotsCollection->map(function ($plot) {
+                return [
+                    'id' => $plot->id,
+                    'plot_code' => $plot->plot_code,
+                    'row' => $plot->row,
+                    'column' => $plot->column,
+                    'status' => $plot->status,
+                    'grave' => $plot->grave ? [
+                        'id' => $plot->grave->id,
+                        'deceased_full_name' => $plot->grave->deceased_full_name,
+                    ] : null,
+                ];
+            })->toArray();
+            
+            // Pre-compute plot map for O(1) lookups
+            foreach ($plots as $plot) {
+                $plotMap["{$plot['row']}-{$plot['column']}"] = $plot;
+            }
         }
     }
     
-    // Create unique render key
-    $renderKey = md5($cemeteryId . json_encode($plots) . $selectedPlotId);
+    // Create unique render key with timestamp for better cache busting
+    $renderVersion = now()->timestamp;
+    $renderKey = md5($cemeteryId . '_' . $selectedPlotId . '_' . $renderVersion . '_' . count($plots));
 @endphp
 
 <div 
     wire:key="plot-picker-{{ $renderKey }}"
     x-data="{
         plots: @js($plots),
+        plotMap: @js($plotMap),
         selectedPlotId: @js($selectedPlotId),
         maxRow: @js($gridDimensions['rows']),
         maxCol: @js($gridDimensions['columns']),
         hoveredPlot: null,
+        isRendering: false,
+        renderError: null,
         
-        getPlotColor(plot) {
-            if (plot.id === this.selectedPlotId) {
-                return '#3b82f6'; // blue-500 - đã chọn
+        init() {
+            try {
+                console.log('[PlotGrid] Initialized with', this.plots.length, 'plots');
+                this.setupLivewireListeners();
+            } catch (error) {
+                console.error('[PlotGrid] Init error:', error);
+                this.renderError = error.message;
             }
-            
-            const colors = {
-                'available': '#22c55e',
-                'occupied': '#6b7280',
-                'reserved': '#eab308',
-                'unavailable': '#ef4444'
-            };
-            return colors[plot.status] || '#d1d5db';
         },
         
-        canSelectPlot(plot) {
-            return plot.status === 'available' || plot.id === this.selectedPlotId;
+        setupLivewireListeners() {
+            // Listen for Livewire updates and debounce re-renders
+            document.addEventListener('livewire:update', () => {
+                this.scheduleRender();
+            });
         },
         
-        selectPlot(plot) {
-            if (!this.canSelectPlot(plot)) {
-                return;
-            }
+        scheduleRender() {
+            if (this.isRendering) return;
             
-            this.selectedPlotId = plot.id;
-            $wire.set('data.plot_id', plot.id);
-            
-            // Auto-fill location description
-            $wire.get('data.location_description').then(currentLocation => {
-                if (!currentLocation || currentLocation === '') {
-                    $wire.set('data.location_description', 
-                        `Lô ${plot.plot_code} - Hàng ${plot.row}, Cột ${plot.column}`
-                    );
+            this.isRendering = true;
+            requestAnimationFrame(() => {
+                try {
+                    // Render will happen naturally through Alpine reactivity
+                    this.isRendering = false;
+                } catch (error) {
+                    console.error('[PlotGrid] Render error:', error);
+                    this.renderError = error.message;
+                    this.isRendering = false;
                 }
             });
         },
         
-        getPlotInfo(plot) {
-            let info = `Lô ${plot.plot_code} - Hàng ${plot.row}, Cột ${plot.column}`;
-            if (plot.grave) {
-                info += `\\n👤 ${plot.grave.deceased_full_name}`;
+        getPlotByPosition(row, col) {
+            try {
+                const key = `${row}-${col}`;
+                return this.plotMap[key] || null;
+            } catch (error) {
+                console.error('[PlotGrid] Error getting plot:', error);
+                return null;
             }
-            return info;
+        },
+        
+        getPlotColor(plot) {
+            try {
+                if (!plot) return '#d1d5db';
+                
+                if (plot.id === this.selectedPlotId) {
+                    return '#3b82f6'; // blue-500 - đã chọn
+                }
+                
+                const colors = {
+                    'available': '#22c55e',
+                    'occupied': '#6b7280',
+                    'reserved': '#eab308',
+                    'unavailable': '#ef4444'
+                };
+                return colors[plot.status] || '#d1d5db';
+            } catch (error) {
+                console.error('[PlotGrid] Error getting color:', error);
+                return '#d1d5db';
+            }
+        },
+        
+        canSelectPlot(plot) {
+            try {
+                if (!plot) return false;
+                return plot.status === 'available' || plot.id === this.selectedPlotId;
+            } catch (error) {
+                console.error('[PlotGrid] Error checking selectability:', error);
+                return false;
+            }
+        },
+        
+        selectPlot(plot) {
+            try {
+                if (!plot || !this.canSelectPlot(plot)) {
+                    return;
+                }
+                
+                this.selectedPlotId = plot.id;
+                $wire.set('data.plot_id', plot.id);
+                
+                // Auto-fill location description
+                $wire.get('data.location_description').then(currentLocation => {
+                    if (!currentLocation || currentLocation === '') {
+                        $wire.set('data.location_description', 
+                            `Lô ${plot.plot_code} - Hàng ${plot.row}, Cột ${plot.column}`
+                        );
+                    }
+                }).catch(error => {
+                    console.error('[PlotGrid] Error setting location:', error);
+                });
+            } catch (error) {
+                console.error('[PlotGrid] Error selecting plot:', error);
+                this.renderError = 'Không thể chọn lô. Vui lòng thử lại.';
+            }
+        },
+        
+        getPlotInfo(plot) {
+            try {
+                if (!plot) return '';
+                let info = `Lô ${plot.plot_code} - Hàng ${plot.row}, Cột ${plot.column}`;
+                if (plot.grave) {
+                    info += `\\n👤 ${plot.grave.deceased_full_name}`;
+                }
+                return info;
+            } catch (error) {
+                console.error('[PlotGrid] Error getting plot info:', error);
+                return 'Lỗi hiển thị thông tin';
+            }
+        },
+        
+        getSelectedPlot() {
+            try {
+                return this.plots.find(p => p.id === this.selectedPlotId) || null;
+            } catch (error) {
+                console.error('[PlotGrid] Error getting selected plot:', error);
+                return null;
+            }
         }
     }"
     class="space-y-4"
 >
+    <!-- Error Banner -->
+    <div x-show="renderError" x-transition class="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+        <div class="flex items-center gap-2 text-red-700 dark:text-red-300">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span class="font-semibold">Lỗi render:</span>
+            <span x-text="renderError"></span>
+        </div>
+    </div>
+    
     @if($cemeteryId && count($plots) > 0)
         <!-- Legend -->
         <div class="flex items-center gap-4 text-xs p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
@@ -123,28 +222,26 @@
             :style="selectedPlotId || hoveredPlot ? 'background-color: #dbeafe; border-color: #3b82f6;' : 'background-color: #f3f4f6; border-color: #d1d5db;'"
         >
             <!-- Selected Plot (Priority) -->
-            <template x-if="selectedPlotId">
+            <template x-if="selectedPlotId && getSelectedPlot()">
                 <div>
-                    <template x-for="plot in plots.filter(p => p.id === selectedPlotId)" :key="plot.id">
-                        <div>
-                            <div class="font-semibold text-blue-700 dark:text-blue-300 mb-2">✓ Lô đã chọn:</div>
-                            <div class="text-lg font-bold" x-text="`Lô ${plot.plot_code}`"></div>
-                            <div class="text-sm text-gray-600 dark:text-gray-400">
-                                Vị trí: Hàng <span x-text="plot.row"></span>, Cột <span x-text="plot.column"></span>
-                            </div>
-                            <div class="text-sm mt-1">
-                                Trạng thái: 
-                                <span class="px-2 py-1 rounded text-xs font-medium"
-                                      :style="plot.status === 'available' ? 'background-color: #dcfce7; color: #166534;' :
-                                              plot.status === 'occupied' ? 'background-color: #f3f4f6; color: #374151;' :
-                                              plot.status === 'reserved' ? 'background-color: #fef3c7; color: #92400e;' :
-                                              'background-color: #fee2e2; color: #991b1b;'"
-                                      x-text="plot.status === 'available' ? 'Còn trống' : 
-                                             plot.status === 'occupied' ? 'Đã sử dụng' : 
-                                             plot.status === 'reserved' ? 'Đã đặt trước' : 'Không khả dụng'"></span>
-                            </div>
+                    <div>
+                        <div class="font-semibold text-blue-700 dark:text-blue-300 mb-2">✓ Lô đã chọn:</div>
+                        <div class="text-lg font-bold" x-text="`Lô ${getSelectedPlot().plot_code}`"></div>
+                        <div class="text-sm text-gray-600 dark:text-gray-400">
+                            Vị trí: Hàng <span x-text="getSelectedPlot().row"></span>, Cột <span x-text="getSelectedPlot().column"></span>
                         </div>
-                    </template>
+                        <div class="text-sm mt-1">
+                            Trạng thái: 
+                            <span class="px-2 py-1 rounded text-xs font-medium"
+                                  :style="getSelectedPlot().status === 'available' ? 'background-color: #dcfce7; color: #166534;' :
+                                          getSelectedPlot().status === 'occupied' ? 'background-color: #f3f4f6; color: #374151;' :
+                                          getSelectedPlot().status === 'reserved' ? 'background-color: #fef3c7; color: #92400e;' :
+                                          'background-color: #fee2e2; color: #991b1b;'"
+                                  x-text="getSelectedPlot().status === 'available' ? 'Còn trống' : 
+                                         getSelectedPlot().status === 'occupied' ? 'Đã sử dụng' : 
+                                         getSelectedPlot().status === 'reserved' ? 'Đã đặt trước' : 'Không khả dụng'"></span>
+                        </div>
+                    </div>
                 </div>
             </template>
             
@@ -197,35 +294,38 @@
                             <span x-text="String.fromCharCode(64 + row)"></span>
                         </div>
 
-                        <!-- Plot Cells -->
+                        <!-- Plot Cells - Using plotMap for O(1) lookup instead of filter -->
                         <template x-for="col in maxCol" :key="'cell-' + row + '-' + col">
-                            <template x-for="plot in plots.filter(p => p.row === row && p.column === col)" :key="plot.id">
-                                <div
-                                    @click="selectPlot(plot)"
-                                    @mouseenter="hoveredPlot = plot"
-                                    @mouseleave="hoveredPlot = null"
-                                    :style="{
-                                        width: '48px',
-                                        height: '48px',
-                                        borderRadius: '6px',
-                                        cursor: canSelectPlot(plot) ? 'pointer' : 'not-allowed',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        fontSize: '10px',
-                                        fontWeight: 'bold',
-                                        color: '#ffffff',
-                                        backgroundColor: getPlotColor(plot),
-                                        border: plot.id === selectedPlotId ? '3px solid #1e40af' : '1px solid rgba(0,0,0,0.1)',
-                                        boxShadow: plot.id === selectedPlotId ? '0 4px 12px rgba(59, 130, 246, 0.4)' : '0 1px 2px rgba(0,0,0,0.1)',
-                                        transition: 'all 0.15s',
-                                        opacity: canSelectPlot(plot) ? '1' : '0.5'
-                                    }"
-                                    :title="getPlotInfo(plot)"
-                                >
-                                    <span x-text="plot.plot_code"></span>
-                                </div>
-                            </template>
+                            <div
+                                x-data="{ plot: getPlotByPosition(row, col) }"
+                                @click="plot && selectPlot(plot)"
+                                @mouseenter="plot && (hoveredPlot = plot)"
+                                @mouseleave="hoveredPlot = null"
+                                :style="plot ? {
+                                    width: '48px',
+                                    height: '48px',
+                                    borderRadius: '6px',
+                                    cursor: canSelectPlot(plot) ? 'pointer' : 'not-allowed',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    fontSize: '10px',
+                                    fontWeight: 'bold',
+                                    color: '#ffffff',
+                                    backgroundColor: getPlotColor(plot),
+                                    border: plot.id === selectedPlotId ? '3px solid #1e40af' : '1px solid rgba(0,0,0,0.1)',
+                                    boxShadow: plot.id === selectedPlotId ? '0 4px 12px rgba(59, 130, 246, 0.4)' : '0 1px 2px rgba(0,0,0,0.1)',
+                                    transition: 'all 0.15s',
+                                    opacity: canSelectPlot(plot) ? '1' : '0.5'
+                                } : {
+                                    width: '48px',
+                                    height: '48px',
+                                    backgroundColor: 'transparent'
+                                }"
+                                :title="plot ? getPlotInfo(plot) : ''"
+                            >
+                                <span x-show="plot" x-text="plot ? plot.plot_code : ''"></span>
+                            </div>
                         </template>
                     </div>
                 </template>

@@ -61,7 +61,7 @@
                             </label>
                             <select name="birth_year" class="select select-bordered w-full">
                                 <option value="">Chọn năm sinh</option>
-                                @for ($year = 1920; $year <= 1975; $year++)
+                                @for ($year = 1820; $year <= 1995; $year++)
                                     <option value="{{ $year }}"
                                         {{ request('birth_year') == $year ? 'selected' : '' }}>
                                         {{ $year }}
@@ -76,7 +76,7 @@
                             </label>
                             <select name="death_year" class="select select-bordered w-full">
                                 <option value="">Chọn năm hy sinh</option>
-                                @for ($year = 1945; $year <= 1990; $year++)
+                                @for ($year = 1825; $year <= 2005; $year++)
                                     <option value="{{ $year }}"
                                         {{ request('death_year') == $year ? 'selected' : '' }}>
                                         {{ $year }}
@@ -508,21 +508,24 @@
     <div id="graveModal" class="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4"
         style="display: none;" onclick="closeGraveModal()">
         <div class="relative max-w-4xl w-full max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">
-            <!-- Close Button -->
-            <button onclick="closeGraveModal()"
-                class="absolute -top-12 right-0 text-white hover:text-gray-300 transition-colors z-10">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                    stroke="currentColor" class="w-10 h-10">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                </svg>
-            </button>
 
             <!-- Modal Content -->
             <div class="rounded-xl overflow-hidden"
                 style="background-color: #fff; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);">
                 <!-- Modal Header -->
-                <div class="text-white p-6" style="background-color: #8b0000;">
-                    <h2 id="modalTitle" class="text-2xl font-bold">Tiểu Sử Liệt Sĩ</h2>
+                <div class="text-white p-6" style="background-color: #3b82f6;">
+                    <div class="flex items-center justify-between gap-4">
+                        <h2 id="modalTitle" class="text-2xl font-bold">Tiểu Sử Liệt Sĩ</h2>
+                        <button onclick="closeGraveModal()" class="text-white rounded-lg p-2 transition"
+                            style="background-color: rgba(255,255,255,0.1);"
+                            onmouseover="this.style.backgroundColor='rgba(255,255,255,0.2)'"
+                            onmouseout="this.style.backgroundColor='rgba(255,255,255,0.1)';">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
+                                stroke="currentColor" class="h-6 w-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Modal Body -->
@@ -537,9 +540,9 @@
                     <div id="modalContent" style="display: none;">
                         <!-- Thông tin liệt sĩ -->
                         <div class="rounded-lg p-4 mb-4" style="background-color: #fafaf8;">
-                            <h3 class="text-lg font-bold mb-4" style="color: #8b0000;">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                                    stroke="currentColor" class="h-5 w-5 inline mr-2">
+                            <h3 class="text-lg font-bold mb-4" style="color: #3b82f6;">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="2" stroke="currentColor" class="h-5 w-5 inline mr-2">
                                     <path stroke-linecap="round" stroke-linejoin="round"
                                         d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
                                 </svg>
@@ -589,9 +592,9 @@
 
                         <!-- Thông tin nghĩa trang -->
                         <div class="rounded-lg p-4 mb-4" style="background-color: #fafaf8;">
-                            <h3 class="text-lg font-bold mb-4" style="color: #8b0000;">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                                    stroke="currentColor" class="h-5 w-5 inline mr-2">
+                            <h3 class="text-lg font-bold mb-4" style="color: #3b82f6;">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="2" stroke="currentColor" class="h-5 w-5 inline mr-2">
                                     <path stroke-linecap="round" stroke-linejoin="round"
                                         d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -601,17 +604,17 @@
                             </h3>
                             <div class="grid grid-cols-2 gap-x-4 gap-y-3">
                                 <div class="col-span-2">
-                                        <span class="text-sm text-gray-600">Nghĩa trang:</span>
+                                    <span class="text-sm text-gray-600">Nghĩa trang:</span>
                                     <p id="cemeteryName" class="font-medium text-gray-900"></p>
                                 </div>
                                 <div class="col-span-2">
                                     <span class="text-sm text-gray-600">Địa chỉ:</span>
                                     <p id="cemeteryAddress" class="font-medium text-gray-900"></p>
-                                    </div>
-                                    <div>
+                                </div>
+                                <div>
                                     <span class="text-sm text-gray-600">Lô mộ:</span>
                                     <p id="plotCode" class="font-medium text-blue-700"></p>
-                                    </div>
+                                </div>
                                 <div>
                                     <span class="text-sm text-gray-600">Vị trí lô:</span>
                                     <p id="plotPosition" class="font-medium text-gray-900"></p>
@@ -619,7 +622,7 @@
                                 <div class="col-span-2" id="locationDescRow" style="display: none;">
                                     <span class="text-sm text-gray-600">Mô tả vị trí:</span>
                                     <p id="locationDesc" class="font-medium text-gray-900"></p>
-                            </div>
+                                </div>
                                 <div id="graveTypeRow" style="display: none;">
                                     <span class="text-sm text-gray-600">Loại mộ:</span>
                                     <p id="graveType" class="font-medium text-gray-900"></p>
@@ -632,10 +635,11 @@
                         </div>
 
                         <!-- Thông tin hành chính -->
-                        <div id="adminInfoSection" class="rounded-lg p-4 mb-4" style="background-color: #fafaf8; display: none;">
-                            <h3 class="text-lg font-bold mb-4" style="color: #8b0000;">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                                    stroke="currentColor" class="h-5 w-5 inline mr-2">
+                        <div id="adminInfoSection" class="rounded-lg p-4 mb-4"
+                            style="background-color: #fafaf8; display: none;">
+                            <h3 class="text-lg font-bold mb-4" style="color: #3b82f6;">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="2" stroke="currentColor" class="h-5 w-5 inline mr-2">
                                     <path stroke-linecap="round" stroke-linejoin="round"
                                         d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
                                 </svg>
@@ -658,10 +662,11 @@
                         </div>
 
                         <!-- Thông tin thân nhân -->
-                        <div id="familyInfoSection" class="rounded-lg p-4 mb-4" style="background-color: #fafaf8; display: none;">
-                            <h3 class="text-lg font-bold mb-4" style="color: #8b0000;">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                                    stroke="currentColor" class="h-5 w-5 inline mr-2">
+                        <div id="familyInfoSection" class="rounded-lg p-4 mb-4"
+                            style="background-color: #fafaf8; display: none;">
+                            <h3 class="text-lg font-bold mb-4" style="color: #3b82f6;">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="2" stroke="currentColor" class="h-5 w-5 inline mr-2">
                                     <path stroke-linecap="round" stroke-linejoin="round"
                                         d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" />
                                 </svg>
@@ -688,10 +693,11 @@
                         </div>
 
                         <!-- Ghi chú -->
-                        <div id="notesSection" class="rounded-lg p-4 mb-4" style="background-color: #fafaf8; display: none;">
-                            <h3 class="text-lg font-bold mb-3" style="color: #8b0000;">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                                    stroke="currentColor" class="h-5 w-5 inline mr-2">
+                        <div id="notesSection" class="rounded-lg p-4 mb-4"
+                            style="background-color: #fafaf8; display: none;">
+                            <h3 class="text-lg font-bold mb-3" style="color: #3b82f6;">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="2" stroke="currentColor" class="h-5 w-5 inline mr-2">
                                     <path stroke-linecap="round" stroke-linejoin="round"
                                         d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m3.75 9v6m3-3H9m1.5-12H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
                                 </svg>
@@ -702,9 +708,9 @@
 
                         <!-- Ảnh chụp mộ liệt sĩ -->
                         <div class="rounded-lg p-4 mb-4" style="background-color: #fafaf8;">
-                            <h3 class="text-lg font-bold mb-4" style="color: #8b0000;">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                                    stroke="currentColor" class="h-5 w-5 inline mr-2">
+                            <h3 class="text-lg font-bold mb-4" style="color: #3b82f6;">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="2" stroke="currentColor" class="h-5 w-5 inline mr-2">
                                     <path stroke-linecap="round" stroke-linejoin="round"
                                         d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
                                 </svg>
@@ -723,8 +729,8 @@
                             </button>
                             <a id="viewDetailsBtn" href="#"
                                 class="px-6 py-3 text-white font-medium rounded-lg transition-colors duration-200"
-                                style="background-color: #8b0000;" onmouseover="this.style.backgroundColor='#6b0000'"
-                                onmouseout="this.style.backgroundColor='#8b0000'">
+                                style="background-color: #3b82f6;" onmouseover="this.style.backgroundColor='#6b0000'"
+                                onmouseout="this.style.backgroundColor='#3b82f6'">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                     stroke-width="2" stroke="currentColor" class="h-5 w-5 inline mr-2">
                                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -747,7 +753,7 @@
         <div class="bg-white rounded-2xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-hidden"
             onclick="event.stopPropagation()">
             <!-- Modal Header -->
-            <div class="p-6" style="background-color: #8b0000;">
+            <div class="p-6" style="background-color: #3b82f6;">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center gap-3 text-white">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
@@ -778,7 +784,7 @@
                 <!-- Loading -->
                 <div id="mapLoading" class="text-center py-12">
                     <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-t-transparent"
-                        style="border-top-color: #8b0000; border-color: rgba(139,0,0,0.2);">
+                        style="border-top-color: #3b82f6; border-color: rgba(139,0,0,0.2);">
                     </div>
                     <p class="mt-4" style="color: #2b2b2b;">Đang tải sơ đồ...</p>
                 </div>
@@ -787,7 +793,7 @@
                 <div id="mapContent" class="hidden space-y-4">
                     <!-- Target Plot Banner -->
                     <div id="targetPlotBanner" class="hidden p-4 text-white rounded-lg shadow-lg"
-                        style="background-color: #8b0000;">
+                        style="background-color: #3b82f6;">
                         <div class="flex items-center gap-3">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
                                 stroke="currentColor" class="h-8 w-8 flex-shrink-0">
@@ -896,11 +902,11 @@
 
         // === THÔNG TIN LIỆT SĨ ===
         document.getElementById('deceasedName').textContent = grave.deceased_full_name || grave.owner_name || '-';
-        
+
         // Giới tính
-        const genderText = grave.deceased_gender === 'male' ? 'Nam' : 
-                          grave.deceased_gender === 'female' ? 'Nữ' : 
-                          grave.deceased_gender || '-';
+        const genderText = grave.deceased_gender === 'male' ? 'Nam' :
+            grave.deceased_gender === 'female' ? 'Nữ' :
+            grave.deceased_gender || '-';
         document.getElementById('deceasedGender').textContent = genderText;
 
         // Năm sinh
@@ -948,18 +954,19 @@
 
         // === THÔNG TIN NGHĨA TRANG ===
         document.getElementById('cemeteryName').textContent = grave.cemetery?.name || '-';
-        
+
         // Địa chỉ nghĩa trang
         let addressParts = [];
         if (grave.cemetery?.address) addressParts.push(grave.cemetery.address);
         if (grave.cemetery?.commune) addressParts.push(grave.cemetery.commune);
         if (grave.cemetery?.district) addressParts.push(grave.cemetery.district);
         if (grave.cemetery?.province) addressParts.push(grave.cemetery.province);
-        document.getElementById('cemeteryAddress').textContent = addressParts.length > 0 ? addressParts.join(', ') : '-';
+        document.getElementById('cemeteryAddress').textContent = addressParts.length > 0 ? addressParts.join(', ') :
+            '-';
 
         // Lô mộ
         document.getElementById('plotCode').textContent = grave.plot?.plot_code || '-';
-        
+
         // Vị trí lô
         if (grave.plot) {
             document.getElementById('plotPosition').textContent = `Hàng ${grave.plot.row}, Cột ${grave.plot.column}`;
@@ -1055,7 +1062,8 @@
         }
 
         // Thông tin liên hệ
-        if (grave.contact_info && (grave.contact_info.phone || grave.contact_info.email || grave.contact_info.address)) {
+        if (grave.contact_info && (grave.contact_info.phone || grave.contact_info.email || grave.contact_info
+                .address)) {
             document.getElementById('contactInfoRow').style.display = 'block';
             let contactHtml = '<div class="space-y-1">';
             if (grave.contact_info.phone) {
@@ -1317,7 +1325,7 @@
 
         let html = `
             <div class="flex flex-col justify-center" style="min-height: 108px;">
-                <div class="font-bold text-base mb-2" style="color: #8b0000;">Lô ${plot.plot_code}</div>
+                <div class="font-bold text-base mb-2" style="color: #3b82f6;">Lô ${plot.plot_code}</div>
                 <div class="space-y-1 text-sm" style="color: #2b2b2b;">
                     <div><strong>Vị trí:</strong> Hàng ${plot.row}, Cột ${plot.column}</div>
                     <div><strong>Trạng thái:</strong> ${getStatusLabel(plot.status)}</div>
@@ -1334,7 +1342,7 @@
         `;
 
         infoBox.style.backgroundColor = '#f5f3e7';
-        infoBox.style.borderColor = '#8b0000';
+        infoBox.style.borderColor = '#3b82f6';
         infoBox.innerHTML = html;
     }
 

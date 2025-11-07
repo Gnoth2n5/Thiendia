@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Graves\Schemas;
 
 use App\Models\Cemetery;
+use App\Models\MartyrPhoto;
 use App\Models\User;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
@@ -143,7 +144,26 @@ class GraveForm
                         FileUpload::make('deceased_photo')
                             ->label('Ảnh liệt sỹ')
                             ->image()
-                            ->directory('deceased-photos')
+                            ->directory(function ($get, $record) {
+                                // Lấy commune từ cemetery
+                                $cemeteryId = $get('cemetery_id') ?? $record?->cemetery_id;
+                                if ($cemeteryId) {
+                                    $cemetery = Cemetery::find($cemeteryId);
+                                    if ($cemetery) {
+                                        return MartyrPhoto::generateStoragePath($cemetery->commune);
+                                    }
+                                }
+
+                                return 'martyr-photos/temp';
+                            })
+                            ->getUploadedFileNameForStorageUsing(function ($file): string {
+                                // Tạo tên file ngắn: timestamp-random.extension
+                                $timestamp = now()->timestamp;
+                                $random = strtolower(substr(md5(uniqid()), 0, 6));
+                                $extension = $file->getClientOriginalExtension();
+
+                                return "{$timestamp}-{$random}.{$extension}";
+                            })
                             ->visibility('public')
                             ->imageEditor()
                             ->imageEditorAspectRatios([
@@ -157,7 +177,26 @@ class GraveForm
                             ->label('Ảnh bia mộ')
                             ->image()
                             ->multiple()
-                            ->directory('grave-photos')
+                            ->directory(function ($get, $record) {
+                                // Lấy commune từ cemetery
+                                $cemeteryId = $get('cemetery_id') ?? $record?->cemetery_id;
+                                if ($cemeteryId) {
+                                    $cemetery = Cemetery::find($cemeteryId);
+                                    if ($cemetery) {
+                                        return MartyrPhoto::generateStoragePath($cemetery->commune);
+                                    }
+                                }
+
+                                return 'martyr-photos/temp';
+                            })
+                            ->getUploadedFileNameForStorageUsing(function ($file): string {
+                                // Tạo tên file ngắn: timestamp-random.extension
+                                $timestamp = now()->timestamp;
+                                $random = strtolower(substr(md5(uniqid()), 0, 6));
+                                $extension = $file->getClientOriginalExtension();
+
+                                return "{$timestamp}-{$random}.{$extension}";
+                            })
                             ->visibility('public')
                             ->imageEditor()
                             ->reorderable()

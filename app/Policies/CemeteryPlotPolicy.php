@@ -20,34 +20,58 @@ class CemeteryPlotPolicy
      */
     public function view(User $user, CemeteryPlot $cemeteryPlot): bool
     {
-        return $user->isAdmin() || $user->isCommuneStaff();
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        if ($user->isCommuneStaff()) {
+            return $cemeteryPlot->cemetery->commune === $user->commune;
+        }
+
+        return false;
     }
 
     /**
      * Determine whether the user can create models.
-     * Only admin can create plots.
+     * Admin và cán bộ xã/phường có thể tạo plots.
      */
     public function create(User $user): bool
     {
-        return $user->isAdmin();
+        return $user->isAdmin() || $user->isCommuneStaff();
     }
 
     /**
      * Determine whether the user can update the model.
-     * Only admin can update plots.
+     * Admin và cán bộ xã/phường có thể cập nhật plots của nghĩa trang họ quản lý.
      */
     public function update(User $user, CemeteryPlot $cemeteryPlot): bool
     {
-        return $user->isAdmin();
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        if ($user->isCommuneStaff()) {
+            return $cemeteryPlot->cemetery->commune === $user->commune;
+        }
+
+        return false;
     }
 
     /**
      * Determine whether the user can delete the model.
-     * Only admin can delete plots.
+     * Admin và cán bộ xã/phường có thể xóa plots của nghĩa trang họ quản lý.
      */
     public function delete(User $user, CemeteryPlot $cemeteryPlot): bool
     {
-        return $user->isAdmin();
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        if ($user->isCommuneStaff()) {
+            return $cemeteryPlot->cemetery->commune === $user->commune;
+        }
+
+        return false;
     }
 
     /**
@@ -55,7 +79,15 @@ class CemeteryPlotPolicy
      */
     public function restore(User $user, CemeteryPlot $cemeteryPlot): bool
     {
-        return $user->isAdmin();
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        if ($user->isCommuneStaff()) {
+            return $cemeteryPlot->cemetery->commune === $user->commune;
+        }
+
+        return false;
     }
 
     /**
@@ -63,6 +95,14 @@ class CemeteryPlotPolicy
      */
     public function forceDelete(User $user, CemeteryPlot $cemeteryPlot): bool
     {
-        return $user->isAdmin();
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        if ($user->isCommuneStaff()) {
+            return $cemeteryPlot->cemetery->commune === $user->commune;
+        }
+
+        return false;
     }
 }
