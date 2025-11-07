@@ -11,6 +11,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
+
 class ContactMessageResource extends Resource
 {
     protected static ?string $model = ContactMessage::class;
@@ -84,7 +85,7 @@ class ContactMessageResource extends Resource
                             ->label('Thời gian phản hồi')
                             ->displayFormat('d/m/Y H:i'),
                     ])
-                    ->visible(fn ($record) => $record && $record->exists),
+                    ->visible(fn($record) => $record && $record->exists),
             ]);
     }
 
@@ -134,7 +135,7 @@ class ContactMessageResource extends Resource
                         'success' => 'replied',
                         'danger' => 'closed',
                     ])
-                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                    ->formatStateUsing(fn(string $state): string => match ($state) {
                         'pending' => 'Chờ xử lý',
                         'read' => 'Đã đọc',
                         'replied' => 'Đã phản hồi',
@@ -174,11 +175,11 @@ class ContactMessageResource extends Resource
                         return $query
                             ->when(
                                 $data['created_from'],
-                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
+                                fn(Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
                             )
                             ->when(
                                 $data['created_until'],
-                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
+                                fn(Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
                             );
                     }),
             ])
@@ -222,10 +223,11 @@ class ContactMessageResource extends Resource
 
     public static function shouldRegisterNavigation(): bool
     {
-        /** @var \App\Models\User $user */
-        $user = auth()->user();
+        // /** @var \App\Models\User $user */
+        // $user = auth()->user();
 
-        // Chỉ hiển thị menu cho admin
-        return $user->isAdmin();
+        // // Chỉ hiển thị menu cho admin
+        // return $user->isAdmin();
+        return false;
     }
 }

@@ -192,10 +192,11 @@ class ContactSettingResource extends Resource
 
     public static function shouldRegisterNavigation(): bool
     {
-        /** @var \App\Models\User $user */
-        $user = auth()->user();
+        // /** @var \App\Models\User $user */
+        // $user = auth()->user();
 
-        // Chỉ hiển thị menu cho admin
-        return $user->isAdmin();
+        // // Chỉ hiển thị menu cho admin
+        // return $user->isAdmin();
+        return false;
     }
 }
