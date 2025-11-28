@@ -9,6 +9,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Auth;
 
 class UserResource extends Resource
 {
@@ -176,8 +177,8 @@ class UserResource extends Resource
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make()
                     ->visible(function (User $record) {
-                        $currentUser = auth()->user();
-
+                        /** @var \App\Models\User $currentUser */
+                        $currentUser = Auth::user();
                         return $currentUser->isAdmin() && $record->id !== $currentUser->id;
                     }),
             ])
@@ -185,7 +186,10 @@ class UserResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make()
                         ->visible(function () {
-                            return auth()->user()->isAdmin();
+                            /** @var \App\Models\User $user */
+                            $user = Auth::user();
+
+                            return $user->isAdmin();
                         }),
                 ]),
             ]);
@@ -209,7 +213,8 @@ class UserResource extends Resource
 
     public static function canViewAny(): bool
     {
-        $currentUser = auth()->user();
+        /** @var \App\Models\User $currentUser */
+        $currentUser = Auth::user();
 
         return $currentUser && $currentUser->isAdmin();
     }

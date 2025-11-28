@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Pages;
+namespace App\Filament\Resources;
 
 use App\Models\Cemetery;
 use App\Models\CemeteryPlot;
@@ -12,14 +12,15 @@ use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Illuminate\Support\Facades\DB;
 
-class ManageCemeteryGrid extends Page implements HasForms
+class ManageCemeteryGridResource extends Page implements HasForms
 {
     use InteractsWithForms;
 
     protected static ?string $navigationIcon = 'heroicon-o-squares-2x2';
 
-    protected static string $view = 'filament.pages.manage-cemetery-grid';
+    protected static string $view = 'filament.manage-cemetery-grid.pages.manage-cemetery-grid';
 
     protected static ?string $navigationLabel = 'Quản lý lưới lô';
 
@@ -169,7 +170,7 @@ class ManageCemeteryGrid extends Page implements HasForms
                     $this->loadPlots();
 
                     Notification::make()
-                        ->title('Đã chuyển sang nghĩa trang: '.$this->cemetery->name)
+                        ->title('Đã chuyển sang nghĩa trang: ' . $this->cemetery->name)
                         ->success()
                         ->send();
                 }),
@@ -256,7 +257,7 @@ class ManageCemeteryGrid extends Page implements HasForms
         $this->loadPlots();
 
         Notification::make()
-            ->title('Đã cập nhật trạng thái lô '.$plot->plot_code)
+            ->title('Đã cập nhật trạng thái lô ' . $plot->plot_code)
             ->success()
             ->send();
     }
@@ -282,7 +283,7 @@ class ManageCemeteryGrid extends Page implements HasForms
 
     public function insertRows(int $position, int $count, string $direction): void
     {
-        \DB::transaction(function () use ($position, $count, $direction) {
+        DB::transaction(function () use ($position, $count, $direction) {
             // Tính toán vị trí bắt đầu shift
             $startRow = $direction === 'before' ? $position : $position + 1;
 
@@ -328,7 +329,7 @@ class ManageCemeteryGrid extends Page implements HasForms
 
     public function insertColumns(int $position, int $count, string $direction): void
     {
-        \DB::transaction(function () use ($position, $count, $direction) {
+        DB::transaction(function () use ($position, $count, $direction) {
             // Tính toán vị trí bắt đầu shift
             $startColumn = $direction === 'before' ? $position : $position + 1;
 
@@ -384,7 +385,7 @@ class ManageCemeteryGrid extends Page implements HasForms
             return;
         }
 
-        \DB::transaction(function () use ($rowNumber) {
+        DB::transaction(function () use ($rowNumber) {
             // Xóa tất cả lô trong hàng đó
             CemeteryPlot::where('cemetery_id', $this->cemetery->id)
                 ->where('row', $rowNumber)
@@ -419,7 +420,7 @@ class ManageCemeteryGrid extends Page implements HasForms
             return;
         }
 
-        \DB::transaction(function () use ($columnNumber) {
+        DB::transaction(function () use ($columnNumber) {
             // Xóa tất cả lô trong cột đó
             CemeteryPlot::where('cemetery_id', $this->cemetery->id)
                 ->where('column', $columnNumber)
@@ -487,10 +488,27 @@ class ManageCemeteryGrid extends Page implements HasForms
 
     public static function canAccess(): bool
     {
-        /** @var \App\Models\User $user */
+        /** @var \App\Models\User|null $user */
         $user = auth()->user();
 
+        if (!$user) {
+            return false;
+        }
+
         // Cho phép admin và cán bộ xã/phường truy cập
+        return $user->isAdmin() || $user->isCommuneStaff();
+    }
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        /** @var \App\Models\User|null $user */
+        $user = auth()->user();
+
+        if (!$user) {
+            return false;
+        }
+
+        // Chỉ hiển thị menu cho admin và cán bộ xã/phường
         return $user->isAdmin() || $user->isCommuneStaff();
     }
 }
