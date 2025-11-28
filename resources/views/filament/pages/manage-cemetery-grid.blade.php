@@ -59,6 +59,16 @@
                         maxCol: @js($gridDimensions['columns'] ?? 0),
                         isRendering: false,
                         renderError: null,
+                        selectedRowForAction: null,
+                        selectedColumnForAction: null,
+                        showRowActionModal: false,
+                        showColumnActionModal: false,
+                        showInsertRowModal: false,
+                        showInsertColumnModal: false,
+                        insertForm: {
+                            count: 1,
+                            direction: 'after'
+                        },
                         
                         init() {
                             try {
@@ -191,6 +201,138 @@
                                 console.error('[CemeteryGrid] Error changing status:', error);
                                 this.renderError = 'Không thể thay đổi trạng thái. Vui lòng thử lại.';
                             }
+                        },
+                        
+                        openRowActionModal(row) {
+                            this.selectedRowForAction = row;
+                            this.showRowActionModal = true;
+                        },
+                        
+                        openColumnActionModal(col) {
+                            this.selectedColumnForAction = col;
+                            this.showColumnActionModal = true;
+                        },
+                        
+                        closeRowActionModal() {
+                            this.showRowActionModal = false;
+                            this.selectedRowForAction = null;
+                        },
+                        
+                        closeColumnActionModal() {
+                            this.showColumnActionModal = false;
+                            this.selectedColumnForAction = null;
+                        },
+                        
+                        openInsertRowModal(direction) {
+                            this.insertForm.count = 1;
+                            this.insertForm.direction = direction;
+                            this.insertForm.position = this.selectedRowForAction;
+                            this.showRowActionModal = false;
+                            this.showInsertRowModal = true;
+                        },
+                        
+                        openInsertColumnModal(direction) {
+                            this.insertForm.count = 1;
+                            this.insertForm.direction = direction;
+                            this.insertForm.position = this.selectedColumnForAction;
+                            this.showColumnActionModal = false;
+                            this.showInsertColumnModal = true;
+                        },
+                        
+                        insertRow() {
+                            try {
+                                if (!this.insertForm.position || !this.insertForm.count) {
+                                    return;
+                                }
+                                $wire.insertRows(this.insertForm.position, this.insertForm.count, this.insertForm.direction).then(() => {
+                                    // Cập nhật lại plots sau khi insert
+                                    this.plots = $wire.plots || this.plots;
+                                    this.maxRow = $wire.gridDimensions?.rows || this.maxRow;
+                                    this.maxCol = $wire.gridDimensions?.columns || this.maxCol;
+                                    this.buildPlotMap();
+                                });
+                                this.showInsertRowModal = false;
+                            } catch (error) {
+                                console.error('[CemeteryGrid] Error inserting row:', error);
+                                this.renderError = 'Không thể chèn hàng. Vui lòng thử lại.';
+                            }
+                        },
+                        
+                        insertColumn() {
+                            try {
+                                if (!this.insertForm.position || !this.insertForm.count) {
+                                    return;
+                                }
+                                $wire.insertColumns(this.insertForm.position, this.insertForm.count, this.insertForm.direction).then(() => {
+                                    // Cập nhật lại plots sau khi insert
+                                    this.plots = $wire.plots || this.plots;
+                                    this.maxRow = $wire.gridDimensions?.rows || this.maxRow;
+                                    this.maxCol = $wire.gridDimensions?.columns || this.maxCol;
+                                    this.buildPlotMap();
+                                });
+                                this.showInsertColumnModal = false;
+                            } catch (error) {
+                                console.error('[CemeteryGrid] Error inserting column:', error);
+                                this.renderError = 'Không thể chèn cột. Vui lòng thử lại.';
+                            }
+                        },
+                        
+                        deleteRow(row) {
+                            if (!confirm('Bạn có chắc muốn xóa hàng ' + String.fromCharCode(64 + row) + '? Hành động này không thể hoàn tác.')) {
+                                return;
+                            }
+                            try {
+                                $wire.deleteRow(row).then(() => {
+                                    // Cập nhật lại plots sau khi delete
+                                    this.plots = $wire.plots || this.plots;
+                                    this.maxRow = $wire.gridDimensions?.rows || this.maxRow;
+                                    this.maxCol = $wire.gridDimensions?.columns || this.maxCol;
+                                    this.buildPlotMap();
+                                });
+                            } catch (error) {
+                                console.error('[CemeteryGrid] Error deleting row:', error);
+                                this.renderError = 'Không thể xóa hàng. Vui lòng thử lại.';
+                            }
+                        },
+                        
+                        deleteColumn(col) {
+                            if (!confirm('Bạn có chắc muốn xóa cột ' + col + '? Hành động này không thể hoàn tác.')) {
+                                return;
+                            }
+                            try {
+                                $wire.deleteColumn(col).then(() => {
+                                    // Cập nhật lại plots sau khi delete
+                                    this.plots = $wire.plots || this.plots;
+                                    this.maxRow = $wire.gridDimensions?.rows || this.maxRow;
+                                    this.maxCol = $wire.gridDimensions?.columns || this.maxCol;
+                                    this.buildPlotMap();
+                                });
+                            } catch (error) {
+                                console.error('[CemeteryGrid] Error deleting column:', error);
+                                this.renderError = 'Không thể xóa cột. Vui lòng thử lại.';
+                            }
+                        },
+                        
+                        canDeleteRow(row) {
+                            // Kiểm tra xem hàng có lô nào có grave không
+                            for (let col = 1; col <= this.maxCol; col++) {
+                                const plot = this.getPlotByPosition(row, col);
+                                if (plot && plot.grave) {
+                                    return false;
+                                }
+                            }
+                            return true;
+                        },
+                        
+                        canDeleteColumn(col) {
+                            // Kiểm tra xem cột có lô nào có grave không
+                            for (let row = 1; row <= this.maxRow; row++) {
+                                const plot = this.getPlotByPosition(row, col);
+                                if (plot && plot.grave) {
+                                    return false;
+                                }
+                            }
+                            return true;
                         }
                     }"
                     class="space-y-4"
@@ -345,7 +487,11 @@
                             <!-- Column Headers -->
                             <div style="display: flex; gap: 4px; margin-bottom: 4px; margin-left: 52px;">
                                 <template x-for="col in maxCol" :key="'col-header-' + col">
-                                    <div style="width: 48px; text-align: center; font-weight: 600; color: #6b7280; font-size: 12px;">
+                                    <div 
+                                        style="width: 48px; text-align: center; font-weight: 600; color: #6b7280; font-size: 12px; position: relative; cursor: pointer; user-select: none;"
+                                        @click.stop="openColumnActionModal(col)"
+                                        class="hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
+                                    >
                                         <span x-text="col"></span>
                                     </div>
                                 </template>
@@ -355,7 +501,11 @@
                             <template x-for="row in maxRow" :key="'row-' + row">
                                 <div style="display: flex; gap: 4px; margin-bottom: 4px;">
                                     <!-- Row Label -->
-                                    <div style="width: 48px; display: flex; align-items: center; justify-content: center; font-weight: 600; color: #6b7280; font-size: 14px;">
+                                    <div 
+                                        style="width: 48px; display: flex; align-items: center; justify-content: center; font-weight: 600; color: #6b7280; font-size: 14px; position: relative; cursor: pointer; user-select: none;"
+                                        @click.stop="openRowActionModal(row)"
+                                        class="hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
+                                    >
                                         <span x-text="String.fromCharCode(64 + row)"></span>
                                     </div>
 
@@ -397,6 +547,304 @@
                     <!-- No Grid Message -->
                     <div class="text-center py-8" style="color: #9ca3af;" x-show="plots.length === 0 || maxRow === 0 || maxCol === 0">
                         <p>Không có dữ liệu lưới. Vui lòng tạo lưới bằng nút "Tạo lưới" phía trên.</p>
+                    </div>
+
+                    <!-- Modal action hàng -->
+                    <div 
+                        x-show="showRowActionModal"
+                        x-transition
+                        class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+                        @click.self="closeRowActionModal()"
+                        style="display: none;"
+                    >
+                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-sm" @click.stop>
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-semibold">Hàng <span x-text="selectedRowForAction ? String.fromCharCode(64 + selectedRowForAction) : ''"></span></h3>
+                                <button
+                                    type="button"
+                                    @click="closeRowActionModal()"
+                                    class="text-gray-500 hover:text-gray-700"
+                                >
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="space-y-3">
+                                <button
+                                    type="button"
+                                    @click="openInsertRowModal('before')"
+                                    class="w-full px-4 py-3 text-left bg-orange-50 dark:bg-orange-900/20 hover:bg-orange-100 dark:hover:bg-orange-900/30 rounded-lg transition-colors flex items-center gap-3"
+                                >
+                                    <div style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background-color: #f97316; border-radius: 6px;">
+                                        <svg style="width: 18px; height: 18px; color: white;" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="font-medium">Chèn hàng trước</div>
+                                        <div class="text-sm text-gray-500">Thêm hàng mới trước hàng này</div>
+                                    </div>
+                                </button>
+                                <button
+                                    type="button"
+                                    @click="openInsertRowModal('after')"
+                                    class="w-full px-4 py-3 text-left bg-orange-50 dark:bg-orange-900/20 hover:bg-orange-100 dark:hover:bg-orange-900/30 rounded-lg transition-colors flex items-center gap-3"
+                                >
+                                    <div style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background-color: #f97316; border-radius: 6px;">
+                                        <svg style="width: 18px; height: 18px; color: white;" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="font-medium">Chèn hàng sau</div>
+                                        <div class="text-sm text-gray-500">Thêm hàng mới sau hàng này</div>
+                                    </div>
+                                </button>
+                                <button
+                                    type="button"
+                                    @click="deleteRow(selectedRowForAction); closeRowActionModal()"
+                                    :disabled="!canDeleteRow(selectedRowForAction)"
+                                    :class="canDeleteRow(selectedRowForAction) ? 'bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/30' : 'bg-gray-100 dark:bg-gray-700 opacity-50 cursor-not-allowed'"
+                                    class="w-full px-4 py-3 text-left rounded-lg transition-colors flex items-center gap-3"
+                                    :title="canDeleteRow(selectedRowForAction) ? 'Xóa hàng' : 'Không thể xóa hàng (có lô đang sử dụng)'"
+                                >
+                                    <div style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background-color: #ef4444; border-radius: 6px;">
+                                        <svg style="width: 18px; height: 18px; color: white;" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4"></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="font-medium">Xóa hàng</div>
+                                        <div class="text-sm text-gray-500">Xóa hàng này (chỉ khi không có lô đang sử dụng)</div>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal action cột -->
+                    <div 
+                        x-show="showColumnActionModal"
+                        x-transition
+                        class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+                        @click.self="closeColumnActionModal()"
+                        style="display: none;"
+                    >
+                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-sm" @click.stop>
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-semibold">Cột <span x-text="selectedColumnForAction || ''"></span></h3>
+                                <button
+                                    type="button"
+                                    @click="closeColumnActionModal()"
+                                    class="text-gray-500 hover:text-gray-700"
+                                >
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="space-y-3">
+                                <button
+                                    type="button"
+                                    @click="openInsertColumnModal('before')"
+                                    class="w-full px-4 py-3 text-left bg-orange-50 dark:bg-orange-900/20 hover:bg-orange-100 dark:hover:bg-orange-900/30 rounded-lg transition-colors flex items-center gap-3"
+                                >
+                                    <div style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background-color: #f97316; border-radius: 6px;">
+                                        <svg style="width: 18px; height: 18px; color: white;" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="font-medium">Chèn cột trước</div>
+                                        <div class="text-sm text-gray-500">Thêm cột mới trước cột này</div>
+                                    </div>
+                                </button>
+                                <button
+                                    type="button"
+                                    @click="openInsertColumnModal('after')"
+                                    class="w-full px-4 py-3 text-left bg-orange-50 dark:bg-orange-900/20 hover:bg-orange-100 dark:hover:bg-orange-900/30 rounded-lg transition-colors flex items-center gap-3"
+                                >
+                                    <div style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background-color: #f97316; border-radius: 6px;">
+                                        <svg style="width: 18px; height: 18px; color: white;" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="font-medium">Chèn cột sau</div>
+                                        <div class="text-sm text-gray-500">Thêm cột mới sau cột này</div>
+                                    </div>
+                                </button>
+                                <button
+                                    type="button"
+                                    @click="deleteColumn(selectedColumnForAction); closeColumnActionModal()"
+                                    :disabled="!canDeleteColumn(selectedColumnForAction)"
+                                    :class="canDeleteColumn(selectedColumnForAction) ? 'bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/30' : 'bg-gray-100 dark:bg-gray-700 opacity-50 cursor-not-allowed'"
+                                    class="w-full px-4 py-3 text-left rounded-lg transition-colors flex items-center gap-3"
+                                    :title="canDeleteColumn(selectedColumnForAction) ? 'Xóa cột' : 'Không thể xóa cột (có lô đang sử dụng)'"
+                                >
+                                    <div style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background-color: #ef4444; border-radius: 6px;">
+                                        <svg style="width: 18px; height: 18px; color: white;" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4"></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="font-medium">Xóa cột</div>
+                                        <div class="text-sm text-gray-500">Xóa cột này (chỉ khi không có lô đang sử dụng)</div>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal chèn hàng -->
+                    <div 
+                        x-show="showInsertRowModal"
+                        x-transition
+                        class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+                        @click.self="showInsertRowModal = false"
+                        style="display: none;"
+                    >
+                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md" @click.stop>
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-semibold">Chèn hàng</h3>
+                                <button
+                                    type="button"
+                                    @click="showInsertRowModal = false"
+                                    class="text-gray-500 hover:text-gray-700"
+                                >
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">Số lượng hàng muốn chèn</label>
+                                    <input
+                                        type="number"
+                                        x-model.number="insertForm.count"
+                                        min="1"
+                                        max="10"
+                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white"
+                                    />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">Vị trí chèn</label>
+                                    <div class="space-y-2">
+                                        <label class="flex items-center">
+                                            <input
+                                                type="radio"
+                                                x-model="insertForm.direction"
+                                                value="before"
+                                                class="mr-2"
+                                            />
+                                            <span>Trước hàng <span x-text="insertForm.position ? String.fromCharCode(64 + insertForm.position) : ''"></span></span>
+                                        </label>
+                                        <label class="flex items-center">
+                                            <input
+                                                type="radio"
+                                                x-model="insertForm.direction"
+                                                value="after"
+                                                class="mr-2"
+                                            />
+                                            <span>Sau hàng <span x-text="insertForm.position ? String.fromCharCode(64 + insertForm.position) : ''"></span></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="flex gap-2 justify-end">
+                                    <button
+                                        type="button"
+                                        @click="showInsertRowModal = false"
+                                        class="px-4 py-2 text-gray-700 bg-gray-200 rounded hover:bg-gray-300 dark:text-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600"
+                                    >
+                                        Hủy
+                                    </button>
+                                    <button
+                                        type="button"
+                                        @click="insertRow()"
+                                        class="px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700"
+                                    >
+                                        Chèn
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal chèn cột -->
+                    <div 
+                        x-show="showInsertColumnModal"
+                        x-transition
+                        class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+                        @click.self="showInsertColumnModal = false"
+                        style="display: none;"
+                    >
+                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md" @click.stop>
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-semibold">Chèn cột</h3>
+                                <button
+                                    type="button"
+                                    @click="showInsertColumnModal = false"
+                                    class="text-gray-500 hover:text-gray-700"
+                                >
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">Số lượng cột muốn chèn</label>
+                                    <input
+                                        type="number"
+                                        x-model.number="insertForm.count"
+                                        min="1"
+                                        max="10"
+                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white"
+                                    />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">Vị trí chèn</label>
+                                    <div class="space-y-2">
+                                        <label class="flex items-center">
+                                            <input
+                                                type="radio"
+                                                x-model="insertForm.direction"
+                                                value="before"
+                                                class="mr-2"
+                                            />
+                                            <span>Trước cột <span x-text="insertForm.position || ''"></span></span>
+                                        </label>
+                                        <label class="flex items-center">
+                                            <input
+                                                type="radio"
+                                                x-model="insertForm.direction"
+                                                value="after"
+                                                class="mr-2"
+                                            />
+                                            <span>Sau cột <span x-text="insertForm.position || ''"></span></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="flex gap-2 justify-end">
+                                    <button
+                                        type="button"
+                                        @click="showInsertColumnModal = false"
+                                        class="px-4 py-2 text-gray-700 bg-gray-200 rounded hover:bg-gray-300 dark:text-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600"
+                                    >
+                                        Hủy
+                                    </button>
+                                    <button
+                                        type="button"
+                                        @click="insertColumn()"
+                                        class="px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700"
+                                    >
+                                        Chèn
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </x-filament::section>

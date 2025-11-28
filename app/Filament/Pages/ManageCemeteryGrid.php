@@ -280,6 +280,211 @@ class ManageCemeteryGrid extends Page implements HasForms
             ->send();
     }
 
+    public function insertRows(int $position, int $count, string $direction): void
+    {
+        \DB::transaction(function () use ($position, $count, $direction) {
+            // Tính toán vị trí bắt đầu shift
+            $startRow = $direction === 'before' ? $position : $position + 1;
+
+            // Shift tất cả các hàng từ vị trí đó trở đi
+            CemeteryPlot::where('cemetery_id', $this->cemetery->id)
+                ->where('row', '>=', $startRow)
+                ->increment('row', $count);
+
+            // Tạo các lô mới cho hàng vừa chèn
+            $maxColumn = $this->gridDimensions['columns'] ?? 0;
+            $plotsData = [];
+
+            for ($i = 0; $i < $count; $i++) {
+                $newRow = $startRow + $i;
+                for ($col = 1; $col <= $maxColumn; $col++) {
+                    $plotsData[] = [
+                        'cemetery_id' => $this->cemetery->id,
+                        'plot_code' => CemeteryPlot::generatePlotCode($newRow, $col),
+                        'row' => $newRow,
+                        'column' => $col,
+                        'status' => 'available',
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ];
+                }
+            }
+
+            if (!empty($plotsData)) {
+                CemeteryPlot::insert($plotsData);
+            }
+
+            // Cập nhật lại plot_code cho tất cả lô bị ảnh hưởng
+            $this->updatePlotCodesAfterShift();
+        });
+
+        $this->loadPlots();
+
+        Notification::make()
+            ->title("Đã chèn {$count} hàng")
+            ->success()
+            ->send();
+    }
+
+    public function insertColumns(int $position, int $count, string $direction): void
+    {
+        \DB::transaction(function () use ($position, $count, $direction) {
+            // Tính toán vị trí bắt đầu shift
+            $startColumn = $direction === 'before' ? $position : $position + 1;
+
+            // Shift tất cả các cột từ vị trí đó trở đi
+            CemeteryPlot::where('cemetery_id', $this->cemetery->id)
+                ->where('column', '>=', $startColumn)
+                ->increment('column', $count);
+
+            // Tạo các lô mới cho cột vừa chèn
+            $maxRow = $this->gridDimensions['rows'] ?? 0;
+            $plotsData = [];
+
+            for ($i = 0; $i < $count; $i++) {
+                $newColumn = $startColumn + $i;
+                for ($row = 1; $row <= $maxRow; $row++) {
+                    $plotsData[] = [
+                        'cemetery_id' => $this->cemetery->id,
+                        'plot_code' => CemeteryPlot::generatePlotCode($row, $newColumn),
+                        'row' => $row,
+                        'column' => $newColumn,
+                        'status' => 'available',
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ];
+                }
+            }
+
+            if (!empty($plotsData)) {
+                CemeteryPlot::insert($plotsData);
+            }
+
+            // Cập nhật lại plot_code cho tất cả lô bị ảnh hưởng
+            $this->updatePlotCodesAfterShift();
+        });
+
+        $this->loadPlots();
+
+        Notification::make()
+            ->title("Đã chèn {$count} cột")
+            ->success()
+            ->send();
+    }
+
+    public function deleteRow(int $rowNumber): void
+    {
+        if (!$this->canDeleteRow($rowNumber)) {
+            Notification::make()
+                ->title('Không thể xóa hàng')
+                ->body('Hàng này có lô đang được sử dụng (có mộ liệt sĩ).')
+                ->warning()
+                ->send();
+
+            return;
+        }
+
+        \DB::transaction(function () use ($rowNumber) {
+            // Xóa tất cả lô trong hàng đó
+            CemeteryPlot::where('cemetery_id', $this->cemetery->id)
+                ->where('row', $rowNumber)
+                ->delete();
+
+            // Shift các hàng sau: row = row - 1
+            CemeteryPlot::where('cemetery_id', $this->cemetery->id)
+                ->where('row', '>', $rowNumber)
+                ->decrement('row');
+
+            // Cập nhật lại plot_code cho tất cả lô bị ảnh hưởng
+            $this->updatePlotCodesAfterShift();
+        });
+
+        $this->loadPlots();
+
+        Notification::make()
+            ->title("Đã xóa hàng {$rowNumber}")
+            ->success()
+            ->send();
+    }
+
+    public function deleteColumn(int $columnNumber): void
+    {
+        if (!$this->canDeleteColumn($columnNumber)) {
+            Notification::make()
+                ->title('Không thể xóa cột')
+                ->body('Cột này có lô đang được sử dụng (có mộ liệt sĩ).')
+                ->warning()
+                ->send();
+
+            return;
+        }
+
+        \DB::transaction(function () use ($columnNumber) {
+            // Xóa tất cả lô trong cột đó
+            CemeteryPlot::where('cemetery_id', $this->cemetery->id)
+                ->where('column', $columnNumber)
+                ->delete();
+
+            // Shift các cột sau: column = column - 1
+            CemeteryPlot::where('cemetery_id', $this->cemetery->id)
+                ->where('column', '>', $columnNumber)
+                ->decrement('column');
+
+            // Cập nhật lại plot_code cho tất cả lô bị ảnh hưởng
+            $this->updatePlotCodesAfterShift();
+        });
+
+        $this->loadPlots();
+
+        Notification::make()
+            ->title("Đã xóa cột {$columnNumber}")
+            ->success()
+            ->send();
+    }
+
+    protected function canDeleteRow(int $rowNumber): bool
+    {
+        return !CemeteryPlot::where('cemetery_id', $this->cemetery->id)
+            ->where('row', $rowNumber)
+            ->whereHas('grave')
+            ->exists();
+    }
+
+    protected function canDeleteColumn(int $columnNumber): bool
+    {
+        return !CemeteryPlot::where('cemetery_id', $this->cemetery->id)
+            ->where('column', $columnNumber)
+            ->whereHas('grave')
+            ->exists();
+    }
+
+    protected function updatePlotCodesAfterShift(): void
+    {
+        // Lấy tất cả lô và cập nhật lại plot_code
+        // Cần cập nhật theo batch để tránh xung đột unique constraint
+        $plots = CemeteryPlot::where('cemetery_id', $this->cemetery->id)->get();
+
+        // Bước 1: Đổi tất cả plot_code thành giá trị tạm để tránh xung đột
+        foreach ($plots as $plot) {
+            $newPlotCode = CemeteryPlot::generatePlotCode($plot->row, $plot->column);
+            if ($plot->plot_code !== $newPlotCode) {
+                $tempCode = 'temp_' . $plot->id . '_' . time();
+                $plot->update(['plot_code' => $tempCode]);
+            }
+        }
+
+        // Bước 2: Refresh để lấy giá trị mới
+        $plots->each->refresh();
+
+        // Bước 3: Cập nhật lại với plot_code đúng
+        foreach ($plots as $plot) {
+            $newPlotCode = CemeteryPlot::generatePlotCode($plot->row, $plot->column);
+            if ($plot->plot_code !== $newPlotCode) {
+                $plot->update(['plot_code' => $newPlotCode]);
+            }
+        }
+    }
+
     public static function canAccess(): bool
     {
         /** @var \App\Models\User $user */
