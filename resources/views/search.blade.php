@@ -572,40 +572,40 @@
                                         <p id="deceasedName" class="font-bold text-lg text-red-600"></p>
                                     </div>
                                     
-                                    <div id="rankRow" style="display: none;">
+                                    <div>
                                         <span class="text-sm text-gray-600">Cấp bậc:</span>
-                                        <p id="rank" class="font-medium text-gray-900"></p>
+                                        <p id="rank" class="font-medium text-gray-900">—</p>
                                     </div>
                                     
-                                    <div id="unitRow" style="display: none;">
+                                    <div>
                                         <span class="text-sm text-gray-600">Đơn vị:</span>
-                                        <p id="unit" class="font-medium text-gray-900"></p>
+                                        <p id="unit" class="font-medium text-gray-900">—</p>
                                     </div>
                                     
-                                    <div id="positionRow" style="display: none;">
+                                    <div>
                                         <span class="text-sm text-gray-600">Chức vụ:</span>
-                                        <p id="position" class="font-medium text-gray-900"></p>
+                                        <p id="position" class="font-medium text-gray-900">—</p>
                                     </div>
                                     
                                     <div class="grid grid-cols-2 gap-x-4 gap-y-3">
-                                        <div id="hometownRow" style="display: none;">
+                                        <div>
                                             <span class="text-sm text-gray-600">Nguyên Quán:</span>
-                                            <p id="hometown" class="font-medium text-gray-900"></p>
+                                            <p id="hometown" class="font-medium text-gray-900">—</p>
                                         </div>
                                         
                                         <div>
                                             <span class="text-sm text-gray-600">Ngày sinh:</span>
-                                            <p id="deceasedBirth" class="font-medium text-gray-900"></p>
+                                            <p id="deceasedBirth" class="font-medium text-gray-900">—</p>
                                         </div>
                                         
-                                        <div id="enlistmentDateRow" style="display: none;">
+                                        <div>
                                             <span class="text-sm text-gray-600">Ngày nhập ngũ:</span>
-                                            <p id="enlistmentDate" class="font-medium text-gray-900"></p>
+                                            <p id="enlistmentDate" class="font-medium text-gray-900">—</p>
                                         </div>
                                         
                                         <div>
                                             <span class="text-sm text-gray-600">Ngày hy sinh:</span>
-                                            <p id="deceasedDeath" class="font-medium text-gray-900"></p>
+                                            <p id="deceasedDeath" class="font-medium text-gray-900">—</p>
                                         </div>
                                     </div>
                                 </div>
@@ -863,47 +863,22 @@
         document.getElementById('deceasedBirth').textContent = birthText;
 
         // Nguyên Quán
-        if (grave.hometown) {
-            document.getElementById('hometownRow').style.display = 'block';
-            document.getElementById('hometown').textContent = grave.hometown;
-        } else {
-            document.getElementById('hometownRow').style.display = 'none';
-        }
+        document.getElementById('hometown').textContent = grave.hometown || '—';
 
         // Ngày nhập ngũ
-        if (grave.enlistment_date) {
-            document.getElementById('enlistmentDateRow').style.display = 'block';
-            document.getElementById('enlistmentDate').textContent = grave.enlistment_date;
-        } else {
-            document.getElementById('enlistmentDateRow').style.display = 'none';
-        }
+        document.getElementById('enlistmentDate').textContent = grave.enlistment_date || '—';
 
         // Ngày hy sinh
-        document.getElementById('deceasedDeath').textContent = grave.deceased_death_date || '-';
+        document.getElementById('deceasedDeath').textContent = grave.deceased_death_date || '—';
 
         // Cấp bậc
-        if (grave.rank) {
-            document.getElementById('rankRow').style.display = 'block';
-            document.getElementById('rank').textContent = grave.rank;
-        } else {
-            document.getElementById('rankRow').style.display = 'none';
-        }
+        document.getElementById('rank').textContent = grave.rank || '—';
 
         // Đơn vị
-        if (grave.unit) {
-            document.getElementById('unitRow').style.display = 'block';
-            document.getElementById('unit').textContent = grave.unit;
-        } else {
-            document.getElementById('unitRow').style.display = 'none';
-        }
+        document.getElementById('unit').textContent = grave.unit || '—';
 
-        // Chức vụ (ẩn nếu không có)
-        if (grave.position) {
-            document.getElementById('positionRow').style.display = 'block';
-            document.getElementById('position').textContent = grave.position;
-        } else {
-            document.getElementById('positionRow').style.display = 'none';
-        }
+        // Chức vụ
+        document.getElementById('position').textContent = grave.position || '—';
 
         // Ảnh liệt sĩ
         const photoContainer = document.getElementById('deceasedPhoto');

@@ -320,61 +320,47 @@
                                     <div class="flex-1">
                                         <p class="font-bold text-2xl mb-2">{{ $grave->deceased_full_name }}</p>
 
-                                        @if ($grave->rank)
-                                            <p class="text-base text-primary font-semibold mb-1">
-                                                Cấp bậc: {{ $grave->rank }}
-                                            </p>
-                                        @endif
+                                        <p class="text-base text-primary font-semibold mb-1">
+                                            Cấp bậc: <span class="text-gray-700">{{ $grave->rank ?: '—' }}</span>
+                                        </p>
 
-                                        @if ($grave->unit)
-                                            <p class="text-base text-primary font-semibold mb-1">
-                                                Đơn vị: {{ $grave->unit }}
-                                            </p>
-                                        @endif
+                                        <p class="text-base text-primary font-semibold mb-1">
+                                            Đơn vị: <span class="text-gray-700">{{ $grave->unit ?: '—' }}</span>
+                                        </p>
 
-                                        @if ($grave->position)
-                                            <p class="text-sm text-base-content/70 mb-2">
-                                                Chức vụ: <span class="font-semibold">{{ $grave->position }}</span>
-                                            </p>
-                                        @endif
+                                        <p class="text-sm text-base-content/70 mb-2">
+                                            Chức vụ: <span class="font-semibold">{{ $grave->position ?: '—' }}</span>
+                                        </p>
 
                                     </div>
                                 </div>
 
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    @if ($grave->hometown)
-                                        <div class="bg-white/50 rounded-lg p-3">
-                                            <p class="text-xs text-base-content/60 mb-1">Nguyên Quán</p>
-                                            <p class="font-bold text-lg">{{ $grave->hometown }}</p>
-                                        </div>
-                                    @endif
+                                    <div class="bg-white/50 rounded-lg p-3">
+                                        <p class="text-xs text-base-content/60 mb-1">Nguyên Quán</p>
+                                        <p class="font-bold text-lg">{{ $grave->hometown ?: '—' }}</p>
+                                    </div>
 
-                                    @if ($grave->deceased_birth_date)
-                                        <div class="rounded-lg p-3" style="background-color: #fafaf8;">
-                                            <p class="text-xs mb-1" style="color: #2b2b2b; opacity: 0.6;">Ngày sinh</p>
-                                            <p class="font-bold text-lg" style="color: #2b2b2b;">
-                                                {{ $grave->deceased_birth_date->format('d/m/Y') }}
-                                            </p>
-                                        </div>
-                                    @endif
+                                    <div class="rounded-lg p-3" style="background-color: #fafaf8;">
+                                        <p class="text-xs mb-1" style="color: #2b2b2b; opacity: 0.6;">Ngày sinh</p>
+                                        <p class="font-bold text-lg" style="color: #2b2b2b;">
+                                            {{ $grave->deceased_birth_date ? $grave->deceased_birth_date->format('d/m/Y') : '—' }}
+                                        </p>
+                                    </div>
 
-                                    @if ($grave->enlistment_date)
-                                        <div class="rounded-lg p-3" style="background-color: #fafaf8;">
-                                            <p class="text-xs mb-1" style="color: #2b2b2b; opacity: 0.6;">Ngày nhập ngũ</p>
-                                            <p class="font-bold text-lg" style="color: #2b2b2b;">
-                                                {{ $grave->enlistment_date->format('d/m/Y') }}
-                                            </p>
-                                        </div>
-                                    @endif
+                                    <div class="rounded-lg p-3" style="background-color: #fafaf8;">
+                                        <p class="text-xs mb-1" style="color: #2b2b2b; opacity: 0.6;">Ngày nhập ngũ</p>
+                                        <p class="font-bold text-lg" style="color: #2b2b2b;">
+                                            {{ $grave->enlistment_date ? $grave->enlistment_date->format('d/m/Y') : '—' }}
+                                        </p>
+                                    </div>
 
-                                    @if ($grave->deceased_death_date)
-                                        <div class="rounded-lg p-3" style="background-color: #fafaf8;">
-                                            <p class="text-xs mb-1" style="color: #2b2b2b; opacity: 0.6;">Ngày hy sinh</p>
-                                            <p class="font-bold text-lg" style="color: #2b2b2b;">
-                                                {{ $grave->deceased_death_date->format('d/m/Y') }}
-                                            </p>
-                                        </div>
-                                    @endif
+                                    <div class="rounded-lg p-3" style="background-color: #fafaf8;">
+                                        <p class="text-xs mb-1" style="color: #2b2b2b; opacity: 0.6;">Ngày hy sinh</p>
+                                        <p class="font-bold text-lg" style="color: #2b2b2b;">
+                                            {{ $grave->deceased_death_date ? $grave->deceased_death_date->format('d/m/Y') : '—' }}
+                                        </p>
+                                    </div>
 
                                 </div>
 
