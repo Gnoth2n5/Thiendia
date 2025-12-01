@@ -1,4 +1,7 @@
-<x-filament-panels::page>
+
+<x-filament::page>
+    {{-- @vite(['resources/css/frontend.css', 'resources/js/app.js']) --}}
+
     <div class="space-y-6">
         <!-- Cemetery Info -->
         <x-filament::section>
