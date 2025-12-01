@@ -83,7 +83,7 @@
 
                 <!-- Save/Cancel Buttons -->
                 <div 
-                    x-show="isEditMode && hasPendingChanges"
+                    x-show="isEditMode && (pendingChanges.insertedRows.length > 0 || pendingChanges.insertedColumns.length > 0 || pendingChanges.deletedRows.length > 0 || pendingChanges.deletedColumns.length > 0)"
                     x-transition
                     style="margin-bottom: 16px; padding: 12px 16px; background-color: #dbeafe; border: 1px solid #3b82f6; border-radius: 8px; display: none;"
                 >
@@ -144,10 +144,11 @@
                         },
                         
                         get hasPendingChanges() {
-                            return this.pendingChanges.insertedRows.length > 0 ||
+                            const hasChanges = this.pendingChanges.insertedRows.length > 0 ||
                                    this.pendingChanges.insertedColumns.length > 0 ||
                                    this.pendingChanges.deletedRows.length > 0 ||
                                    this.pendingChanges.deletedColumns.length > 0;
+                            return hasChanges;
                         },
                         
                         init() {
@@ -168,9 +169,12 @@
                         
                         buildPlotMap() {
                             this.plotMap = {};
+                            // Xây dựng map, ưu tiên plot có id (từ DB) hơn plot mới (id: null)
                             this.plots.forEach(plot => {
                                 const key = `${plot.row}-${plot.column}`;
-                                this.plotMap[key] = plot;
+                                if (!this.plotMap[key] || (plot.id !== null && this.plotMap[key].id === null)) {
+                                    this.plotMap[key] = plot;
+                                }
                             });
                         },
                         
@@ -202,8 +206,15 @@
                         
                         getPlotByPosition(row, col) {
                             try {
-                                const key = `${row}-${col}`;
-                                return this.plotMap[key] || null;
+                                // Tìm plot theo row và column trực tiếp từ plots array
+                                // Ưu tiên plot có id (từ DB) hơn plot mới (id: null)
+                                const plotsAtPosition = this.plots.filter(p => p.row === row && p.column === col);
+                                if (plotsAtPosition.length === 0) {
+                                    return null;
+                                }
+                                // Nếu có nhiều plots ở cùng vị trí, ưu tiên plot có id
+                                const plotWithId = plotsAtPosition.find(p => p.id !== null);
+                                return plotWithId || plotsAtPosition[0];
                             } catch (error) {
                                 console.error('[CemeteryGrid] Error getting plot:', error);
                                 return null;
@@ -417,9 +428,11 @@
                         },
                         
                         applyRowInsertInMemory(position, count, direction) {
+                            // Tính vị trí bắt đầu chèn
                             const startRow = direction === 'before' ? position : position + 1;
                             
-                            // Shift các plots
+                            // Shift TẤT CẢ các plots (cả có id và không có id) có row >= startRow
+                            // Đẩy lùi các hàng ra sau
                             this.plots.forEach(plot => {
                                 if (plot.row >= startRow) {
                                     plot.row += count;
@@ -427,18 +440,24 @@
                                 }
                             });
                             
-                            // Tạo plots mới
+                            // Tạo plots mới cho các hàng vừa chèn ở vị trí startRow
+                            // Các plots mới này sẽ có status: 'available' (không copy từ hàng cũ)
                             for (let i = 0; i < count; i++) {
                                 const newRow = startRow + i;
                                 for (let col = 1; col <= this.maxCol; col++) {
-                                    this.plots.push({
-                                        id: null,
-                                        plot_code: this.generatePlotCode(newRow, col),
-                                        row: newRow,
-                                        column: col,
-                                        status: 'available',
-                                        grave: null
-                                    });
+                                    // Kiểm tra xem đã có plot ở vị trí này chưa (sau khi shift)
+                                    const existingPlot = this.plots.find(p => p.row === newRow && p.column === col);
+                                    if (!existingPlot) {
+                                        // Chỉ tạo plot mới nếu chưa có
+                                        this.plots.push({
+                                            id: null,
+                                            plot_code: this.generatePlotCode(newRow, col),
+                                            row: newRow,
+                                            column: col,
+                                            status: 'available',
+                                            grave: null
+                                        });
+                                    }
                                 }
                             }
                             
@@ -447,9 +466,11 @@
                         },
                         
                         applyColumnInsertInMemory(position, count, direction) {
+                            // Tính vị trí bắt đầu chèn
                             const startColumn = direction === 'before' ? position : position + 1;
                             
-                            // Shift các plots
+                            // Shift TẤT CẢ các plots (cả có id và không có id) có column >= startColumn
+                            // Đẩy lùi các cột ra sau
                             this.plots.forEach(plot => {
                                 if (plot.column >= startColumn) {
                                     plot.column += count;
@@ -457,18 +478,24 @@
                                 }
                             });
                             
-                            // Tạo plots mới
+                            // Tạo plots mới cho các cột vừa chèn ở vị trí startColumn
+                            // Các plots mới này sẽ có status: 'available' (không copy từ cột cũ)
                             for (let i = 0; i < count; i++) {
                                 const newColumn = startColumn + i;
                                 for (let row = 1; row <= this.maxRow; row++) {
-                                    this.plots.push({
-                                        id: null,
-                                        plot_code: this.generatePlotCode(row, newColumn),
-                                        row: row,
-                                        column: newColumn,
-                                        status: 'available',
-                                        grave: null
-                                    });
+                                    // Kiểm tra xem đã có plot ở vị trí này chưa (sau khi shift)
+                                    const existingPlot = this.plots.find(p => p.row === row && p.column === newColumn);
+                                    if (!existingPlot) {
+                                        // Chỉ tạo plot mới nếu chưa có
+                                        this.plots.push({
+                                            id: null,
+                                            plot_code: this.generatePlotCode(row, newColumn),
+                                            row: row,
+                                            column: newColumn,
+                                            status: 'available',
+                                            grave: null
+                                        });
+                                    }
                                 }
                             }
                             
