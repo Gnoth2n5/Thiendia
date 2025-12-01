@@ -159,13 +159,24 @@
 
     <!-- Search Results -->
     <div class="search-results-content">
-        @if (request()->hasAny(['deceased_name', 'birth_year', 'death_year', 'cemetery_id', 'commune', 'plot_code']))
+        @if (true)
             <div class="mb-6">
                 <div class="flex items-center justify-between">
                     <div>
-                        <h2 class="text-xl font-bold text-neutral">Kết quả tìm kiếm</h2>
-                        <p class="text-sm text-base-content/60 search-result-count">Tìm thấy {{ $graves->total() }} liệt
-                            sĩ</p>
+                        <h2 class="text-xl font-bold text-neutral">
+                            @if (request()->hasAny(['deceased_name', 'birth_year', 'death_year', 'cemetery_id', 'commune', 'plot_code']))
+                                Kết quả tìm kiếm
+                            @else
+                                Danh sách liệt sĩ
+                            @endif
+                        </h2>
+                        <p class="text-sm text-base-content/60 search-result-count">
+                            @if (request()->hasAny(['deceased_name', 'birth_year', 'death_year', 'cemetery_id', 'commune', 'plot_code']))
+                                Tìm thấy {{ $graves->total() }} liệt sĩ
+                            @else
+                                Tổng cộng {{ $graves->total() }} liệt sĩ
+                            @endif
+                        </p>
                     </div>
                 </div>
             </div>
