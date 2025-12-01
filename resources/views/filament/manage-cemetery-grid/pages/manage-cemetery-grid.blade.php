@@ -170,7 +170,15 @@
                         buildPlotMap() {
                             this.plotMap = {};
                             // Xây dựng map, ưu tiên plot có id (từ DB) hơn plot mới (id: null)
-                            this.plots.forEach(plot => {
+                            // Sắp xếp để plots có id được xử lý trước
+                            const sortedPlots = [...this.plots].sort((a, b) => {
+                                // Ưu tiên plots có id (từ DB) trước
+                                if (a.id !== null && b.id === null) return -1;
+                                if (a.id === null && b.id !== null) return 1;
+                                return 0;
+                            });
+                            
+                            sortedPlots.forEach(plot => {
                                 const key = `${plot.row}-${plot.column}`;
                                 if (!this.plotMap[key] || (plot.id !== null && this.plotMap[key].id === null)) {
                                     this.plotMap[key] = plot;
@@ -431,35 +439,45 @@
                             // Tính vị trí bắt đầu chèn
                             const startRow = direction === 'before' ? position : position + 1;
                             
-                            // Shift TẤT CẢ các plots (cả có id và không có id) có row >= startRow
-                            // Đẩy lùi các hàng ra sau
-                            this.plots.forEach(plot => {
-                                if (plot.row >= startRow) {
-                                    plot.row += count;
-                                    plot.plot_code = this.generatePlotCode(plot.row, plot.column);
+                            // Bước 1: Xóa các plots mới (id: null) ở vị trí sẽ bị shift để tránh conflict
+                            this.plots = this.plots.filter(plot => {
+                                if (plot.id === null && plot.row >= startRow) {
+                                    return false; // Xóa plot mới ở vị trí sẽ bị shift
                                 }
+                                return true;
                             });
                             
-                            // Tạo plots mới cho các hàng vừa chèn ở vị trí startRow
-                            // Các plots mới này sẽ có status: 'available' (không copy từ hàng cũ)
+                            // Bước 2: Shift TẤT CẢ các plots còn lại (có id từ DB) có row >= startRow
+                            // Đẩy lùi các hàng ra sau và đổi tên (plot_code)
+                            // Sắp xếp theo row giảm dần để tránh conflict khi shift
+                            const plotsToShift = this.plots.filter(p => p.row >= startRow)
+                                .sort((a, b) => b.row - a.row); // Sort giảm dần
+                            
+                            plotsToShift.forEach(plot => {
+                                plot.row += count;
+                                plot.plot_code = this.generatePlotCode(plot.row, plot.column);
+                            });
+                            
+                            // Bước 3: Tạo plots mới HOÀN TOÀN cho các hàng vừa chèn ở vị trí startRow
+                            // Các plots mới này sẽ có status: 'available' (KHÔNG copy từ hàng cũ)
+                            const newPlots = [];
                             for (let i = 0; i < count; i++) {
                                 const newRow = startRow + i;
                                 for (let col = 1; col <= this.maxCol; col++) {
-                                    // Kiểm tra xem đã có plot ở vị trí này chưa (sau khi shift)
-                                    const existingPlot = this.plots.find(p => p.row === newRow && p.column === col);
-                                    if (!existingPlot) {
-                                        // Chỉ tạo plot mới nếu chưa có
-                                        this.plots.push({
-                                            id: null,
-                                            plot_code: this.generatePlotCode(newRow, col),
-                                            row: newRow,
-                                            column: col,
-                                            status: 'available',
-                                            grave: null
-                                        });
-                                    }
+                                    // Luôn tạo plot mới ở vị trí này (đã xóa plots mới ở bước 1, đã shift plots cũ ở bước 2)
+                                    newPlots.push({
+                                        id: null,
+                                        plot_code: this.generatePlotCode(newRow, col),
+                                        row: newRow,
+                                        column: col,
+                                        status: 'available',
+                                        grave: null
+                                    });
                                 }
                             }
+                            
+                            // Thêm plots mới vào array
+                            this.plots.push(...newPlots);
                             
                             this.maxRow += count;
                             this.buildPlotMap();
@@ -469,35 +487,45 @@
                             // Tính vị trí bắt đầu chèn
                             const startColumn = direction === 'before' ? position : position + 1;
                             
-                            // Shift TẤT CẢ các plots (cả có id và không có id) có column >= startColumn
-                            // Đẩy lùi các cột ra sau
-                            this.plots.forEach(plot => {
-                                if (plot.column >= startColumn) {
-                                    plot.column += count;
-                                    plot.plot_code = this.generatePlotCode(plot.row, plot.column);
+                            // Bước 1: Xóa các plots mới (id: null) ở vị trí sẽ bị shift để tránh conflict
+                            this.plots = this.plots.filter(plot => {
+                                if (plot.id === null && plot.column >= startColumn) {
+                                    return false; // Xóa plot mới ở vị trí sẽ bị shift
                                 }
+                                return true;
                             });
                             
-                            // Tạo plots mới cho các cột vừa chèn ở vị trí startColumn
-                            // Các plots mới này sẽ có status: 'available' (không copy từ cột cũ)
+                            // Bước 2: Shift TẤT CẢ các plots còn lại (có id từ DB) có column >= startColumn
+                            // Đẩy lùi các cột ra sau và đổi tên (plot_code)
+                            // Sắp xếp theo column giảm dần để tránh conflict khi shift
+                            const plotsToShift = this.plots.filter(p => p.column >= startColumn)
+                                .sort((a, b) => b.column - a.column); // Sort giảm dần
+                            
+                            plotsToShift.forEach(plot => {
+                                plot.column += count;
+                                plot.plot_code = this.generatePlotCode(plot.row, plot.column);
+                            });
+                            
+                            // Bước 3: Tạo plots mới HOÀN TOÀN cho các cột vừa chèn ở vị trí startColumn
+                            // Các plots mới này sẽ có status: 'available' (KHÔNG copy từ cột cũ)
+                            const newPlots = [];
                             for (let i = 0; i < count; i++) {
                                 const newColumn = startColumn + i;
                                 for (let row = 1; row <= this.maxRow; row++) {
-                                    // Kiểm tra xem đã có plot ở vị trí này chưa (sau khi shift)
-                                    const existingPlot = this.plots.find(p => p.row === row && p.column === newColumn);
-                                    if (!existingPlot) {
-                                        // Chỉ tạo plot mới nếu chưa có
-                                        this.plots.push({
-                                            id: null,
-                                            plot_code: this.generatePlotCode(row, newColumn),
-                                            row: row,
-                                            column: newColumn,
-                                            status: 'available',
-                                            grave: null
-                                        });
-                                    }
+                                    // Luôn tạo plot mới ở vị trí này (đã xóa plots mới ở bước 1, đã shift plots cũ ở bước 2)
+                                    newPlots.push({
+                                        id: null,
+                                        plot_code: this.generatePlotCode(row, newColumn),
+                                        row: row,
+                                        column: newColumn,
+                                        status: 'available',
+                                        grave: null
+                                    });
                                 }
                             }
+                            
+                            // Thêm plots mới vào array
+                            this.plots.push(...newPlots);
                             
                             this.maxCol += count;
                             this.buildPlotMap();
