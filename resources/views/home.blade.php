@@ -64,6 +64,26 @@
     @endpush
 
 @section('content')
+    <!-- Banner Carousel Section -->
+    @if (!empty($bannerImages) && count($bannerImages) > 0)
+        <div class="mb-8">
+            <div class="swiper banner-swiper">
+                <div class="swiper-wrapper">
+                    @foreach ($bannerImages as $image)
+                        <div class="swiper-slide">
+                            <img src="{{ $image }}" alt="Banner" class="w-full h-auto object-cover" style="max-height: 500px;">
+                        </div>
+                    @endforeach
+                </div>
+                <!-- Navigation arrows -->
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+                <!-- Pagination dots -->
+                <div class="swiper-pagination"></div>
+            </div>
+        </div>
+    @endif
+
     <!-- Quick Search Section -->
     <div class="mb-12">
         <div class="text-center mb-8">
@@ -393,5 +413,122 @@
     </div>
 
 @endsection
+
+@push('styles')
+    @if (!empty($bannerImages) && count($bannerImages) > 0)
+        <!-- Swiper CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+        <style>
+            .banner-swiper {
+                width: 100%;
+                height: auto;
+                border-radius: 0.5rem;
+                overflow: hidden;
+            }
+
+            .banner-swiper .swiper-slide {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .banner-swiper .swiper-slide img {
+                width: 100%;
+                height: auto;
+                object-fit: cover;
+                display: block;
+            }
+
+            .banner-swiper .swiper-button-next,
+            .banner-swiper .swiper-button-prev {
+                color: white;
+                background-color: rgba(0, 0, 0, 0.5);
+                width: 44px;
+                height: 44px;
+                border-radius: 50%;
+            }
+
+            .banner-swiper .swiper-button-next:after,
+            .banner-swiper .swiper-button-prev:after {
+                font-size: 20px;
+            }
+
+            .banner-swiper .swiper-button-next:hover,
+            .banner-swiper .swiper-button-prev:hover {
+                background-color: rgba(0, 0, 0, 0.7);
+            }
+
+            .banner-swiper .swiper-pagination-bullet {
+                background-color: white;
+                opacity: 0.5;
+            }
+
+            .banner-swiper .swiper-pagination-bullet-active {
+                opacity: 1;
+            }
+
+            @media (max-width: 768px) {
+                .banner-swiper .swiper-button-next,
+                .banner-swiper .swiper-button-prev {
+                    width: 36px;
+                    height: 36px;
+                }
+
+                .banner-swiper .swiper-button-next:after,
+                .banner-swiper .swiper-button-prev:after {
+                    font-size: 16px;
+                }
+            }
+        </style>
+    @endif
+@endpush
+
+@push('scripts')
+    @if (!empty($bannerImages) && count($bannerImages) > 0)
+        <!-- Swiper JS -->
+        <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const swiper = new Swiper('.banner-swiper', {
+                    // Optional parameters
+                    loop: true,
+                    autoplay: {
+                        delay: 5000,
+                        disableOnInteraction: false,
+                    },
+                    effect: 'fade',
+                    fadeEffect: {
+                        crossFade: true
+                    },
+                    // Navigation arrows
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                    },
+                    // Pagination
+                    pagination: {
+                        el: '.swiper-pagination',
+                        clickable: true,
+                    },
+                    // Responsive breakpoints
+                    breakpoints: {
+                        320: {
+                            slidesPerView: 1,
+                            spaceBetween: 10
+                        },
+                        768: {
+                            slidesPerView: 1,
+                            spaceBetween: 20
+                        },
+                        1024: {
+                            slidesPerView: 1,
+                            spaceBetween: 30
+                        }
+                    }
+                });
+            });
+        </script>
+    @endif
+@endpush
 
 {{-- Temporarily disabled JavaScript to test form submission --}}
