@@ -81,8 +81,7 @@ class ArticleResource extends Resource
                             ->required()
                             ->options([
                                 'tin_tuc' => 'Tin tức',
-                                'huong_dan' => 'Hướng dẫn',
-                                'thong_bao' => 'Thông báo',
+                                'su_kien' => 'Sự kiện'
                             ]),
                         Forms\Components\Select::make('status')
                             ->label('Trạng thái')

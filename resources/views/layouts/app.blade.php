@@ -92,17 +92,12 @@
                         Trang Chủ
                     </a>
 
-                    {{-- <div class="relative group">
-                        <a href="#"
-                            class="px-4 py-2 text-white font-semibold hover:bg-red-700 transition-colors duration-300 rounded flex items-center gap-1">
-                            Giới Thiệu
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                stroke-width="2" stroke="currentColor" class="h-4 w-4">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                            </svg>
-                        </a>
-
-                    </div> --}}
+                    <a href="{{ route('about') }}"
+                        class="px-4 py-2 text-white font-semibold rounded transition-colors duration-200 {{ request()->routeIs('about') ? 'bg-[rgba(0,0,0,0.3)]' : '' }}"
+                        onmouseover="this.style.backgroundColor='rgba(0,0,0,0.3)'"
+                        onmouseout="this.style.backgroundColor='{{ request()->routeIs('about') ? 'rgba(0,0,0,0.3)' : 'transparent' }}'">
+                        Giới Thiệu
+                    </a>
 
                     <div class="relative group">
                         <a href="{{ route('articles.index') }}"
@@ -127,9 +122,6 @@
                             <a href="{{ route('articles.category', 'su_kien') }}"
                                 class="block px-4 py-2 transition-colors hover:bg-gray-100" style="color: #2b2b2b;">Sự
                                 kiện</a>
-                            <a href="{{ route('articles.category', 'thong_bao') }}"
-                                class="block px-4 py-2 transition-colors hover:bg-gray-100"
-                                style="color: #2b2b2b;">Thông báo</a>
                         </div>
                     </div>
 
@@ -186,6 +178,13 @@
                         onmouseover="if(!this.classList.contains('active-link')) this.style.backgroundColor='rgba(0,0,0,0.5)'"
                         onmouseout="this.style.backgroundColor='{{ request()->routeIs('home') ? 'rgba(0,0,0,0.5)' : 'transparent' }}'">
                         Trang Chủ
+                    </a>
+
+                    <a href="{{ route('about') }}"
+                        class="flex items-center gap-3 px-4 py-3 text-white font-semibold transition-colors duration-200 {{ request()->routeIs('about') ? 'bg-[rgba(0,0,0,0.5)]' : '' }}"
+                        onmouseover="if(!this.classList.contains('active-link')) this.style.backgroundColor='rgba(0,0,0,0.5)'"
+                        onmouseout="this.style.backgroundColor='{{ request()->routeIs('about') ? 'rgba(0,0,0,0.5)' : 'transparent' }}'">
+                        Giới Thiệu
                     </a>
 
                     <a href="{{ route('articles.index') }}"
