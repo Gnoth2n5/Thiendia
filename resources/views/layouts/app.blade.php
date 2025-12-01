@@ -136,13 +136,6 @@
                         Danh Sách Liệt Sĩ
                     </a>
 
-                    {{-- Ngày Giỗ Hôm Nay - TẠM THỜI TẮT --}}
-                    {{-- <a href="{{ route('anniversary.today') }}"
-                        class="px-4 py-2 text-white font-semibold rounded transition-colors duration-200 {{ request()->routeIs('anniversary.*') ? 'bg-[rgba(0,0,0,0.3)]' : '' }}"
-                        onmouseover="if(!this.classList.contains('active-link')) this.style.backgroundColor='rgba(0,0,0,0.3)'"
-                        onmouseout="this.style.backgroundColor='{{ request()->routeIs('anniversary.*') ? 'rgba(0,0,0,0.3)' : 'transparent' }}'">
-                        Ngày Giỗ Hôm Nay
-                    </a> --}}
 
                     <a href="{{ route('contact') }}"
                         class="px-4 py-2 text-white font-semibold rounded transition-colors duration-200"

@@ -213,8 +213,8 @@
                             <!-- Image Section -->
                             <div class="relative overflow-hidden">
                                 @if ($article->featured_image)
-                                    <img src="{{ $article->featured_image }}" alt="{{ $article->title }}"
-                                        class="w-full h-64 md:h-full object-cover">
+                                    <img src="{{ Storage::url($article->featured_image) }}" alt="{{ $article->title }}"
+                                        class="w-full h-48 md:h-64 object-cover">
                                 @else
                                     <div class="w-full h-64 md:h-full flex items-center justify-center"
                                         style="background-color: #3b82f6;">
