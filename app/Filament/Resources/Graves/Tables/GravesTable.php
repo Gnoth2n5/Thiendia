@@ -53,53 +53,31 @@ class GravesTable
                     ->label('Họ tên liệt sỹ')
                     ->sortable()
                     ->searchable()
-                    ->limit(30)
+                    ->limit(40)
+                    ->weight('bold')
                     ->placeholder('Chưa có thông tin'),
-
-                TextColumn::make('hometown')
-                    ->label('Nguyên Quán')
-                    ->sortable()
-                    ->searchable()
-                    ->limit(30)
-                    ->placeholder('—'),
-
-                TextColumn::make('deceased_birth_date')
-                    ->label('Ngày tháng năm sinh')
-                    ->date('d/m/Y')
-                    ->sortable()
-                    ->placeholder('—'),
-
-                TextColumn::make('enlistment_date')
-                    ->label('Ngày nhập ngũ')
-                    ->date('d/m/Y')
-                    ->sortable()
-                    ->placeholder('—'),
 
                 TextColumn::make('deceased_death_date')
                     ->label('Ngày hy sinh')
                     ->date('d/m/Y')
-                    ->sortable(),
+                    ->sortable()
+                    ->alignCenter(),
 
                 TextColumn::make('rank')
                     ->label('Cấp bậc')
                     ->sortable()
                     ->searchable()
                     ->limit(25)
-                    ->placeholder('—'),
-
-                TextColumn::make('position')
-                    ->label('Chức vụ')
-                    ->sortable()
-                    ->searchable()
-                    ->limit(25)
-                    ->placeholder('—'),
+                    ->placeholder('—')
+                    ->toggleable(),
 
                 TextColumn::make('unit')
                     ->label('Đơn vị')
                     ->sortable()
                     ->searchable()
                     ->limit(35)
-                    ->placeholder('—'),
+                    ->placeholder('—')
+                    ->toggleable(),
 
                 ImageColumn::make('deceased_photo')
                     ->label('Ảnh')
@@ -107,6 +85,36 @@ class GravesTable
                     ->square()
                     ->size(50)
                     ->defaultImageUrl(url('/images/default-avatar.png')),
+
+                TextColumn::make('hometown')
+                    ->label('Nguyên Quán')
+                    ->sortable()
+                    ->searchable()
+                    ->limit(30)
+                    ->placeholder('—')
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('deceased_birth_date')
+                    ->label('Ngày sinh')
+                    ->date('d/m/Y')
+                    ->sortable()
+                    ->placeholder('—')
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('enlistment_date')
+                    ->label('Ngày nhập ngũ')
+                    ->date('d/m/Y')
+                    ->sortable()
+                    ->placeholder('—')
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('position')
+                    ->label('Chức vụ')
+                    ->sortable()
+                    ->searchable()
+                    ->limit(25)
+                    ->placeholder('—')
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('notes')
                     ->label('Ghi chú')
@@ -116,7 +124,8 @@ class GravesTable
 
                         return strlen($state) > 50 ? $state : null;
                     })
-                    ->placeholder('—'),
+                    ->placeholder('—')
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 SelectFilter::make('cemetery_id')

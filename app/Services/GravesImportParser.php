@@ -54,10 +54,39 @@ class GravesImportParser
         for ($row = 2; $row <= $highestRow; $row++) {
             $data = [];
 
-            // Đọc tối đa 12 cột (index 0-11): các trường Excel + plot + 2 photo + notes
-            for ($col = 0; $col <= 11; $col++) {
-                $cellValue = $worksheet->getCellByColumnAndRow($col + 1, $row)->getValue();
-                $data[$col] = $cellValue;
+            // Đọc từ cột 2 (bỏ qua cột 1 là STT), tối đa 12 cột dữ liệu (index 0-11)
+            // Excel column: 1=STT (bỏ qua), 2-13 = dữ liệu
+            for ($excelCol = 2; $excelCol <= 13; $excelCol++) {
+                $dataIndex = $excelCol - 2; // Map Excel column 2->0, 3->1, 4->2, etc.
+                $cell = $worksheet->getCellByColumnAndRow($excelCol, $row);
+                $rawValue = $cell->getValue();
+
+                // Nếu là cột ngày tháng (Ngày sinh, Ngày nhập ngũ, Ngày hy sinh)
+                // Mapping: Excel col 4->data[2], col 5->data[3], col 6->data[4]
+                if (in_array($dataIndex, [2, 3, 4]) && $rawValue !== null) {
+                    // Nếu là số (Excel date serial number), convert sang date
+                    if (is_numeric($rawValue)) {
+                        try {
+                            $dateTime = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject((float) $rawValue);
+                            $data[$dataIndex] = $dateTime->format('d/m/Y');
+                        } catch (\Exception $e) {
+                            // Nếu không convert được, lấy formatted value
+                            $data[$dataIndex] = $cell->getFormattedValue() ?: $rawValue;
+                        }
+                    } else {
+                        // Nếu là string hoặc DateTime object, lấy formatted value hoặc raw value
+                        if ($rawValue instanceof \DateTime || $rawValue instanceof \DateTimeInterface) {
+                            $data[$dataIndex] = $rawValue->format('d/m/Y');
+                        } else {
+                            $formatted = $cell->getFormattedValue();
+                            $data[$dataIndex] = ! empty($formatted) ? $formatted : (string) $rawValue;
+                        }
+                    }
+                } else {
+                    // Các cột khác: lấy formatted value nếu có, nếu không thì raw value
+                    $formatted = $cell->getFormattedValue();
+                    $data[$dataIndex] = ! empty($formatted) ? $formatted : $rawValue;
+                }
             }
 
             // Bỏ qua row trống
@@ -265,15 +294,86 @@ class GravesImportParser
         }
 
         try {
+            // Xử lý DateTime object
             if ($date instanceof \DateTime) {
                 return $date->format('Y-m-d');
             }
 
-            if (is_numeric($date)) {
-                return Carbon::createFromFormat('Y-m-d', \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($date)->format('Y-m-d'))->format('Y-m-d');
+            // Xử lý DateTimeInterface (Carbon, etc.)
+            if ($date instanceof \DateTimeInterface) {
+                return $date->format('Y-m-d');
             }
 
-            return Carbon::parse($date)->format('Y-m-d');
+            // Nếu là số (Excel date serial number)
+            if (is_numeric($date)) {
+                try {
+                    $dateTime = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject((float) $date);
+
+                    return $dateTime->format('Y-m-d');
+                } catch (\Exception $e) {
+                    // Nếu không phải Excel serial number, thử parse như timestamp
+                    if ($date > 1000000000) {
+                        return Carbon::createFromTimestamp((int) $date)->format('Y-m-d');
+                    }
+                }
+            }
+
+            $dateString = trim((string) $date);
+
+            // Thử parse với format dd/mm/yyyy trước (format phổ biến ở Việt Nam)
+            if (preg_match('/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/', $dateString, $matches)) {
+                $day = (int) $matches[1];
+                $month = (int) $matches[2];
+                $year = (int) $matches[3];
+
+                // Validate ngày tháng hợp lệ
+                if ($day >= 1 && $day <= 31 && $month >= 1 && $month <= 12 && $year >= 1900 && $year <= 2100) {
+                    try {
+                        return Carbon::createFromDate($year, $month, $day)->format('Y-m-d');
+                    } catch (\Exception $e) {
+                        // Nếu không tạo được (ví dụ: 31/02/1952), thử parse tự động
+                    }
+                }
+            }
+
+            // Thử parse với format yyyy-mm-dd
+            if (preg_match('/^(\d{4})-(\d{1,2})-(\d{1,2})$/', $dateString, $matches)) {
+                $year = (int) $matches[1];
+                $month = (int) $matches[2];
+                $day = (int) $matches[3];
+
+                if ($day >= 1 && $day <= 31 && $month >= 1 && $month <= 12 && $year >= 1900 && $year <= 2100) {
+                    try {
+                        return Carbon::createFromDate($year, $month, $day)->format('Y-m-d');
+                    } catch (\Exception $e) {
+                        // Nếu không tạo được, thử parse tự động
+                    }
+                }
+            }
+
+            // Thử parse với format dd-mm-yyyy
+            if (preg_match('/^(\d{1,2})-(\d{1,2})-(\d{4})$/', $dateString, $matches)) {
+                $day = (int) $matches[1];
+                $month = (int) $matches[2];
+                $year = (int) $matches[3];
+
+                if ($day >= 1 && $day <= 31 && $month >= 1 && $month <= 12 && $year >= 1900 && $year <= 2100) {
+                    try {
+                        return Carbon::createFromDate($year, $month, $day)->format('Y-m-d');
+                    } catch (\Exception $e) {
+                        // Nếu không tạo được, thử parse tự động
+                    }
+                }
+            }
+
+            // Fallback: dùng Carbon::parse() để tự động detect format
+            // Carbon có thể parse nhiều format khác nhau
+            $parsed = Carbon::parse($dateString);
+            if ($parsed && $parsed->year >= 1900 && $parsed->year <= 2100) {
+                return $parsed->format('Y-m-d');
+            }
+
+            return null;
         } catch (\Exception $e) {
             return null;
         }
