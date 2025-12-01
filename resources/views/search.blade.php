@@ -566,38 +566,47 @@
                                 </div>
 
                                 <!-- Info Grid -->
-                                <div class="flex-1 grid grid-cols-2 gap-x-4 gap-y-3">
-                                    <div class="col-span-2">
+                                <div class="flex-1 space-y-3">
+                                    <div>
                                         <span class="text-sm text-gray-600">Họ và tên:</span>
                                         <p id="deceasedName" class="font-bold text-lg text-red-600"></p>
                                     </div>
-                                    <div class="col-span-2" id="hometownRow" style="display: none;">
-                                        <span class="text-sm text-gray-600">Nguyên Quán:</span>
-                                        <p id="hometown" class="font-medium text-gray-900"></p>
-                                    </div>
-                                    <div>
-                                        <span class="text-sm text-gray-600">Ngày sinh:</span>
-                                        <p id="deceasedBirth" class="font-medium text-gray-900"></p>
-                                    </div>
-                                    <div class="col-span-2" id="enlistmentDateRow" style="display: none;">
-                                        <span class="text-sm text-gray-600">Ngày nhập ngũ:</span>
-                                        <p id="enlistmentDate" class="font-medium text-gray-900"></p>
-                                    </div>
-                                    <div class="col-span-2">
-                                        <span class="text-sm text-gray-600">Ngày hy sinh:</span>
-                                        <p id="deceasedDeath" class="font-medium text-gray-900"></p>
-                                    </div>
-                                    <div class="col-span-2" id="rankRow" style="display: none;">
+                                    
+                                    <div id="rankRow" style="display: none;">
                                         <span class="text-sm text-gray-600">Cấp bậc:</span>
                                         <p id="rank" class="font-medium text-gray-900"></p>
                                     </div>
-                                    <div class="col-span-2" id="unitRow" style="display: none;">
+                                    
+                                    <div id="unitRow" style="display: none;">
                                         <span class="text-sm text-gray-600">Đơn vị:</span>
                                         <p id="unit" class="font-medium text-gray-900"></p>
                                     </div>
-                                    <div class="col-span-2" id="positionRow" style="display: none;">
+                                    
+                                    <div id="positionRow" style="display: none;">
                                         <span class="text-sm text-gray-600">Chức vụ:</span>
                                         <p id="position" class="font-medium text-gray-900"></p>
+                                    </div>
+                                    
+                                    <div class="grid grid-cols-2 gap-x-4 gap-y-3">
+                                        <div id="hometownRow" style="display: none;">
+                                            <span class="text-sm text-gray-600">Nguyên Quán:</span>
+                                            <p id="hometown" class="font-medium text-gray-900"></p>
+                                        </div>
+                                        
+                                        <div>
+                                            <span class="text-sm text-gray-600">Ngày sinh:</span>
+                                            <p id="deceasedBirth" class="font-medium text-gray-900"></p>
+                                        </div>
+                                        
+                                        <div id="enlistmentDateRow" style="display: none;">
+                                            <span class="text-sm text-gray-600">Ngày nhập ngũ:</span>
+                                            <p id="enlistmentDate" class="font-medium text-gray-900"></p>
+                                        </div>
+                                        
+                                        <div>
+                                            <span class="text-sm text-gray-600">Ngày hy sinh:</span>
+                                            <p id="deceasedDeath" class="font-medium text-gray-900"></p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -631,76 +640,6 @@
                                 <div>
                                     <span class="text-sm text-gray-600">Vị trí lô:</span>
                                     <p id="plotPosition" class="font-medium text-gray-900"></p>
-                                </div>
-                                <div class="col-span-2" id="locationDescRow" style="display: none;">
-                                    <span class="text-sm text-gray-600">Mô tả vị trí:</span>
-                                    <p id="locationDesc" class="font-medium text-gray-900"></p>
-                                </div>
-                                <div id="graveTypeRow" style="display: none;">
-                                    <span class="text-sm text-gray-600">Loại mộ:</span>
-                                    <p id="graveType" class="font-medium text-gray-900"></p>
-                                </div>
-                                <div id="burialDateRow" style="display: none;">
-                                    <span class="text-sm text-gray-600">Ngày an táng:</span>
-                                    <p id="burialDate" class="font-medium text-gray-900"></p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Thông tin hành chính -->
-                        <div id="adminInfoSection" class="rounded-lg p-4 mb-4"
-                            style="background-color: #fafaf8; display: none;">
-                            <h3 class="text-lg font-bold mb-4" style="color: #3b82f6;">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                    stroke-width="2" stroke="currentColor" class="h-5 w-5 inline mr-2">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
-                                </svg>
-                                Thông tin hành chính
-                            </h3>
-                            <div class="grid grid-cols-2 gap-x-4 gap-y-3">
-                                <div id="certificateRow" style="display: none;">
-                                    <span class="text-sm text-gray-600">Số giấy chứng nhận:</span>
-                                    <p id="certificateNumber" class="font-medium text-gray-900"></p>
-                                </div>
-                                <div id="decisionNumberRow" style="display: none;">
-                                    <span class="text-sm text-gray-600">Số quyết định:</span>
-                                    <p id="decisionNumber" class="font-medium text-gray-900"></p>
-                                </div>
-                                <div id="decisionDateRow" style="display: none;" class="col-span-2">
-                                    <span class="text-sm text-gray-600">Ngày quyết định:</span>
-                                    <p id="decisionDate" class="font-medium text-gray-900"></p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Thông tin thân nhân -->
-                        <div id="familyInfoSection" class="rounded-lg p-4 mb-4"
-                            style="background-color: #fafaf8; display: none;">
-                            <h3 class="text-lg font-bold mb-4" style="color: #3b82f6;">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                    stroke-width="2" stroke="currentColor" class="h-5 w-5 inline mr-2">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" />
-                                </svg>
-                                Thông tin thân nhân
-                            </h3>
-                            <div class="space-y-3">
-                                <div id="nextOfKinRow" style="display: none;">
-                                    <span class="text-sm text-gray-600">Người thân:</span>
-                                    <p id="nextOfKin" class="font-medium text-gray-900"></p>
-                                </div>
-                                <div id="relationshipRow" style="display: none;">
-                                    <span class="text-sm text-gray-600">Quan hệ:</span>
-                                    <p id="relationship" class="font-medium text-gray-900"></p>
-                                </div>
-                                <div id="caretakerRow" style="display: none;">
-                                    <span class="text-sm text-gray-600">Người chăm sóc mộ:</span>
-                                    <p id="caretaker" class="font-medium text-gray-900"></p>
-                                </div>
-                                <div id="contactInfoRow" style="display: none;">
-                                    <span class="text-sm text-gray-600">Thông tin liên hệ:</span>
-                                    <div id="contactInfo" class="font-medium text-gray-900"></div>
                                 </div>
                             </div>
                         </div>

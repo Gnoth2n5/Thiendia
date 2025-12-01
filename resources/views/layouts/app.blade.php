@@ -4,30 +4,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Tra cứu liệt sĩ tỉnh Ninh Bình')</title>
+    <title>@yield('title', 'Tra cứu liệt sĩ  xã Lý Nhân')</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="@yield('description', 'Hệ thống tra cứu thông tin liệt sĩ tỉnh Ninh Bình trực tuyến. Tìm kiếm nhanh chóng, chính xác và tiện lợi. Quản lý dữ liệu nghĩa trang khoa học, minh bạch và hiện đại.')">
+    <meta name="description" content="@yield('description', 'Hệ thống tra cứu thông tin liệt sĩ  xã Lý Nhân trực tuyến. Tìm kiếm nhanh chóng, chính xác và tiện lợi. Quản lý dữ liệu nghĩa trang khoa học, minh bạch và hiện đại.')">
     <meta name="keywords"
-        content="tra cứu liệt sĩ, nghĩa trang Ninh Bình, tìm kiếm liệt sĩ, quản lý nghĩa trang, hệ thống tra cứu trực tuyến, bản đồ số nghĩa trang">
-    <meta name="author" content="Hệ thống Tra cứu Liệt sĩ Ninh Bình">
+        content="tra cứu liệt sĩ, nghĩa trang xã Lý Nhân, tìm kiếm liệt sĩ, quản lý nghĩa trang, hệ thống tra cứu trực tuyến, bản đồ số nghĩa trang">
+    <meta name="author" content="Hệ thống Tra cứu Liệt sĩ xã Lý Nhân">
     <meta name="robots" content="index, follow">
     <meta name="language" content="vi">
     <meta name="geo.region" content="VN-18">
-    <meta name="geo.placename" content="Ninh Bình, Việt Nam">
+    <meta name="geo.placename" content="xã Lý Nhân, Việt Nam">
 
     <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="@yield('title', 'Tra cứu liệt sĩ tỉnh Ninh Bình')">
-    <meta property="og:description" content="@yield('description', 'Hệ thống tra cứu thông tin liệt sĩ tỉnh Ninh Bình trực tuyến. Tìm kiếm nhanh chóng, chính xác và tiện lợi.')">
+    <meta property="og:title" content="@yield('title', 'Tra cứu liệt sĩ xã Lý Nhân')">
+    <meta property="og:description" content="@yield('description', 'Hệ thống tra cứu thông tin liệt sĩ xã Lý Nhân trực tuyến. Tìm kiếm nhanh chóng, chính xác và tiện lợi.')">
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ url()->current() }}">
-    <meta property="og:site_name" content="Hệ thống Tra cứu Liệt sĩ Ninh Bình">
+    <meta property="og:site_name" content="Hệ thống Tra cứu Liệt sĩ xã Lý Nhân">
     <meta property="og:locale" content="vi_VN">
 
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="@yield('title', 'Tra cứu liệt sĩ tỉnh Ninh Bình')">
-    <meta name="twitter:description" content="@yield('description', 'Hệ thống tra cứu thông tin liệt sĩ tỉnh Ninh Bình trực tuyến. Tìm kiếm nhanh chóng, chính xác và tiện lợi.')">
+    <meta name="twitter:title" content="@yield('title', 'Tra cứu liệt sĩ xã Lý Nhân')">
+    <meta name="twitter:description" content="@yield('description', 'Hệ thống tra cứu thông tin liệt sĩ xã Lý Nhân trực tuyến. Tìm kiếm nhanh chóng, chính xác và tiện lợi.')">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -77,7 +77,7 @@
                         </div>
                         <div class="hidden sm:block text-white">
                             <div class="text-lg font-bold">Hệ thống Tra cứu liệt sĩ</div>
-                            <div class="text-sm opacity-90">Tỉnh Ninh Bình</div>
+                            <div class="text-sm opacity-90"> xã Lý Nhân</div>
                         </div>
                     </a>
                 </div>
@@ -305,7 +305,7 @@
                             <img src="{{ asset('images/logo1.png') }}" alt="Logo" class="w-8 h-8 object-contain">
                         </div>
                         <div>
-                            <h3 class="text-lg font-bold">Hệ thống Tra cứu liệt sĩ tỉnh Ninh Bình</h3>
+                            <h3 class="text-lg font-bold">Hệ thống Tra cứu liệt sĩ xã Lý Nhân</h3>
                             <p class="text-sm opacity-80">Tra cứu thông tin trực tuyến</p>
                         </div>
                     </div>
@@ -367,7 +367,7 @@
         <div class="border-t" style="border-color: rgba(212, 208, 200, 0.3);">
             <div class="container mx-auto px-4 py-6">
                 <div class="flex flex-col md:flex-row justify-between items-center gap-4 text-sm opacity-80">
-                    <p>© {{ date('Y') }} Hệ thống Tra cứu liệt sĩ tỉnh Ninh Bình. All rights reserved.</p>
+                    <p>© {{ date('Y') }} Hệ thống Tra cứu liệt sĩ xã Lý Nhân. All rights reserved.</p>
                     <div class="flex gap-6">
                         <a href="{{ route('privacy-policy') }}" class="hover:text-white transition-colors">Chính sách
                             bảo mật</a>
