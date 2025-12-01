@@ -238,12 +238,10 @@
                                             </div>
                                         </td>
 
-                                        <!-- Năm sinh -->
+                                        <!-- Ngày sinh -->
                                         <td class="px-4 py-4 text-sm text-gray-600 border-r border-gray-100">
-                                            @if ($grave->birth_year)
-                                                {{ $grave->birth_year }}
-                                            @elseif ($grave->deceased_birth_date)
-                                                {{ $grave->deceased_birth_date->format('Y') }}
+                                            @if ($grave->deceased_birth_date)
+                                                {{ $grave->deceased_birth_date->format('d/m/Y') }}
                                             @else
                                                 <span class="text-gray-400">-</span>
                                             @endif
@@ -260,8 +258,15 @@
 
                                         <!-- Cấp bậc, đơn vị -->
                                         <td class="px-4 py-4 text-sm text-gray-700 border-r border-gray-100">
-                                            @if ($grave->rank_and_unit)
-                                                <div class="font-medium text-gray-900">{{ $grave->rank_and_unit }}</div>
+                                            @if ($grave->rank || $grave->unit)
+                                                <div class="font-medium text-gray-900">
+                                                    @if ($grave->rank)
+                                                        <div>Cấp bậc: {{ $grave->rank }}</div>
+                                                    @endif
+                                                    @if ($grave->unit)
+                                                        <div>Đơn vị: {{ $grave->unit }}</div>
+                                                    @endif
+                                                </div>
                                             @else
                                                 <span class="text-gray-400">-</span>
                                             @endif
@@ -383,12 +388,10 @@
                                 <!-- Mobile Info Grid -->
                                 <div class="grid grid-cols-2 gap-3 text-sm mb-3">
                                     <div>
-                                        <span class="text-gray-500">Năm sinh:</span>
+                                        <span class="text-gray-500">Ngày sinh:</span>
                                         <div class="font-medium">
-                                            @if ($grave->birth_year)
-                                                {{ $grave->birth_year }}
-                                            @elseif ($grave->deceased_birth_date)
-                                                {{ $grave->deceased_birth_date->format('Y') }}
+                                            @if ($grave->deceased_birth_date)
+                                                {{ $grave->deceased_birth_date->format('d/m/Y') }}
                                             @else
                                                 <span class="text-gray-400">-</span>
                                             @endif
@@ -404,16 +407,18 @@
                                             @endif
                                         </div>
                                     </div>
-                                    <div class="col-span-2">
-                                        <span class="text-gray-500">Cấp bậc, đơn vị:</span>
-                                        <div class="font-medium">
-                                            @if ($grave->rank_and_unit)
-                                                {{ $grave->rank_and_unit }}
-                                            @else
-                                                <span class="text-gray-400">-</span>
-                                            @endif
+                                    @if ($grave->rank)
+                                        <div class="col-span-2">
+                                            <span class="text-gray-500">Cấp bậc:</span>
+                                            <div class="font-medium">{{ $grave->rank }}</div>
                                         </div>
-                                    </div>
+                                    @endif
+                                    @if ($grave->unit)
+                                        <div class="col-span-2">
+                                            <span class="text-gray-500">Đơn vị:</span>
+                                            <div class="font-medium">{{ $grave->unit }}</div>
+                                        </div>
+                                    @endif
                                     <div>
                                         <span class="text-gray-500">Xã/Phường:</span>
                                         <div class="font-medium">{{ $grave->cemetery->commune }}</div>
@@ -566,21 +571,29 @@
                                         <span class="text-sm text-gray-600">Họ và tên:</span>
                                         <p id="deceasedName" class="font-bold text-lg text-red-600"></p>
                                     </div>
-                                    <div>
-                                        <span class="text-sm text-gray-600">Giới tính:</span>
-                                        <p id="deceasedGender" class="font-medium text-gray-900"></p>
+                                    <div class="col-span-2" id="hometownRow" style="display: none;">
+                                        <span class="text-sm text-gray-600">Nguyên Quán:</span>
+                                        <p id="hometown" class="font-medium text-gray-900"></p>
                                     </div>
                                     <div>
-                                        <span class="text-sm text-gray-600">Năm sinh:</span>
+                                        <span class="text-sm text-gray-600">Ngày sinh:</span>
                                         <p id="deceasedBirth" class="font-medium text-gray-900"></p>
+                                    </div>
+                                    <div class="col-span-2" id="enlistmentDateRow" style="display: none;">
+                                        <span class="text-sm text-gray-600">Ngày nhập ngũ:</span>
+                                        <p id="enlistmentDate" class="font-medium text-gray-900"></p>
                                     </div>
                                     <div class="col-span-2">
                                         <span class="text-sm text-gray-600">Ngày hy sinh:</span>
                                         <p id="deceasedDeath" class="font-medium text-gray-900"></p>
                                     </div>
-                                    <div class="col-span-2">
-                                        <span class="text-sm text-gray-600">Cấp bậc, chức vụ:</span>
-                                        <p id="rankAndUnit" class="font-medium text-gray-900"></p>
+                                    <div class="col-span-2" id="rankRow" style="display: none;">
+                                        <span class="text-sm text-gray-600">Cấp bậc:</span>
+                                        <p id="rank" class="font-medium text-gray-900"></p>
+                                    </div>
+                                    <div class="col-span-2" id="unitRow" style="display: none;">
+                                        <span class="text-sm text-gray-600">Đơn vị:</span>
+                                        <p id="unit" class="font-medium text-gray-900"></p>
                                     </div>
                                     <div class="col-span-2" id="positionRow" style="display: none;">
                                         <span class="text-sm text-gray-600">Chức vụ:</span>
@@ -903,26 +916,47 @@
         // === THÔNG TIN LIỆT SĨ ===
         document.getElementById('deceasedName').textContent = grave.deceased_full_name || grave.owner_name || '-';
 
-        // Giới tính
-        const genderText = grave.deceased_gender === 'male' ? 'Nam' :
-            grave.deceased_gender === 'female' ? 'Nữ' :
-            grave.deceased_gender || '-';
-        document.getElementById('deceasedGender').textContent = genderText;
-
-        // Năm sinh
+        // Ngày sinh
         let birthText = '-';
-        if (grave.birth_year) {
-            birthText = grave.birth_year;
-        } else if (grave.deceased_birth_date) {
+        if (grave.deceased_birth_date) {
             birthText = grave.deceased_birth_date;
         }
         document.getElementById('deceasedBirth').textContent = birthText;
 
+        // Nguyên Quán
+        if (grave.hometown) {
+            document.getElementById('hometownRow').style.display = 'block';
+            document.getElementById('hometown').textContent = grave.hometown;
+        } else {
+            document.getElementById('hometownRow').style.display = 'none';
+        }
+
+        // Ngày nhập ngũ
+        if (grave.enlistment_date) {
+            document.getElementById('enlistmentDateRow').style.display = 'block';
+            document.getElementById('enlistmentDate').textContent = grave.enlistment_date;
+        } else {
+            document.getElementById('enlistmentDateRow').style.display = 'none';
+        }
+
         // Ngày hy sinh
         document.getElementById('deceasedDeath').textContent = grave.deceased_death_date || '-';
 
-        // Cấp bậc, đơn vị
-        document.getElementById('rankAndUnit').textContent = grave.rank_and_unit || '-';
+        // Cấp bậc
+        if (grave.rank) {
+            document.getElementById('rankRow').style.display = 'block';
+            document.getElementById('rank').textContent = grave.rank;
+        } else {
+            document.getElementById('rankRow').style.display = 'none';
+        }
+
+        // Đơn vị
+        if (grave.unit) {
+            document.getElementById('unitRow').style.display = 'block';
+            document.getElementById('unit').textContent = grave.unit;
+        } else {
+            document.getElementById('unitRow').style.display = 'none';
+        }
 
         // Chức vụ (ẩn nếu không có)
         if (grave.position) {
@@ -974,115 +1008,6 @@
             document.getElementById('plotPosition').textContent = '-';
         }
 
-        // Mô tả vị trí
-        if (grave.location_description) {
-            document.getElementById('locationDescRow').style.display = 'block';
-            document.getElementById('locationDesc').textContent = grave.location_description;
-        } else {
-            document.getElementById('locationDescRow').style.display = 'none';
-        }
-
-        // Loại mộ
-        if (grave.grave_type) {
-            document.getElementById('graveTypeRow').style.display = 'block';
-            const graveTypeLabel = {
-                'đất': 'Lăng mộ đất',
-                'xi_măng': 'Lăng mộ xi măng',
-                'đá': 'Lăng mộ đá',
-                'gỗ': 'Lăng mộ gỗ',
-                'khác': 'Loại khác'
-            };
-            document.getElementById('graveType').textContent = graveTypeLabel[grave.grave_type] || grave.grave_type;
-        } else {
-            document.getElementById('graveTypeRow').style.display = 'none';
-        }
-
-        // Ngày an táng
-        if (grave.burial_date) {
-            document.getElementById('burialDateRow').style.display = 'block';
-            document.getElementById('burialDate').textContent = grave.burial_date;
-        } else {
-            document.getElementById('burialDateRow').style.display = 'none';
-        }
-
-        // === THÔNG TIN HÀNH CHÍNH ===
-        let hasAdminInfo = false;
-
-        if (grave.certificate_number) {
-            document.getElementById('certificateRow').style.display = 'block';
-            document.getElementById('certificateNumber').textContent = grave.certificate_number;
-            hasAdminInfo = true;
-        } else {
-            document.getElementById('certificateRow').style.display = 'none';
-        }
-
-        if (grave.decision_number) {
-            document.getElementById('decisionNumberRow').style.display = 'block';
-            document.getElementById('decisionNumber').textContent = grave.decision_number;
-            hasAdminInfo = true;
-        } else {
-            document.getElementById('decisionNumberRow').style.display = 'none';
-        }
-
-        if (grave.decision_date) {
-            document.getElementById('decisionDateRow').style.display = 'block';
-            document.getElementById('decisionDate').textContent = grave.decision_date;
-            hasAdminInfo = true;
-        } else {
-            document.getElementById('decisionDateRow').style.display = 'none';
-        }
-
-        document.getElementById('adminInfoSection').style.display = hasAdminInfo ? 'block' : 'none';
-
-        // === THÔNG TIN THÂN NHÂN ===
-        let hasFamilyInfo = false;
-
-        if (grave.next_of_kin) {
-            document.getElementById('nextOfKinRow').style.display = 'block';
-            document.getElementById('nextOfKin').textContent = grave.next_of_kin;
-            hasFamilyInfo = true;
-        } else {
-            document.getElementById('nextOfKinRow').style.display = 'none';
-        }
-
-        if (grave.deceased_relationship) {
-            document.getElementById('relationshipRow').style.display = 'block';
-            document.getElementById('relationship').textContent = grave.deceased_relationship;
-            hasFamilyInfo = true;
-        } else {
-            document.getElementById('relationshipRow').style.display = 'none';
-        }
-
-        if (grave.caretaker_name) {
-            document.getElementById('caretakerRow').style.display = 'block';
-            document.getElementById('caretaker').textContent = grave.caretaker_name;
-            hasFamilyInfo = true;
-        } else {
-            document.getElementById('caretakerRow').style.display = 'none';
-        }
-
-        // Thông tin liên hệ
-        if (grave.contact_info && (grave.contact_info.phone || grave.contact_info.email || grave.contact_info
-                .address)) {
-            document.getElementById('contactInfoRow').style.display = 'block';
-            let contactHtml = '<div class="space-y-1">';
-            if (grave.contact_info.phone) {
-                contactHtml += `<div><strong>SĐT:</strong> ${grave.contact_info.phone}</div>`;
-            }
-            if (grave.contact_info.email) {
-                contactHtml += `<div><strong>Email:</strong> ${grave.contact_info.email}</div>`;
-            }
-            if (grave.contact_info.address) {
-                contactHtml += `<div><strong>Địa chỉ:</strong> ${grave.contact_info.address}</div>`;
-            }
-            contactHtml += '</div>';
-            document.getElementById('contactInfo').innerHTML = contactHtml;
-            hasFamilyInfo = true;
-        } else {
-            document.getElementById('contactInfoRow').style.display = 'none';
-        }
-
-        document.getElementById('familyInfoSection').style.display = hasFamilyInfo ? 'block' : 'none';
 
         // === GHI CHÚ ===
         if (grave.notes) {

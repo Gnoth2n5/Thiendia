@@ -54,8 +54,8 @@ class GravesImportParser
         for ($row = 2; $row <= $highestRow; $row++) {
             $data = [];
 
-            // Đọc 13 cột (index 0-12)
-            for ($col = 0; $col <= 12; $col++) {
+            // Đọc tối đa 12 cột (index 0-11): các trường Excel + plot + 2 photo + notes
+            for ($col = 0; $col <= 11; $col++) {
                 $cellValue = $worksheet->getCellByColumnAndRow($col + 1, $row)->getValue();
                 $data[$col] = $cellValue;
             }
@@ -96,23 +96,22 @@ class GravesImportParser
         }
         $validatedData['deceased_full_name'] = $fullName;
 
-        // 1: Năm sinh
-        $birthYear = $data[1] ?? null;
-        if (! empty($birthYear)) {
-            $birthYear = (int) $birthYear;
-            if ($birthYear < 1900 || $birthYear > 2100) {
-                $errors[] = 'Năm sinh không hợp lệ (1900-2100)';
-            }
-            $validatedData['birth_year'] = $birthYear;
-        } else {
-            $validatedData['birth_year'] = null;
+        // 1: Nguyên Quán
+        $validatedData['hometown'] = ! empty($data[1]) ? trim((string) $data[1]) : null;
+
+        // 2: Ngày tháng năm sinh
+        $birthDate = $this->parseDate($data[2] ?? null);
+        if (! empty($data[2]) && $birthDate === null) {
+            $errors[] = 'Ngày sinh không đúng định dạng';
         }
+        $validatedData['deceased_birth_date'] = $birthDate;
 
-        // 2: Cấp bậc, chức vụ, đơn vị
-        $validatedData['rank_and_unit'] = ! empty($data[2]) ? trim((string) $data[2]) : null;
-
-        // 3: Chức vụ
-        $validatedData['position'] = ! empty($data[3]) ? trim((string) $data[3]) : null;
+        // 3: Ngày tháng năm nhập ngũ
+        $enlistmentDate = $this->parseDate($data[3] ?? null);
+        if (! empty($data[3]) && $enlistmentDate === null) {
+            $errors[] = 'Ngày nhập ngũ không đúng định dạng';
+        }
+        $validatedData['enlistment_date'] = $enlistmentDate;
 
         // 4: Ngày tháng năm hy sinh
         $deathDate = $this->parseDate($data[4] ?? null);
@@ -121,25 +120,20 @@ class GravesImportParser
         }
         $validatedData['deceased_death_date'] = $deathDate;
 
-        // 5: Số bằng TQGC
-        $validatedData['certificate_number'] = ! empty($data[5]) ? trim((string) $data[5]) : null;
+        // 5: Cấp bậc
+        $validatedData['rank'] = ! empty($data[5]) ? trim((string) $data[5]) : null;
 
-        // 6: Số QĐ, ngày, tháng, năm cấp
-        $decisionData = $this->parseDecisionField($data[6] ?? null);
-        $validatedData['decision_number'] = $decisionData['number'];
-        $validatedData['decision_date'] = $decisionData['date'];
+        // 6: Chức vụ
+        $validatedData['position'] = ! empty($data[6]) ? trim((string) $data[6]) : null;
 
-        // 7: Quan hệ với liệt sỹ
-        $validatedData['deceased_relationship'] = ! empty($data[7]) ? trim((string) $data[7]) : null;
+        // 7: Đơn vị
+        $validatedData['unit'] = ! empty($data[7]) ? trim((string) $data[7]) : null;
 
-        // 8: Thân nhân
-        $validatedData['next_of_kin'] = ! empty($data[8]) ? trim((string) $data[8]) : null;
+        // 8: Ghi chú
+        $validatedData['notes'] = ! empty($data[8]) ? trim((string) $data[8]) : null;
 
-        // 9: Ghi chú
-        $validatedData['notes'] = ! empty($data[9]) ? trim((string) $data[9]) : null;
-
-        // 10: Lô - tìm plot_id
-        $plotCode = ! empty($data[10]) ? trim((string) $data[10]) : null;
+        // 9: Lô - tìm plot_id
+        $plotCode = ! empty($data[9]) ? trim((string) $data[9]) : null;
         $plotId = null;
         if ($plotCode) {
             $plot = CemeteryPlot::where('cemetery_id', $this->cemeteryId)
@@ -158,8 +152,8 @@ class GravesImportParser
         }
         $validatedData['plot_id'] = $plotId;
 
-        // 11: Ảnh liệt sỹ - Tên file hoặc path hoặc URL
-        $deceasedPhoto = ! empty($data[11]) ? trim((string) $data[11]) : null;
+        // 10: Ảnh liệt sỹ - Tên file hoặc path hoặc URL
+        $deceasedPhoto = ! empty($data[10]) ? trim((string) $data[10]) : null;
         if ($deceasedPhoto) {
             if ($this->isValidUrl($deceasedPhoto)) {
                 // URL đầy đủ - giữ nguyên
@@ -180,10 +174,10 @@ class GravesImportParser
             $validatedData['deceased_photo'] = null;
         }
 
-        // 12: Ảnh mộ - Nhiều tên file/path/URLs cách nhau bằng dấu phẩy
+        // 11: Ảnh mộ - Nhiều tên file/path/URLs cách nhau bằng dấu phẩy
         $gravePhotos = [];
-        if (! empty($data[12])) {
-            $photoItems = array_map('trim', explode(',', (string) $data[12]));
+        if (! empty($data[11])) {
+            $photoItems = array_map('trim', explode(',', (string) $data[11]));
             foreach ($photoItems as $item) {
                 if (! empty($item)) {
                     if ($this->isValidUrl($item)) {
@@ -208,8 +202,6 @@ class GravesImportParser
 
         // Thêm các trường mặc định
         $validatedData['cemetery_id'] = $this->cemeteryId;
-        $validatedData['grave_type'] = 'đá';
-        $validatedData['deceased_gender'] = 'nam';
 
         return [
             'row_number' => $rowNumber,

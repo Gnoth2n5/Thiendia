@@ -7,6 +7,7 @@ use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ViewAction;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -17,6 +18,37 @@ class GravesTable
     {
         return $table
             ->columns([
+                TextColumn::make('index')
+                    ->label('STT')
+                    ->getStateUsing(function ($record, $livewire) {
+                        $records = $livewire->getTableRecords();
+
+                        if ($records instanceof \Illuminate\Contracts\Pagination\Paginator) {
+                            $firstItem = $records->firstItem();
+                            if ($firstItem !== null) {
+                                $currentIndex = 0;
+                                foreach ($records as $idx => $item) {
+                                    if ($item->id === $record->id) {
+                                        return $firstItem + $currentIndex;
+                                    }
+                                    $currentIndex++;
+                                }
+                            }
+                        }
+
+                        // Fallback: tìm index trong collection
+                        $index = 0;
+                        foreach ($records as $idx => $item) {
+                            if ($item->id === $record->id) {
+                                return $idx + 1;
+                            }
+                        }
+
+                        return 1;
+                    })
+                    ->alignCenter()
+                    ->sortable(false),
+
                 TextColumn::make('deceased_full_name')
                     ->label('Họ tên liệt sỹ')
                     ->sortable()
@@ -24,66 +56,67 @@ class GravesTable
                     ->limit(30)
                     ->placeholder('Chưa có thông tin'),
 
-                TextColumn::make('birth_year')
-                    ->label('Năm sinh')
+                TextColumn::make('hometown')
+                    ->label('Nguyên Quán')
                     ->sortable()
-                    ->alignCenter()
+                    ->searchable()
+                    ->limit(30)
                     ->placeholder('—'),
 
-                TextColumn::make('rank_and_unit')
-                    ->label('Cấp bậc, đơn vị')
+                TextColumn::make('deceased_birth_date')
+                    ->label('Ngày tháng năm sinh')
+                    ->date('d/m/Y')
                     ->sortable()
-                    ->searchable()
-                    ->limit(35)
-                    ->placeholder('—')
-                    ->toggleable(),
+                    ->placeholder('—'),
 
-                TextColumn::make('position')
-                    ->label('Chức vụ')
+                TextColumn::make('enlistment_date')
+                    ->label('Ngày nhập ngũ')
+                    ->date('d/m/Y')
                     ->sortable()
-                    ->searchable()
-                    ->limit(25)
-                    ->placeholder('—')
-                    ->toggleable(),
+                    ->placeholder('—'),
 
                 TextColumn::make('deceased_death_date')
                     ->label('Ngày hy sinh')
                     ->date('d/m/Y')
                     ->sortable(),
 
-                TextColumn::make('certificate_number')
-                    ->label('Số bằng TQGC')
-                    ->sortable()
-                    ->searchable()
-                    ->placeholder('—')
-                    ->toggleable(isToggledHiddenByDefault: true),
-
-                TextColumn::make('decision_number')
-                    ->label('Số QĐ')
-                    ->sortable()
-                    ->searchable()
-                    ->placeholder('—')
-                    ->toggleable(isToggledHiddenByDefault: true),
-
-                TextColumn::make('next_of_kin')
-                    ->label('Thân nhân')
+                TextColumn::make('rank')
+                    ->label('Cấp bậc')
                     ->sortable()
                     ->searchable()
                     ->limit(25)
-                    ->placeholder('—')
-                    ->toggleable(),
+                    ->placeholder('—'),
 
-                TextColumn::make('cemetery.name')
-                    ->label('Nghĩa trang')
+                TextColumn::make('position')
+                    ->label('Chức vụ')
                     ->sortable()
                     ->searchable()
-                    ->limit(30),
+                    ->limit(25)
+                    ->placeholder('—'),
 
-                TextColumn::make('created_at')
-                    ->label('Ngày tạo')
-                    ->dateTime('d/m/Y H:i')
+                TextColumn::make('unit')
+                    ->label('Đơn vị')
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->searchable()
+                    ->limit(35)
+                    ->placeholder('—'),
+
+                ImageColumn::make('deceased_photo')
+                    ->label('Ảnh')
+                    ->disk('public')
+                    ->square()
+                    ->size(50)
+                    ->defaultImageUrl(url('/images/default-avatar.png')),
+
+                TextColumn::make('notes')
+                    ->label('Ghi chú')
+                    ->limit(50)
+                    ->tooltip(function (TextColumn $column): ?string {
+                        $state = $column->getState();
+
+                        return strlen($state) > 50 ? $state : null;
+                    })
+                    ->placeholder('—'),
             ])
             ->filters([
                 SelectFilter::make('cemetery_id')

@@ -89,19 +89,6 @@
 
                     <div class="space-y-4">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <p class="text-sm text-base-content/60 mb-1">Loại mộ</p>
-                                <p class="font-medium">{{ $grave->grave_type_label }}</p>
-                            </div>
-
-                            @if ($grave->burial_date)
-                                <div>
-                                    <p class="text-sm mb-1" style="color: #2b2b2b; opacity: 0.6;">Ngày an táng</p>
-                                    <p class="font-medium" style="color: #2b2b2b;">
-                                        {{ $grave->burial_date->format('d/m/Y') }}</p>
-                                </div>
-                            @endif
-
                             @if ($grave->plot)
                                 <div>
                                     <p class="text-sm text-base-content/60 mb-1">Lô mộ</p>
@@ -333,9 +320,15 @@
                                     <div class="flex-1">
                                         <p class="font-bold text-2xl mb-2">{{ $grave->deceased_full_name }}</p>
 
-                                        @if ($grave->rank_and_unit)
-                                            <p class="text-base text-primary font-semibold mb-2">
-                                                {{ $grave->rank_and_unit }}
+                                        @if ($grave->rank)
+                                            <p class="text-base text-primary font-semibold mb-1">
+                                                Cấp bậc: {{ $grave->rank }}
+                                            </p>
+                                        @endif
+
+                                        @if ($grave->unit)
+                                            <p class="text-base text-primary font-semibold mb-1">
+                                                Đơn vị: {{ $grave->unit }}
                                             </p>
                                         @endif
 
@@ -345,20 +338,14 @@
                                             </p>
                                         @endif
 
-                                        @if ($grave->deceased_gender)
-                                            <div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium mb-2"
-                                                style="background-color: #fafaf8;">
-                                                {{ ucfirst($grave->deceased_gender) }}
-                                            </div>
-                                        @endif
                                     </div>
                                 </div>
 
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    @if ($grave->birth_year)
+                                    @if ($grave->hometown)
                                         <div class="bg-white/50 rounded-lg p-3">
-                                            <p class="text-xs text-base-content/60 mb-1">Năm sinh</p>
-                                            <p class="font-bold text-lg">{{ $grave->birth_year }}</p>
+                                            <p class="text-xs text-base-content/60 mb-1">Nguyên Quán</p>
+                                            <p class="font-bold text-lg">{{ $grave->hometown }}</p>
                                         </div>
                                     @endif
 
@@ -371,50 +358,24 @@
                                         </div>
                                     @endif
 
+                                    @if ($grave->enlistment_date)
+                                        <div class="rounded-lg p-3" style="background-color: #fafaf8;">
+                                            <p class="text-xs mb-1" style="color: #2b2b2b; opacity: 0.6;">Ngày nhập ngũ</p>
+                                            <p class="font-bold text-lg" style="color: #2b2b2b;">
+                                                {{ $grave->enlistment_date->format('d/m/Y') }}
+                                            </p>
+                                        </div>
+                                    @endif
+
                                     @if ($grave->deceased_death_date)
                                         <div class="rounded-lg p-3" style="background-color: #fafaf8;">
-                                            <p class="text-xs mb-1" style="color: #2b2b2b; opacity: 0.6;">Ngày mất</p>
+                                            <p class="text-xs mb-1" style="color: #2b2b2b; opacity: 0.6;">Ngày hy sinh</p>
                                             <p class="font-bold text-lg" style="color: #2b2b2b;">
                                                 {{ $grave->deceased_death_date->format('d/m/Y') }}
                                             </p>
                                         </div>
                                     @endif
 
-                                    @if ($grave->certificate_number)
-                                        <div class="bg-white/50 rounded-lg p-3">
-                                            <p class="text-xs text-base-content/60 mb-1">Số bằng TQGC</p>
-                                            <p class="font-bold text-base">{{ $grave->certificate_number }}</p>
-                                        </div>
-                                    @endif
-
-                                    @if ($grave->decision_number)
-                                        <div class="bg-white/50 rounded-lg p-3">
-                                            <p class="text-xs text-base-content/60 mb-1">Số QĐ</p>
-                                            <p class="font-bold text-base">{{ $grave->decision_number }}</p>
-                                        </div>
-                                    @endif
-
-                                    @if ($grave->decision_date)
-                                        <div class="bg-white/50 rounded-lg p-3">
-                                            <p class="text-xs text-base-content/60 mb-1">Ngày cấp QĐ</p>
-                                            <p class="font-bold text-base">{{ $grave->decision_date->format('d/m/Y') }}
-                                            </p>
-                                        </div>
-                                    @endif
-
-                                    @if ($grave->next_of_kin)
-                                        <div class="bg-white/50 rounded-lg p-3">
-                                            <p class="text-xs text-base-content/60 mb-1">Thân nhân</p>
-                                            <p class="font-bold text-base">{{ $grave->next_of_kin }}</p>
-                                        </div>
-                                    @endif
-
-                                    @if ($grave->deceased_relationship)
-                                        <div class="bg-white/50 rounded-lg p-3">
-                                            <p class="text-xs text-base-content/60 mb-1">Quan hệ</p>
-                                            <p class="font-bold text-base">{{ $grave->deceased_relationship }}</p>
-                                        </div>
-                                    @endif
                                 </div>
 
                                 @if ($grave->deceased_birth_date && $grave->deceased_death_date)
@@ -434,28 +395,11 @@
                 </div>
             @endif
 
-            <!-- Location & Notes -->
-            @if ($grave->location_description || $grave->notes)
+            <!-- Notes -->
+            @if ($grave->notes)
                 <div class="card border" style="background-color: #fafaf8; border-color: #d4d0c8; box-shadow: none;">
                     <div class="card-body">
-                        <h2 class="card-title text-xl mb-4" style="color: #2b2b2b;">Thông tin bổ sung</h2>
-
-                        @if ($grave->location_description)
-                            <div class="mb-4">
-                                <div class="flex items-center gap-2 mb-2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                        stroke-width="2" stroke="currentColor" class="h-5 w-5" style="color: #3b82f6;">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
-                                    </svg>
-                                    <p class="font-medium" style="color: #2b2b2b;">Vị trí</p>
-                                </div>
-                                <p class="ml-7" style="color: #2b2b2b; opacity: 0.8;">
-                                    {{ $grave->location_description }}</p>
-                            </div>
-                        @endif
+                        <h2 class="card-title text-xl mb-4" style="color: #2b2b2b;">Ghi chú</h2>
 
                         @if ($grave->notes)
                             <div>
@@ -474,46 +418,6 @@
                 </div>
             @endif
 
-            <!-- Map Location -->
-            @if ($grave->latitude && $grave->longitude)
-                <div class="card border" style="background-color: #fafaf8; border-color: #d4d0c8; box-shadow: none;">
-                    <div class="card-body">
-                        <h2 class="card-title text-xl mb-4" style="color: #2b2b2b;">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                                stroke="currentColor" class="h-6 w-6" style="color: #3b82f6;">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M9 6.75V15m6-6v8.25m.503 3.498 4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 0 0-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0Z" />
-                            </svg>
-                            Vị trí trên bản đồ
-                        </h2>
-
-                        <div id="grave-map" class="w-full rounded-lg relative z-10" style="height: 400px;">
-                        </div>
-
-                        <div class="mt-4 flex flex-wrap gap-4 text-sm" style="color: #2b2b2b; opacity: 0.7;">
-                            <div class="flex items-center gap-2">
-                                <span class="font-medium">Vĩ độ:</span>
-                                <span class="font-mono">{{ $grave->latitude }}</span>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <span class="font-medium">Kinh độ:</span>
-                                <span class="font-mono">{{ $grave->longitude }}</span>
-                            </div>
-                            <a href="https://www.google.com/maps?q={{ $grave->latitude }},{{ $grave->longitude }}"
-                                target="_blank" class="inline-flex items-center gap-1 transition-colors"
-                                style="color: #3b82f6;" onmouseover="this.style.color='#1e40af'"
-                                onmouseout="this.style.color='#3b82f6'">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                    stroke-width="2" stroke="currentColor" class="h-4 w-4">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
-                                </svg>
-                                Mở trong Google Maps
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            @endif
 
             <!-- Grave Photos -->
             @if ($grave->grave_photos && count($grave->grave_photos) > 0)
@@ -606,66 +510,6 @@
                 </div>
             </div>
 
-            <!-- Contact Info -->
-            @if ($grave->contact_info && count(array_filter($grave->contact_info)) > 0)
-                <div class="card border" style="background-color: #fafaf8; border-color: #d4d0c8; box-shadow: none;">
-                    <div class="card-body">
-                        <h3 class="font-bold text-lg mb-4" style="color: #2b2b2b;">Thông tin liên hệ</h3>
-
-                        <div class="space-y-3">
-                            @foreach ($grave->contact_info as $key => $value)
-                                @if ($value)
-                                    <div class="flex items-start gap-2">
-                                        @if ($key === 'phone')
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                stroke-width="2" stroke="currentColor" class="h-5 w-5 shrink-0"
-                                                style="color: #3b82f6;">
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" />
-                                            </svg>
-                                        @elseif($key === 'email')
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                stroke-width="2" stroke="currentColor" class="h-5 w-5 shrink-0"
-                                                style="color: #3b82f6;">
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
-                                            </svg>
-                                        @elseif($key === 'address')
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                stroke-width="2" stroke="currentColor" class="h-5 w-5 shrink-0"
-                                                style="color: #3b82f6;">
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
-                                            </svg>
-                                        @else
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                stroke-width="2" stroke="currentColor" class="h-5 w-5 shrink-0"
-                                                style="color: #3b82f6;">
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
-                                            </svg>
-                                        @endif
-                                        <div class="flex-1">
-                                            <p class="text-xs" style="color: #2b2b2b; opacity: 0.6;">
-                                                {{ match ($key) {
-                                                    'phone' => 'Số điện thoại',
-                                                    'email' => 'Email',
-                                                    'address' => 'Địa chỉ',
-                                                    default => ucfirst($key),
-                                                } }}
-                                            </p>
-                                            <p class="text-sm font-medium" style="color: #2b2b2b;">{{ $value }}
-                                            </p>
-                                        </div>
-                                    </div>
-                                @endif
-                            @endforeach
-                        </div>
-                    </div>
-                </div>
-            @endif
 
             <!-- Recent Tributes -->
             <div class="card border" style="background-color: #fafaf8; border-color: #d4d0c8; box-shadow: none;">
@@ -932,68 +776,6 @@
             }
         });
 
-        // Initialize map if coordinates exist
-        @if ($grave->latitude && $grave->longitude)
-            document.addEventListener('DOMContentLoaded', function() {
-                // Add CSS to fix z-index issues
-                const style = document.createElement('style');
-                style.textContent = `
-                #grave-map {
-                    position: relative !important;
-                    z-index: 1 !important;
-                }
-                #grave-map .leaflet-container {
-                    position: relative !important;
-                    z-index: 1 !important;
-                }
-                #grave-map .leaflet-control-container {
-                    z-index: 10 !important;
-                }
-                #grave-map .leaflet-popup {
-                    z-index: 1000 !important;
-                }
-                #grave-map .leaflet-popup-content-wrapper {
-                    z-index: 1000 !important;
-                }
-            `;
-                document.head.appendChild(style);
-
-                // Create map
-                const graveMap = L.map('grave-map', {
-                    zoomControl: true,
-                    attributionControl: true,
-                    scrollWheelZoom: true,
-                    doubleClickZoom: true,
-                    boxZoom: false,
-                    dragging: true,
-                    keyboard: true,
-                    touchZoom: true
-                }).setView([{{ $grave->latitude }}, {{ $grave->longitude }}], 15);
-
-                // Add OpenStreetMap tiles
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-                    maxZoom: 19
-                }).addTo(graveMap);
-
-                // Add marker for grave location
-                const marker = L.marker([{{ $grave->latitude }}, {{ $grave->longitude }}]).addTo(graveMap);
-
-                // Add popup with grave information
-                marker.bindPopup(`
-                <div class="text-center">
-                    <p class="font-bold text-lg mb-2">{{ $grave->deceased_full_name }}</p>
-                    <p class="text-sm mb-1">{{ $grave->cemetery->name }}</p>
-                    @if ($grave->location_description)
-                        <p class="text-xs text-gray-600 mt-2">{{ $grave->location_description }}</p>
-                    @endif
-                </div>
-            `).openPopup();
-
-                // Ensure map doesn't overflow container
-                graveMap.invalidateSize();
-            });
-        @endif
     </script>
 
     <!-- Tribute Modal -->
