@@ -232,6 +232,14 @@ class GravesImportParser
         // Thêm các trường mặc định
         $validatedData['cemetery_id'] = $this->cemeteryId;
 
+        // Kiểm tra duplicate: Họ tên + Ngày sinh + Ngày hy sinh
+        if (! empty($fullName) && ($birthDate || $deathDate)) {
+            $duplicateError = $this->checkDuplicate($fullName, $birthDate, $deathDate, $rowNumber);
+            if ($duplicateError) {
+                $errors[] = $duplicateError;
+            }
+        }
+
         return [
             'row_number' => $rowNumber,
             'data' => $data,
@@ -282,6 +290,62 @@ class GravesImportParser
         }
 
         return true;
+    }
+
+    /**
+     * Kiểm tra duplicate dựa trên 3 cột: Họ tên, Ngày sinh, Ngày hy sinh
+     */
+    protected function checkDuplicate(string $fullName, ?string $birthDate, ?string $deathDate, int $currentRowNumber): ?string
+    {
+        $normalizedName = mb_strtolower(trim($fullName));
+
+        // Kiểm tra duplicate trong cùng file (các rows đã parse trước đó)
+        foreach ($this->rows as $parsedRow) {
+            if ($parsedRow['row_number'] >= $currentRowNumber) {
+                continue; // Chỉ kiểm tra các row trước đó
+            }
+
+            $existingData = $parsedRow['validated_data'] ?? [];
+            $existingName = mb_strtolower(trim($existingData['deceased_full_name'] ?? ''));
+            $existingBirth = $existingData['deceased_birth_date'] ?? null;
+            $existingDeath = $existingData['deceased_death_date'] ?? null;
+
+            // So sánh 3 trường: Họ tên phải trùng, ngày sinh và ngày hy sinh phải cùng null hoặc cùng giá trị
+            if ($normalizedName === $existingName) {
+                $birthMatch = ($birthDate === null && $existingBirth === null) || ($birthDate === $existingBirth);
+                $deathMatch = ($deathDate === null && $existingDeath === null) || ($deathDate === $existingDeath);
+
+                if ($birthMatch && $deathMatch) {
+                    return "Dữ liệu đã tồn tại trong file (dòng {$parsedRow['row_number']})";
+                }
+            }
+        }
+
+        // Kiểm tra duplicate trong database
+        $query = Grave::where('cemetery_id', $this->cemeteryId)
+            ->whereRaw('LOWER(TRIM(deceased_full_name)) = ?', [$normalizedName]);
+
+        // So sánh ngày sinh: cùng null hoặc cùng giá trị
+        if ($birthDate) {
+            $query->where('deceased_birth_date', $birthDate);
+        } else {
+            $query->whereNull('deceased_birth_date');
+        }
+
+        // So sánh ngày hy sinh: cùng null hoặc cùng giá trị
+        if ($deathDate) {
+            $query->where('deceased_death_date', $deathDate);
+        } else {
+            $query->whereNull('deceased_death_date');
+        }
+
+        $existing = $query->first();
+
+        if ($existing) {
+            return 'Dữ liệu đã tồn tại trong hệ thống';
+        }
+
+        return null;
     }
 
     /**
