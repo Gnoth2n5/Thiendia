@@ -72,8 +72,8 @@
                 <!-- Logo Section -->
                 <div class="flex items-center gap-4">
                     <a href="{{ route('home') }}" class="flex items-center gap-3">
-                        <div class="p-2 rounded-lg" style="background-color: rgba(245, 243, 231, 0.2);">
-                            <img src="{{ asset('images/logo1.png') }}" alt="Logo" class="w-10 h-10">
+                        <div class="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center" style="background-color: #026acb;">
+                            <img src="{{ asset('images/logo1.png') }}" alt="Logo" class="w-8 h-8 object-contain">
                         </div>
                         <div class="hidden sm:block text-white">
                             <div class="text-lg font-bold">Hệ thống Tra cứu liệt sĩ</div>
@@ -301,8 +301,8 @@
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                 <div class="col-span-1 md:col-span-2">
                     <div class="flex items-center gap-3 mb-4">
-                        <div class="rounded-lg w-12">
-                            <img src="{{ asset('images/logo.png') }}" alt="Logo" class="w-10 h-10">
+                        <div class="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center" style="background-color: #026acb;">
+                            <img src="{{ asset('images/logo1.png') }}" alt="Logo" class="w-8 h-8 object-contain">
                         </div>
                         <div>
                             <h3 class="text-lg font-bold">Hệ thống Tra cứu liệt sĩ tỉnh Ninh Bình</h3>
