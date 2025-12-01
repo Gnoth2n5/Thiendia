@@ -320,6 +320,35 @@ class GravesImportParser
 
             $dateString = trim((string) $date);
 
+            // Thử parse với format chỉ có năm (ví dụ: 1952, 1954)
+            if (preg_match('/^(\d{4})$/', $dateString, $matches)) {
+                $year = (int) $matches[1];
+                if ($year >= 1900 && $year <= 2100) {
+                    // Lưu ngày 01/01/năm
+                    return Carbon::createFromDate($year, 1, 1)->format('Y-m-d');
+                }
+            }
+
+            // Thử parse với format năm-tháng (ví dụ: 1952-02, 02/1952, 1952/02)
+            if (preg_match('/^(\d{4})[-\/](\d{1,2})$/', $dateString, $matches)) {
+                $year = (int) $matches[1];
+                $month = (int) $matches[2];
+                if ($month >= 1 && $month <= 12 && $year >= 1900 && $year <= 2100) {
+                    // Lưu ngày 01/tháng/năm
+                    return Carbon::createFromDate($year, $month, 1)->format('Y-m-d');
+                }
+            }
+
+            // Thử parse với format tháng/năm (ví dụ: 02/1952, 2/1952)
+            if (preg_match('/^(\d{1,2})[-\/](\d{4})$/', $dateString, $matches)) {
+                $month = (int) $matches[1];
+                $year = (int) $matches[2];
+                if ($month >= 1 && $month <= 12 && $year >= 1900 && $year <= 2100) {
+                    // Lưu ngày 01/tháng/năm
+                    return Carbon::createFromDate($year, $month, 1)->format('Y-m-d');
+                }
+            }
+
             // Thử parse với format dd/mm/yyyy trước (format phổ biến ở Việt Nam)
             if (preg_match('/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/', $dateString, $matches)) {
                 $day = (int) $matches[1];
