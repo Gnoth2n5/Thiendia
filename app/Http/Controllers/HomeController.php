@@ -45,10 +45,7 @@ class HomeController extends Controller
 
         // Lọc theo năm sinh
         if ($request->filled('birth_year')) {
-            $query->where(function ($q) use ($request) {
-                $q->where('birth_year', $request->birth_year)
-                    ->orWhereYear('deceased_birth_date', $request->birth_year);
-            });
+            $query->whereYear('deceased_birth_date', $request->birth_year);
         }
 
         // Lọc theo năm hy sinh

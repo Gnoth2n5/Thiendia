@@ -485,7 +485,7 @@
 
                 <!-- Pagination -->
                 <div class="flex justify-center">
-                    {{ $graves->appends(request()->query())->links() }}
+                    {{ $graves->withQueryString()->links() }}
                 </div>
             @else
                 <div class="card shadow-lg border text-center py-16"
