@@ -392,6 +392,28 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Cemetery Map Card -->
+            <div class="card border" style="background-color: #fafaf8; border-color: #d4d0c8; box-shadow: none;">
+                <div class="card-body">
+                    <h3 class="font-bold text-lg mb-4" style="color: #2b2b2b;">Sơ đồ nghĩa trang</h3>
+                    <p class="text-sm mb-4" style="color: #2b2b2b; opacity: 0.7;">
+                        Xem toàn bộ sơ đồ lưới lô của nghĩa trang
+                    </p>
+                    <a href="{{ route('cemetery.map', ['id' => $grave->cemetery_id]) }}"
+                        class="btn btn-primary w-full gap-2"
+                        style="background-color: #3b82f6; border-color: #1e40af;"
+                        onmouseover="this.style.backgroundColor='#1e40af'"
+                        onmouseout="this.style.backgroundColor='#3b82f6'">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                            stroke="currentColor" class="h-5 w-5">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z" />
+                        </svg>
+                        Xem sơ đồ nghĩa trang
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 
