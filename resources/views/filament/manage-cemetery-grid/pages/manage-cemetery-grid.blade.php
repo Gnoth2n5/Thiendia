@@ -27,7 +27,18 @@
         @if($plots && count($plots) > 0)
             <x-filament::section>
                 <x-slot name="heading">
-                    Sơ đồ lưới lô mộ
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                        <span>Sơ đồ lưới lô mộ</span>
+                        <button
+                            type="button"
+                            wire:click="toggleEditMode"
+                            style="padding: 6px 12px; background-color: {{ $isEditMode ? '#ef4444' : '#3b82f6' }}; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500;"
+                            onmouseover="this.style.opacity='0.9'"
+                            onmouseout="this.style.opacity='1'"
+                        >
+                            {{ $isEditMode ? 'Hủy chỉnh sửa' : 'Chỉnh sửa lưới' }}
+                        </button>
+                    </div>
                 </x-slot>
 
                 <x-slot name="description">
@@ -51,6 +62,58 @@
                     </div>
                 </x-slot>
 
+                <!-- Instruction Box khi ở Edit Mode -->
+                <div 
+                    x-show="isEditMode"
+                    x-transition
+                    style="margin-bottom: 16px; padding: 12px 16px; background-color: #fef3c7; border: 1px solid #fbbf24; border-radius: 8px; display: none;"
+                >
+                    <div style="display: flex; align-items: start; gap: 12px;">
+                        <div style="width: 20px; height: 20px; flex-shrink: 0; margin-top: 2px;">
+                            <svg style="width: 100%; height: 100%; color: #f59e0b;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <div style="flex: 1;">
+                            <div style="font-weight: 600; color: #92400e; margin-bottom: 4px;">Chế độ chỉnh sửa lưới</div>
+                            <div style="font-size: 14px; color: #78350f;">Click vào label hàng (A, B, C...) hoặc cột (1, 2, 3...) để chèn hoặc xóa. Sau khi hoàn tất, nhấn nút "Lưu thay đổi" để áp dụng.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Save/Cancel Buttons -->
+                <div 
+                    x-show="isEditMode && hasPendingChanges"
+                    x-transition
+                    style="margin-bottom: 16px; padding: 12px 16px; background-color: #dbeafe; border: 1px solid #3b82f6; border-radius: 8px; display: none;"
+                >
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                        <div style="font-weight: 500; color: #1e40af;">
+                            Có <span x-text="pendingChanges.insertedRows.length + pendingChanges.insertedColumns.length + pendingChanges.deletedRows.length + pendingChanges.deletedColumns.length"></span> thay đổi chờ lưu
+                        </div>
+                        <div style="display: flex; gap: 8px;">
+                            <button
+                                type="button"
+                                @click="cancelChanges()"
+                                style="padding: 8px 16px; background-color: #6b7280; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500;"
+                                onmouseover="this.style.backgroundColor='#4b5563'"
+                                onmouseout="this.style.backgroundColor='#6b7280'"
+                            >
+                                Hủy
+                            </button>
+                            <button
+                                type="button"
+                                @click="saveChanges()"
+                                style="padding: 8px 16px; background-color: #10b981; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500;"
+                                onmouseover="this.style.backgroundColor='#059669'"
+                                onmouseout="this.style.backgroundColor='#10b981'"
+                            >
+                                Lưu thay đổi
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
                 <div
                     wire:key="cemetery-grid-{{ $cemetery->id }}-{{ $gridVersion }}-{{ now()->timestamp }}"
                     x-data="{
@@ -62,6 +125,13 @@
                         maxCol: @js($gridDimensions['columns'] ?? 0),
                         isRendering: false,
                         renderError: null,
+                        isEditMode: @js($isEditMode ?? false),
+                        pendingChanges: {
+                            insertedRows: [],
+                            insertedColumns: [],
+                            deletedRows: [],
+                            deletedColumns: []
+                        },
                         selectedRowForAction: null,
                         selectedColumnForAction: null,
                         showRowActionModal: false,
@@ -73,11 +143,23 @@
                             direction: 'after'
                         },
                         
+                        get hasPendingChanges() {
+                            return this.pendingChanges.insertedRows.length > 0 ||
+                                   this.pendingChanges.insertedColumns.length > 0 ||
+                                   this.pendingChanges.deletedRows.length > 0 ||
+                                   this.pendingChanges.deletedColumns.length > 0;
+                        },
+                        
                         init() {
                             try {
                                 console.log('[CemeteryGrid] Initialized with', this.plots.length, 'plots');
                                 this.buildPlotMap();
                                 this.setupLivewireListeners();
+                                
+                                // Sync isEditMode từ backend
+                                this.$watch('$wire.isEditMode', (value) => {
+                                    this.isEditMode = value;
+                                });
                             } catch (error) {
                                 console.error('[CemeteryGrid] Init error:', error);
                                 this.renderError = error.message;
@@ -95,6 +177,10 @@
                         setupLivewireListeners() {
                             document.addEventListener('livewire:update', () => {
                                 this.scheduleRender();
+                                // Sync isEditMode
+                                if ($wire && $wire.isEditMode !== undefined) {
+                                    this.isEditMode = $wire.isEditMode;
+                                }
                             });
                         },
                         
@@ -247,13 +333,17 @@
                                 if (!this.insertForm.position || !this.insertForm.count) {
                                     return;
                                 }
-                                $wire.insertRows(this.insertForm.position, this.insertForm.count, this.insertForm.direction).then(() => {
-                                    // Cập nhật lại plots sau khi insert
-                                    this.plots = $wire.plots || this.plots;
-                                    this.maxRow = $wire.gridDimensions?.rows || this.maxRow;
-                                    this.maxCol = $wire.gridDimensions?.columns || this.maxCol;
-                                    this.buildPlotMap();
+                                
+                                // Thêm vào pendingChanges
+                                this.pendingChanges.insertedRows.push({
+                                    position: this.insertForm.position,
+                                    count: this.insertForm.count,
+                                    direction: this.insertForm.direction
                                 });
+                                
+                                // Cập nhật trong memory
+                                this.applyRowInsertInMemory(this.insertForm.position, this.insertForm.count, this.insertForm.direction);
+                                
                                 this.showInsertRowModal = false;
                             } catch (error) {
                                 console.error('[CemeteryGrid] Error inserting row:', error);
@@ -266,13 +356,17 @@
                                 if (!this.insertForm.position || !this.insertForm.count) {
                                     return;
                                 }
-                                $wire.insertColumns(this.insertForm.position, this.insertForm.count, this.insertForm.direction).then(() => {
-                                    // Cập nhật lại plots sau khi insert
-                                    this.plots = $wire.plots || this.plots;
-                                    this.maxRow = $wire.gridDimensions?.rows || this.maxRow;
-                                    this.maxCol = $wire.gridDimensions?.columns || this.maxCol;
-                                    this.buildPlotMap();
+                                
+                                // Thêm vào pendingChanges
+                                this.pendingChanges.insertedColumns.push({
+                                    position: this.insertForm.position,
+                                    count: this.insertForm.count,
+                                    direction: this.insertForm.direction
                                 });
+                                
+                                // Cập nhật trong memory
+                                this.applyColumnInsertInMemory(this.insertForm.position, this.insertForm.count, this.insertForm.direction);
+                                
                                 this.showInsertColumnModal = false;
                             } catch (error) {
                                 console.error('[CemeteryGrid] Error inserting column:', error);
@@ -281,39 +375,195 @@
                         },
                         
                         deleteRow(row) {
-                            if (!confirm('Bạn có chắc muốn xóa hàng ' + String.fromCharCode(64 + row) + '? Hành động này không thể hoàn tác.')) {
+                            if (!confirm('Bạn có chắc muốn xóa hàng ' + String.fromCharCode(64 + row) + '?')) {
                                 return;
                             }
-                            try {
-                                $wire.deleteRow(row).then(() => {
-                                    // Cập nhật lại plots sau khi delete
-                                    this.plots = $wire.plots || this.plots;
-                                    this.maxRow = $wire.gridDimensions?.rows || this.maxRow;
-                                    this.maxCol = $wire.gridDimensions?.columns || this.maxCol;
-                                    this.buildPlotMap();
-                                });
-                            } catch (error) {
-                                console.error('[CemeteryGrid] Error deleting row:', error);
-                                this.renderError = 'Không thể xóa hàng. Vui lòng thử lại.';
+                            
+                            // Kiểm tra có thể xóa không
+                            if (!this.canDeleteRow(row)) {
+                                alert('Không thể xóa hàng này vì có lô đang được sử dụng.');
+                                return;
                             }
+                            
+                            // Thêm vào pendingChanges
+                            if (!this.pendingChanges.deletedRows.includes(row)) {
+                                this.pendingChanges.deletedRows.push(row);
+                            }
+                            
+                            // Cập nhật trong memory
+                            this.applyRowDeleteInMemory(row);
+                            this.closeRowActionModal();
                         },
                         
                         deleteColumn(col) {
-                            if (!confirm('Bạn có chắc muốn xóa cột ' + col + '? Hành động này không thể hoàn tác.')) {
+                            if (!confirm('Bạn có chắc muốn xóa cột ' + col + '?')) {
                                 return;
                             }
-                            try {
-                                $wire.deleteColumn(col).then(() => {
-                                    // Cập nhật lại plots sau khi delete
-                                    this.plots = $wire.plots || this.plots;
-                                    this.maxRow = $wire.gridDimensions?.rows || this.maxRow;
-                                    this.maxCol = $wire.gridDimensions?.columns || this.maxCol;
-                                    this.buildPlotMap();
-                                });
-                            } catch (error) {
-                                console.error('[CemeteryGrid] Error deleting column:', error);
-                                this.renderError = 'Không thể xóa cột. Vui lòng thử lại.';
+                            
+                            // Kiểm tra có thể xóa không
+                            if (!this.canDeleteColumn(col)) {
+                                alert('Không thể xóa cột này vì có lô đang được sử dụng.');
+                                return;
                             }
+                            
+                            // Thêm vào pendingChanges
+                            if (!this.pendingChanges.deletedColumns.includes(col)) {
+                                this.pendingChanges.deletedColumns.push(col);
+                            }
+                            
+                            // Cập nhật trong memory
+                            this.applyColumnDeleteInMemory(col);
+                            this.closeColumnActionModal();
+                        },
+                        
+                        applyRowInsertInMemory(position, count, direction) {
+                            const startRow = direction === 'before' ? position : position + 1;
+                            
+                            // Shift các plots
+                            this.plots.forEach(plot => {
+                                if (plot.row >= startRow) {
+                                    plot.row += count;
+                                    plot.plot_code = this.generatePlotCode(plot.row, plot.column);
+                                }
+                            });
+                            
+                            // Tạo plots mới
+                            for (let i = 0; i < count; i++) {
+                                const newRow = startRow + i;
+                                for (let col = 1; col <= this.maxCol; col++) {
+                                    this.plots.push({
+                                        id: null,
+                                        plot_code: this.generatePlotCode(newRow, col),
+                                        row: newRow,
+                                        column: col,
+                                        status: 'available',
+                                        grave: null
+                                    });
+                                }
+                            }
+                            
+                            this.maxRow += count;
+                            this.buildPlotMap();
+                        },
+                        
+                        applyColumnInsertInMemory(position, count, direction) {
+                            const startColumn = direction === 'before' ? position : position + 1;
+                            
+                            // Shift các plots
+                            this.plots.forEach(plot => {
+                                if (plot.column >= startColumn) {
+                                    plot.column += count;
+                                    plot.plot_code = this.generatePlotCode(plot.row, plot.column);
+                                }
+                            });
+                            
+                            // Tạo plots mới
+                            for (let i = 0; i < count; i++) {
+                                const newColumn = startColumn + i;
+                                for (let row = 1; row <= this.maxRow; row++) {
+                                    this.plots.push({
+                                        id: null,
+                                        plot_code: this.generatePlotCode(row, newColumn),
+                                        row: row,
+                                        column: newColumn,
+                                        status: 'available',
+                                        grave: null
+                                    });
+                                }
+                            }
+                            
+                            this.maxCol += count;
+                            this.buildPlotMap();
+                        },
+                        
+                        applyRowDeleteInMemory(rowNumber) {
+                            // Xóa plots trong hàng
+                            this.plots = this.plots.filter(plot => plot.row !== rowNumber);
+                            
+                            // Shift các hàng sau
+                            this.plots.forEach(plot => {
+                                if (plot.row > rowNumber) {
+                                    plot.row -= 1;
+                                    plot.plot_code = this.generatePlotCode(plot.row, plot.column);
+                                }
+                            });
+                            
+                            this.maxRow -= 1;
+                            this.buildPlotMap();
+                        },
+                        
+                        applyColumnDeleteInMemory(columnNumber) {
+                            // Xóa plots trong cột
+                            this.plots = this.plots.filter(plot => plot.column !== columnNumber);
+                            
+                            // Shift các cột sau
+                            this.plots.forEach(plot => {
+                                if (plot.column > columnNumber) {
+                                    plot.column -= 1;
+                                    plot.plot_code = this.generatePlotCode(plot.row, plot.column);
+                                }
+                            });
+                            
+                            this.maxCol -= 1;
+                            this.buildPlotMap();
+                        },
+                        
+                        generatePlotCode(row, column) {
+                            // Convert row to letter (1=A, 2=B, ..., 26=Z, 27=AA, etc.)
+                            let letter = '';
+                            let temp = row;
+                            while (temp > 0) {
+                                temp--;
+                                letter = String.fromCharCode(65 + (temp % 26)) + letter;
+                                temp = Math.floor(temp / 26);
+                            }
+                            return letter + column;
+                        },
+                        
+                        saveChanges() {
+                            if (!this.hasPendingChanges) {
+                                return;
+                            }
+                            
+                            $wire.saveGridChanges(this.pendingChanges).then(() => {
+                                // Reset pendingChanges
+                                this.pendingChanges = {
+                                    insertedRows: [],
+                                    insertedColumns: [],
+                                    deletedRows: [],
+                                    deletedColumns: []
+                                };
+                                
+                                // Refresh plots từ server
+                                this.plots = $wire.plots || this.plots;
+                                this.maxRow = $wire.gridDimensions?.rows || this.maxRow;
+                                this.maxCol = $wire.gridDimensions?.columns || this.maxCol;
+                                this.buildPlotMap();
+                                this.isEditMode = false;
+                            });
+                        },
+                        
+                        cancelChanges() {
+                            if (!confirm('Bạn có chắc muốn hủy tất cả thay đổi?')) {
+                                return;
+                            }
+                            
+                            // Reset pendingChanges
+                            this.pendingChanges = {
+                                insertedRows: [],
+                                insertedColumns: [],
+                                deletedRows: [],
+                                deletedColumns: []
+                            };
+                            
+                            // Reload từ server và tắt edit mode
+                            $wire.toggleEditMode().then(() => {
+                                this.plots = $wire.plots || this.plots;
+                                this.maxRow = $wire.gridDimensions?.rows || this.maxRow;
+                                this.maxCol = $wire.gridDimensions?.columns || this.maxCol;
+                                this.buildPlotMap();
+                                this.isEditMode = false;
+                            });
                         },
                         
                         canDeleteRow(row) {
@@ -491,9 +741,12 @@
                             <div style="display: flex; gap: 4px; margin-bottom: 4px; margin-left: 52px;">
                                 <template x-for="col in maxCol" :key="'col-header-' + col">
                                     <div 
-                                        style="width: 48px; text-align: center; font-weight: 600; color: #6b7280; font-size: 12px; position: relative; cursor: pointer; user-select: none;"
-                                        @click.stop="openColumnActionModal(col)"
-                                        class="hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
+                                        :style="isEditMode ? 
+                                            'width: 48px; text-align: center; font-weight: 600; color: #92400e; font-size: 12px; position: relative; cursor: pointer; user-select: none; background-color: #fef3c7; border: 2px solid #fbbf24; border-radius: 6px;' :
+                                            'width: 48px; text-align: center; font-weight: 600; color: #6b7280; font-size: 12px; position: relative; cursor: default; user-select: none;'"
+                                        @click.stop="isEditMode && openColumnActionModal(col)"
+                                        :onmouseover="isEditMode ? 'this.style.backgroundColor=\'#fde68a\'' : ''"
+                                        :onmouseout="isEditMode ? 'this.style.backgroundColor=\'#fef3c7\'' : ''"
                                     >
                                         <span x-text="col"></span>
                                     </div>
@@ -505,9 +758,12 @@
                                 <div style="display: flex; gap: 4px; margin-bottom: 4px;">
                                     <!-- Row Label -->
                                     <div 
-                                        style="width: 48px; display: flex; align-items: center; justify-content: center; font-weight: 600; color: #6b7280; font-size: 14px; position: relative; cursor: pointer; user-select: none;"
-                                        @click.stop="openRowActionModal(row)"
-                                        class="hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
+                                        :style="isEditMode ? 
+                                            'width: 48px; display: flex; align-items: center; justify-content: center; font-weight: 600; color: #92400e; font-size: 14px; position: relative; cursor: pointer; user-select: none; background-color: #fef3c7; border: 2px solid #fbbf24; border-radius: 6px;' :
+                                            'width: 48px; display: flex; align-items: center; justify-content: center; font-weight: 600; color: #6b7280; font-size: 14px; position: relative; cursor: default; user-select: none;'"
+                                        @click.stop="isEditMode && openRowActionModal(row)"
+                                        :onmouseover="isEditMode ? 'this.style.backgroundColor=\'#fde68a\'' : ''"
+                                        :onmouseout="isEditMode ? 'this.style.backgroundColor=\'#fef3c7\'' : ''"
                                     >
                                         <span x-text="String.fromCharCode(64 + row)"></span>
                                     </div>

@@ -40,6 +40,8 @@ class ManageCemeteryGridResource extends Page implements HasForms
 
     public int $gridVersion = 0;
 
+    public bool $isEditMode = false;
+
     public function mount(?int $cemetery = null): void
     {
         /** @var \App\Models\User $user */
@@ -497,6 +499,201 @@ class ManageCemeteryGridResource extends Page implements HasForms
 
         // Cho phép admin và cán bộ xã/phường truy cập
         return $user->isAdmin() || $user->isCommuneStaff();
+    }
+
+    public function toggleEditMode(): void
+    {
+        $this->isEditMode = !$this->isEditMode;
+        
+        if (!$this->isEditMode) {
+            // Reset khi tắt edit mode
+            $this->loadPlots();
+        }
+    }
+
+    public function saveGridChanges(array $changes): void
+    {
+        try {
+            DB::transaction(function () use ($changes) {
+                // Bước 1: Xử lý row changes trước
+                // 1.1. Xóa các hàng (phải xóa trước để tránh conflict)
+                $deletedRows = $changes['deletedRows'] ?? [];
+                foreach ($deletedRows as $rowNumber) {
+                    if (!$this->canDeleteRow($rowNumber)) {
+                        throw new \Exception("Không thể xóa hàng {$rowNumber}: có lô đang được sử dụng");
+                    }
+                    
+                    CemeteryPlot::where('cemetery_id', $this->cemetery->id)
+                        ->where('row', $rowNumber)
+                        ->delete();
+                    
+                    // Shift các hàng sau
+                    CemeteryPlot::where('cemetery_id', $this->cemetery->id)
+                        ->where('row', '>', $rowNumber)
+                        ->decrement('row');
+                }
+                
+                // 1.2. Chèn các hàng mới
+                $insertedRows = $changes['insertedRows'] ?? [];
+                foreach ($insertedRows as $insert) {
+                    $position = $insert['position'];
+                    $count = $insert['count'];
+                    $direction = $insert['direction'];
+                    $startRow = $direction === 'before' ? $position : $position + 1;
+                    
+                    // Shift các hàng từ startRow trở đi
+                    CemeteryPlot::where('cemetery_id', $this->cemetery->id)
+                        ->where('row', '>=', $startRow)
+                        ->increment('row', $count);
+                }
+                
+                // Bước 2: Xử lý column changes
+                // 2.1. Xóa các cột
+                $deletedColumns = $changes['deletedColumns'] ?? [];
+                foreach ($deletedColumns as $columnNumber) {
+                    if (!$this->canDeleteColumn($columnNumber)) {
+                        throw new \Exception("Không thể xóa cột {$columnNumber}: có lô đang được sử dụng");
+                    }
+                    
+                    CemeteryPlot::where('cemetery_id', $this->cemetery->id)
+                        ->where('column', $columnNumber)
+                        ->delete();
+                    
+                    // Shift các cột sau
+                    CemeteryPlot::where('cemetery_id', $this->cemetery->id)
+                        ->where('column', '>', $columnNumber)
+                        ->decrement('column');
+                }
+                
+                // 2.2. Chèn các cột mới
+                $insertedColumns = $changes['insertedColumns'] ?? [];
+                foreach ($insertedColumns as $insert) {
+                    $position = $insert['position'];
+                    $count = $insert['count'];
+                    $direction = $insert['direction'];
+                    $startColumn = $direction === 'before' ? $position : $position + 1;
+                    
+                    // Shift các cột từ startColumn trở đi
+                    CemeteryPlot::where('cemetery_id', $this->cemetery->id)
+                        ->where('column', '>=', $startColumn)
+                        ->increment('column', $count);
+                }
+                
+                // Bước 3: Cập nhật plot_code cho tất cả lô
+                $this->updateAllPlotCodes();
+                
+                // Bước 4: Thêm các lô mới
+                $this->insertPlotsFromChanges($insertedRows, $insertedColumns);
+            });
+
+            $this->loadPlots();
+            $this->isEditMode = false;
+
+            Notification::make()
+                ->title('Đã lưu thay đổi lưới thành công')
+                ->success()
+                ->send();
+        } catch (\Exception $e) {
+            Notification::make()
+                ->title('Lỗi khi lưu thay đổi')
+                ->body($e->getMessage())
+                ->danger()
+                ->send();
+        }
+    }
+
+
+    protected function insertPlotsFromChanges(array $insertedRows, array $insertedColumns): void
+    {
+        // Lấy kích thước hiện tại sau khi đã xóa
+        $currentMaxRow = CemeteryPlot::where('cemetery_id', $this->cemetery->id)->max('row') ?? 0;
+        $currentMaxColumn = CemeteryPlot::where('cemetery_id', $this->cemetery->id)->max('column') ?? 0;
+        
+        $plotsData = [];
+        
+        // Thêm các lô cho hàng mới
+        foreach ($insertedRows as $insert) {
+            $position = $insert['position'];
+            $count = $insert['count'];
+            $direction = $insert['direction'];
+            $startRow = $direction === 'before' ? $position : $position + 1;
+            
+            // Tính số cột hiện tại (sau khi đã xóa cột nếu có)
+            $numColumns = $currentMaxColumn;
+            
+            for ($i = 0; $i < $count; $i++) {
+                $newRow = $startRow + $i;
+                for ($col = 1; $col <= $numColumns; $col++) {
+                    $plotsData[] = [
+                        'cemetery_id' => $this->cemetery->id,
+                        'plot_code' => CemeteryPlot::generatePlotCode($newRow, $col),
+                        'row' => $newRow,
+                        'column' => $col,
+                        'status' => 'available',
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ];
+                }
+            }
+        }
+        
+        // Thêm các lô cho cột mới
+        foreach ($insertedColumns as $insert) {
+            $position = $insert['position'];
+            $count = $insert['count'];
+            $direction = $insert['direction'];
+            $startColumn = $direction === 'before' ? $position : $position + 1;
+            
+            // Tính số hàng hiện tại (sau khi đã xóa hàng nếu có)
+            $numRows = $currentMaxRow;
+            
+            for ($i = 0; $i < $count; $i++) {
+                $newColumn = $startColumn + $i;
+                for ($row = 1; $row <= $numRows; $row++) {
+                    $plotsData[] = [
+                        'cemetery_id' => $this->cemetery->id,
+                        'plot_code' => CemeteryPlot::generatePlotCode($row, $newColumn),
+                        'row' => $row,
+                        'column' => $newColumn,
+                        'status' => 'available',
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ];
+                }
+            }
+        }
+        
+        if (!empty($plotsData)) {
+            CemeteryPlot::insert($plotsData);
+        }
+        
+        // Cập nhật lại plot_code cho tất cả lô (bao gồm cả lô mới)
+        $this->updateAllPlotCodes();
+    }
+
+    protected function updateAllPlotCodes(): void
+    {
+        $plots = CemeteryPlot::where('cemetery_id', $this->cemetery->id)->get();
+
+        // Bước 1: Đổi tất cả plot_code thành giá trị tạm
+        foreach ($plots as $plot) {
+            $newPlotCode = CemeteryPlot::generatePlotCode($plot->row, $plot->column);
+            if ($plot->plot_code !== $newPlotCode) {
+                $tempCode = 'temp_' . $plot->id . '_' . time();
+                $plot->update(['plot_code' => $tempCode]);
+            }
+        }
+
+        // Bước 2: Refresh
+        $plots->each->refresh();
+
+        // Bước 3: Cập nhật lại với plot_code đúng
+        foreach ($plots as $plot) {
+            $newPlotCode = CemeteryPlot::generatePlotCode($plot->row, $plot->column);
+            if ($plot->plot_code !== $newPlotCode) {
+                $plot->update(['plot_code' => $newPlotCode]);
+            }
+        }
     }
 
     public static function shouldRegisterNavigation(): bool
