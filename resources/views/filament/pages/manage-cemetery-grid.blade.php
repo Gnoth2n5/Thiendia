@@ -354,6 +354,50 @@
                         </template>
                     </div>
 
+                    <!-- Entrance Line and Labels (đoạn thẳng ngang và nhãn cổng vào) - Đặt ngoài khối render lưới -->
+                    <div class="overflow-x-auto" x-show="plots.length > 0 && maxRow > 0 && maxCol > 0">
+                        <div style="display: flex; margin-bottom: 8px; margin-left: 48px; position: relative; min-height: 30px;">
+                            <!-- Tính chiều rộng của lưới -->
+                            <div 
+                                x-data="{
+                                    get gridWidth() {
+                                        if (colArray.length === 0) return 0;
+                                        return (colArray.length * 48) + ((colArray.length - 1) * 4);
+                                    },
+                                    get leftWidth() {
+                                        return Math.floor(this.gridWidth / 2);
+                                    },
+                                    get rightWidth() {
+                                        return this.gridWidth - this.leftWidth;
+                                    }
+                                }"
+                                :style="`width: ${gridWidth}px; position: relative;`"
+                            >
+                                <!-- Đoạn thẳng ngang -->
+                                <div style="position: absolute; top: 20px; left: 0; right: 0; height: 2px; background-color: #3b82f6; z-index: 1;"></div>
+                                
+                                <!-- Label Bên trái -->
+                                <div style="position: absolute; top: 0; left: 0; text-align: left; font-size: 11px; font-weight: 600; color: #3b82f6;">
+                                    Bên trái
+                                </div>
+                                
+                                <!-- Label Cổng vào (ở giữa) -->
+                                <div 
+                                    :style="`position: absolute; top: 0; left: ${leftWidth - 30}px; text-align: center; font-size: 11px; font-weight: 600; color: #3b82f6; width: 60px;`"
+                                >
+                                    Cổng vào
+                                </div>
+                                
+                                <!-- Label Bên phải -->
+                                <div 
+                                    :style="`position: absolute; top: 0; right: 0; text-align: right; font-size: 11px; font-weight: 600; color: #3b82f6;`"
+                                >
+                                    Bên phải
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Grid with Row/Column Labels -->
                     <div class="overflow-x-auto" x-show="plots.length > 0 && maxRow > 0 && maxCol > 0">
                         <div class="inline-block">
