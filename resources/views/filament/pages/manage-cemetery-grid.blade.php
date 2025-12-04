@@ -342,27 +342,27 @@
                     <!-- Grid with Row/Column Labels -->
                     <div class="overflow-x-auto" x-show="plots.length > 0 && maxRow > 0 && maxCol > 0">
                         <div class="inline-block">
-                            <!-- Column Headers -->
-                            <div style="display: flex; gap: 4px; margin-bottom: 4px; margin-left: 52px;">
+                            <!-- Column Headers (hiển thị chữ cái ở trên) -->
+                            <div style="display: flex; gap: 4px; margin-bottom: 4px; margin-left: 48px;">
                                 <template x-for="col in maxCol" :key="'col-header-' + col">
                                     <div style="width: 48px; text-align: center; font-weight: 600; color: #6b7280; font-size: 12px;">
-                                        <span x-text="col"></span>
+                                        <span x-text="String.fromCharCode(64 + col)"></span>
                                     </div>
                                 </template>
                             </div>
 
-                            <!-- Grid Rows -->
+                            <!-- Grid Rows (hàng ngang với label số bên trái) -->
                             <template x-for="row in maxRow" :key="'row-' + row">
                                 <div style="display: flex; gap: 4px; margin-bottom: 4px;">
-                                    <!-- Row Label -->
+                                    <!-- Row Label (số) -->
                                     <div style="width: 48px; display: flex; align-items: center; justify-content: center; font-weight: 600; color: #6b7280; font-size: 14px;">
-                                        <span x-text="String.fromCharCode(64 + row)"></span>
+                                        <span x-text="row"></span>
                                     </div>
 
-                                    <!-- Plot Cells - Using plotMap for O(1) lookup -->
+                                    <!-- Plot Cells - Lặp qua các cột trong hàng này -->
                                     <template x-for="col in maxCol" :key="'cell-' + row + '-' + col">
                                         <div
-                                            x-data="{ plot: getPlotByPosition(row, col) }"
+                                            x-data="{ plot: getPlotByPosition(col, row) }"
                                             @click="plot && selectPlot(plot.id)"
                                             :style="plot ? {
                                                 width: '48px',
