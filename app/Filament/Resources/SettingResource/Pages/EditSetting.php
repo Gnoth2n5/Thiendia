@@ -33,6 +33,9 @@ class EditSetting extends EditRecord
 
     protected function mutateFormDataBeforeSave(array $data): array
     {
+        // Lấy record hiện tại để có thể giữ nguyên giá trị cũ nếu cần
+        $record = $this->record;
+        
         // Nếu là banner, lưu danh sách ảnh vào value dạng JSON
         if (isset($data['key']) && $data['key'] === 'banner') {
             // Lấy ảnh từ form data hoặc giữ nguyên giá trị cũ nếu không có thay đổi
@@ -56,13 +59,13 @@ class EditSetting extends EditRecord
                 }, array_values($images));
                 $data['value'] = json_encode($images);
             } else {
-                // Nếu không có banner_images trong data, giữ nguyên value cũ
-                // Không cần làm gì, value sẽ được giữ nguyên từ record
+                // Nếu không có banner_images trong data, giữ nguyên value cũ từ record
+                $data['value'] = $record->value ?? '[]';
             }
             unset($data['banner_images']); // Xóa field tạm để tránh lỗi
         } else {
-            // Nếu không phải banner, lấy giá trị từ value_text hoặc value
-            $data['value'] = $data['value_text'] ?? $data['value'] ?? '';
+            // Nếu không phải banner, lấy giá trị từ value_text hoặc value hoặc giá trị cũ
+            $data['value'] = $data['value_text'] ?? $data['value'] ?? $record->value ?? '';
             unset($data['value_text']); // Xóa field tạm
         }
 

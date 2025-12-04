@@ -77,28 +77,87 @@
                     <!-- Grid -->
                     <div class="overflow-x-auto p-4 bg-gray-50 rounded-lg">
                         <div class="inline-block">
-                            <!-- Column Headers -->
+                            @php
+                                // Đảo 90 độ: số hàng hiển thị = số cột dữ liệu, số cột hiển thị = số hàng dữ liệu
+                                $displayRows = $plotGrid['columns']; // Hàng hiển thị = Cột dữ liệu
+                                $displayCols = $plotGrid['rows'];    // Cột hiển thị = Hàng dữ liệu
+                                
+                                // Tính toán chiều rộng và vị trí cho hàng rào và cổng
+                                $gridWidth = ($displayCols * 48) + (($displayCols - 1) * 4);
+                                $leftWidth = floor($gridWidth / 2) - 40;
+                                $rightWidth = $gridWidth - $leftWidth - 80;
+                                $gatePosition = $leftWidth;
+                                $fenceCount = floor($leftWidth / 20);
+                            @endphp
+                            
+                            <!-- Entrance Line and Labels (hàng rào và cổng vào) -->
+                            <div style="display: flex; margin-bottom: 12px; margin-left: 40px; position: relative; min-height: 80px; overflow: visible;">
+                                <div style="width: {{ $gridWidth }}px; position: relative; min-width: {{ $gridWidth }}px;">
+                                    <!-- Hàng rào bên trái -->
+                                    <div style="position: absolute; top: 30px; left: 0; width: {{ $leftWidth }}px; display: flex; align-items: center; gap: 2px;">
+                                        @for ($i = 0; $i < $fenceCount; $i++)
+                                            <img src="/images/fence.png" alt="Hàng rào" style="width: 18px; height: 18px; object-fit: contain;">
+                                        @endfor
+                                    </div>
+                                    
+                                    <!-- Cổng vào (ở giữa) -->
+                                    <div style="position: absolute; top: 0; left: {{ $gatePosition }}px; display: flex; flex-direction: column; align-items: center; gap: 4px; width: 80px;">
+                                        <div style="display: flex; align-items: center; gap: 4px;">
+                                            <span style="font-size: 12px; font-weight: 700; color: #dc2626;">Cổng vào</span>
+                                        </div>
+                                        <img src="/images/gate.png" alt="Cổng vào" style="width: 32px; height: 32px; object-fit: contain;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" style="width: 20px; height: 20px; color: #dc2626;">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3" />
+                                        </svg>
+                                    </div>
+                                    
+                                    <!-- Hàng rào bên phải -->
+                                    <div style="position: absolute; top: 30px; right: 0; width: {{ $rightWidth }}px; display: flex; align-items: center; gap: 2px;">
+                                        @for ($i = 0; $i < $fenceCount; $i++)
+                                            <img src="/images/fence.png" alt="Hàng rào" style="width: 18px; height: 18px; object-fit: contain;">
+                                        @endfor
+                                    </div>
+                                    
+                                    <!-- Label Bên trái -->
+                                    <div style="position: absolute; top: 0; left: 0; display: flex; align-items: center; gap: 4px;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 16px; height: 16px; color: #16a34a;">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18" />
+                                        </svg>
+                                        <span style="font-size: 12px; font-weight: 700; color: #16a34a;">Bên trái</span>
+                                    </div>
+                                    
+                                    <!-- Label Bên phải -->
+                                    <div style="position: absolute; top: 0; right: 0; display: flex; align-items: center; gap: 4px;">
+                                        <span style="font-size: 12px; font-weight: 700; color: #16a34a;">Bên phải</span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 16px; height: 16px; color: #16a34a;">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Column Headers (hiển thị chữ cái) -->
                             <div style="display: flex; gap: 4px; margin-bottom: 4px; margin-left: 40px;">
-                                @for ($col = 1; $col <= $plotGrid['columns']; $col++)
+                                @for ($col = 1; $col <= $displayCols; $col++)
                                     <div style="width: 48px; text-align: center; font-weight: 600; color: #6b7280; font-size: 11px;">
-                                        {{ $col }}
+                                        {{ chr(64 + $col) }}
                                     </div>
                                 @endfor
                             </div>
 
-                            <!-- Grid Rows -->
-                            @for ($row = 1; $row <= $plotGrid['rows']; $row++)
+                            <!-- Grid Rows (hiển thị số) -->
+                            @for ($row = 1; $row <= $displayRows; $row++)
                                 <div style="display: flex; gap: 4px; margin-bottom: 4px;">
-                                    <!-- Row Label -->
+                                    <!-- Row Label (số) -->
                                     <div style="width: 36px; display: flex; align-items: center; justify-content: center; font-weight: 600; color: #6b7280; font-size: 13px;">
-                                        {{ chr(64 + $row) }}
+                                        {{ $row }}
                                     </div>
 
-                                    <!-- Plot Cells -->
-                                    @for ($col = 1; $col <= $plotGrid['columns']; $col++)
-                                        @if (isset($plotMap[$row][$col]))
+                                    <!-- Plot Cells - đảo 90 độ: khi hiển thị ở (row, col), tìm plot có (row dữ liệu = col, column dữ liệu = row) -->
+                                    @for ($col = 1; $col <= $displayCols; $col++)
+                                        @if (isset($plotMap[$col][$row]))
                                             @php
-                                                $plot = $plotMap[$row][$col];
+                                                $plot = $plotMap[$col][$row];
                                                 $backgroundColor = $getPlotColor($plot->status);
                                                 $title = $plot->plot_code . ' - ' . $plot->status_label;
                                                 if ($plot->grave) {

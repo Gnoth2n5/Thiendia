@@ -309,8 +309,8 @@
                                                 <div class="flex flex-col gap-1">
                                                     <span
                                                         class="font-bold text-blue-700">{{ $grave->plot->plot_code }}</span>
-                                                    <span class="text-xs text-gray-500">Hàng {{ $grave->plot->row }}, Cột
-                                                        {{ $grave->plot->column }}</span>
+                                                    <span class="text-xs text-gray-500">Hàng {{ $grave->plot->column }}, Cột
+                                                        {{ $grave->plot->row }}</span>
                                                 </div>
                                             @else
                                                 <span class="text-gray-400">-</span>
@@ -926,9 +926,9 @@
         // Lô mộ
         document.getElementById('plotCode').textContent = grave.plot?.plot_code || '-';
 
-        // Vị trí lô
+        // Vị trí lô (đảo 90 độ: hàng hiển thị = cột dữ liệu, cột hiển thị = hàng dữ liệu)
         if (grave.plot) {
-            document.getElementById('plotPosition').textContent = `Hàng ${grave.plot.row}, Cột ${grave.plot.column}`;
+            document.getElementById('plotPosition').textContent = `Hàng ${grave.plot.column}, Cột ${grave.plot.row}`;
         } else {
             document.getElementById('plotPosition').textContent = '-';
         }
@@ -1021,7 +1021,7 @@
                     const bannerInfo = document.getElementById('targetPlotInfo');
                     banner.classList.remove('hidden');
                     bannerInfo.textContent =
-                        `📍 Vị trí liệt sĩ: Lô ${targetPlot.plot_code} - Hàng ${targetPlot.row}, Cột ${targetPlot.column}`;
+                        `📍 Vị trí liệt sĩ: Lô ${targetPlot.plot_code} - Hàng ${targetPlot.column}, Cột ${targetPlot.row}`;
 
                     // Show plot info
                     showPlotInfo(targetPlot);
@@ -1067,29 +1067,79 @@
             plotMap[key] = plot;
         });
 
+        // Đảo 90 độ: số hàng hiển thị = số cột dữ liệu, số cột hiển thị = số hàng dữ liệu
+        const displayRows = grid.columns; // Hàng hiển thị = Cột dữ liệu
+        const displayCols = grid.rows;    // Cột hiển thị = Hàng dữ liệu
+
         // Build grid HTML
         let gridHTML = '<div class="inline-block">';
 
-        // Column headers
+        // Tính toán chiều rộng và vị trí cho hàng rào và cổng
+        const gridWidth = (displayCols * 40) + ((displayCols - 1) * 4);
+        const leftWidth = Math.floor(gridWidth / 2) - 40;
+        const rightWidth = gridWidth - leftWidth - 80;
+        const gatePosition = leftWidth;
+        const fenceCount = Math.floor(leftWidth / 20);
+
+        // Entrance Line and Labels (hàng rào và cổng vào)
+        gridHTML += '<div style="display: flex; margin-bottom: 12px; margin-left: 40px; position: relative; min-height: 80px; overflow: visible;">';
+        gridHTML += `<div style="width: ${gridWidth}px; position: relative; min-width: ${gridWidth}px;">`;
+        
+        // Hàng rào bên trái
+        gridHTML += `<div style="position: absolute; top: 30px; left: 0; width: ${leftWidth}px; display: flex; align-items: center; gap: 2px;">`;
+        for (let i = 0; i < fenceCount; i++) {
+            gridHTML += '<img src="/images/fence.png" alt="Hàng rào" style="width: 18px; height: 18px; object-fit: contain;">';
+        }
+        gridHTML += '</div>';
+        
+        // Cổng vào (ở giữa)
+        gridHTML += `<div style="position: absolute; top: 0; left: ${gatePosition}px; display: flex; flex-direction: column; align-items: center; gap: 4px; width: 80px;">`;
+        gridHTML += '<div style="display: flex; align-items: center; gap: 4px;"><span style="font-size: 12px; font-weight: 700; color: #dc2626;">Cổng vào</span></div>';
+        gridHTML += '<img src="/images/gate.png" alt="Cổng vào" style="width: 32px; height: 32px; object-fit: contain;">';
+        gridHTML += '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" style="width: 20px; height: 20px; color: #dc2626;"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3" /></svg>';
+        gridHTML += '</div>';
+        
+        // Hàng rào bên phải
+        gridHTML += `<div style="position: absolute; top: 30px; right: 0; width: ${rightWidth}px; display: flex; align-items: center; gap: 2px;">`;
+        for (let i = 0; i < fenceCount; i++) {
+            gridHTML += '<img src="/images/fence.png" alt="Hàng rào" style="width: 18px; height: 18px; object-fit: contain;">';
+        }
+        gridHTML += '</div>';
+        
+        // Label Bên trái
+        gridHTML += '<div style="position: absolute; top: 0; left: 0; display: flex; align-items: center; gap: 4px;">';
+        gridHTML += '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 16px; height: 16px; color: #16a34a;"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18" /></svg>';
+        gridHTML += '<span style="font-size: 12px; font-weight: 700; color: #16a34a;">Bên trái</span></div>';
+        
+        // Label Bên phải
+        gridHTML += '<div style="position: absolute; top: 0; right: 0; display: flex; align-items: center; gap: 4px;">';
+        gridHTML += '<span style="font-size: 12px; font-weight: 700; color: #16a34a;">Bên phải</span>';
+        gridHTML += '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 16px; height: 16px; color: #16a34a;"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" /></svg>';
+        gridHTML += '</div>';
+        
+        gridHTML += '</div></div>';
+
+        // Column headers (hiển thị chữ cái)
         gridHTML += '<div style="display: flex; gap: 4px; margin-bottom: 4px; margin-left: 40px;">';
-        for (let col = 1; col <= grid.columns; col++) {
+        for (let col = 1; col <= displayCols; col++) {
+            const colLabel = String.fromCharCode(64 + col); // A, B, C...
             gridHTML +=
-                `<div style="width: 40px; text-align: center; font-weight: 600; color: #6b7280; font-size: 11px;">${col}</div>`;
+                `<div style="width: 40px; text-align: center; font-weight: 600; color: #6b7280; font-size: 11px;">${colLabel}</div>`;
         }
         gridHTML += '</div>';
 
-        // Grid rows
-        for (let row = 1; row <= grid.rows; row++) {
+        // Grid rows (hiển thị số)
+        for (let row = 1; row <= displayRows; row++) {
             gridHTML += '<div style="display: flex; gap: 4px; margin-bottom: 4px;">';
 
-            // Row label
-            const rowLabel = String.fromCharCode(64 + row); // A, B, C...
+            // Row label (số)
             gridHTML +=
-                `<div style="width: 36px; display: flex; align-items: center; justify-content: center; font-weight: 600; color: #6b7280; font-size: 13px;">${rowLabel}</div>`;
+                `<div style="width: 36px; display: flex; align-items: center; justify-content: center; font-weight: 600; color: #6b7280; font-size: 13px;">${row}</div>`;
 
-            // Plot cells
-            for (let col = 1; col <= grid.columns; col++) {
-                const plot = plotMap[`${row}-${col}`];
+            // Plot cells - đảo 90 độ: khi hiển thị ở (row, col), tìm plot có (row dữ liệu = col, column dữ liệu = row)
+            for (let col = 1; col <= displayCols; col++) {
+                // Đảo ngược: row hiển thị = column dữ liệu, col hiển thị = row dữ liệu
+                const plot = plotMap[`${col}-${row}`];
 
                 if (plot) {
                     const isHighlighted = highlightPlotId && plot.id === highlightPlotId;
@@ -1177,7 +1227,7 @@
             <div class="flex flex-col justify-center" style="min-height: 108px;">
                 <div class="font-bold text-base mb-2" style="color: #3b82f6;">Lô ${plot.plot_code}</div>
                 <div class="space-y-1 text-sm" style="color: #2b2b2b;">
-                    <div><strong>Vị trí:</strong> Hàng ${plot.row}, Cột ${plot.column}</div>
+                    <div><strong>Vị trí:</strong> Hàng ${plot.column}, Cột ${plot.row}</div>
                     <div><strong>Trạng thái:</strong> ${getStatusLabel(plot.status)}</div>
         `;
 

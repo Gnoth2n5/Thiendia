@@ -31,6 +31,7 @@ class SettingResource extends Resource
                         Forms\Components\TextInput::make('key')
                             ->label('Khóa')
                             ->disabled()
+                            ->dehydrated() // Đảm bảo key vẫn được gửi trong form data
                             ->unique(ignoreRecord: true)
                             ->maxLength(255)
                             ->placeholder('Ví dụ: banner, site_name, etc.')

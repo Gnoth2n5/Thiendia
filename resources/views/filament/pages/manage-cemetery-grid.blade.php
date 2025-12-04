@@ -12,7 +12,7 @@
                     <div>Xã/Phường: {{ $cemetery->commune }}</div>
                     @if($gridDimensions && $gridDimensions['rows'] > 0)
                         <div class="mt-2 text-sm font-semibold">
-                            Kích thước lưới: {{ $gridDimensions['rows'] }} hàng × {{ $gridDimensions['columns'] }} cột
+                            Kích thước hiển thị: {{ $gridDimensions['columns'] }} hàng × {{ $gridDimensions['rows'] }} cột
                             = {{ $gridDimensions['rows'] * $gridDimensions['columns'] }} lô
                         </div>
                     @endif
@@ -57,12 +57,19 @@
                         selectedPlot: null,
                         maxRow: @js($gridDimensions['rows'] ?? 0),
                         maxCol: @js($gridDimensions['columns'] ?? 0),
+                        rowArray: [],
+                        colArray: [],
                         isRendering: false,
                         renderError: null,
                         
                         init() {
                             try {
                                 console.log('[CemeteryGrid] Initialized with', this.plots.length, 'plots');
+                                console.log('[CemeteryGrid] Grid dimensions:', 'rows:', this.maxRow, 'cols:', this.maxCol);
+                                // Đảo 90 độ: số hàng hiển thị = số cột dữ liệu, số cột hiển thị = số hàng dữ liệu
+                                this.rowArray = Array.from({ length: this.maxCol }, (_, i) => i + 1);
+                                this.colArray = Array.from({ length: this.maxRow }, (_, i) => i + 1);
+                                console.log('[CemeteryGrid] Display arrays:', 'rowArray length:', this.rowArray.length, 'colArray length:', this.colArray.length);
                                 this.buildPlotMap();
                                 this.setupLivewireListeners();
                             } catch (error) {
@@ -101,10 +108,18 @@
                             });
                         },
                         
-                        getPlotByPosition(row, col) {
+                        getPlotByPosition(col, row) {
                             try {
-                                const key = `${row}-${col}`;
-                                return this.plotMap[key] || null;
+                                // Đảo 90 độ: 
+                                // - Hàng hiển thị (row) = Cột dữ liệu (column)
+                                // - Cột hiển thị (col) = Hàng dữ liệu (row)
+                                // Vậy khi hiển thị ở (row, col), cần tìm plot có (row dữ liệu = col, column dữ liệu = row)
+                                const key = `${col}-${row}`;
+                                const plot = this.plotMap[key] || null;
+                                if (!plot) {
+                                    console.debug(`[CemeteryGrid] No plot found at display position (row=${row}, col=${col}), key=${key}`);
+                                }
+                                return plot;
                             } catch (error) {
                                 console.error('[CemeteryGrid] Error getting plot:', error);
                                 return null;
@@ -262,7 +277,7 @@
                                     <!-- Thông tin lô -->
                                     <div class="space-y-2">
                                         <div class="text-sm">
-                                            <strong>Vị trí:</strong> Hàng <span x-text="selectedPlot.row"></span>, Cột <span x-text="selectedPlot.column"></span>
+                                            <strong>Vị trí:</strong> Hàng <span x-text="selectedPlot.column"></span>, Cột <span x-text="selectedPlot.row"></span>
                                         </div>
                                         <div class="text-sm">
                                             <strong>Trạng thái hiện tại:</strong> 
@@ -339,30 +354,112 @@
                         </template>
                     </div>
 
+                    <!-- Entrance Line and Labels (hàng rào và cổng vào) - Đặt ngoài khối render lưới -->
+                    <div class="overflow-x-auto" x-show="plots.length > 0 && maxRow > 0 && maxCol > 0" style="overflow-x: visible;">
+                        <div style="display: flex; margin-bottom: 12px; margin-left: 48px; position: relative; min-height: 80px; overflow: visible;">
+                            <!-- Tính chiều rộng của lưới -->
+                            <div 
+                                x-data="{
+                                    get gridWidth() {
+                                        if (colArray.length === 0) return 0;
+                                        return (colArray.length * 48) + ((colArray.length - 1) * 4);
+                                    },
+                                    get leftWidth() {
+                                        return Math.floor(this.gridWidth / 2) - 40;
+                                    },
+                                    get rightWidth() {
+                                        return this.gridWidth - this.leftWidth - 80;
+                                    },
+                                    get gatePosition() {
+                                        return this.leftWidth;
+                                    },
+                                    get fenceCount() {
+                                        return Math.floor(this.leftWidth / 20);
+                                    }
+                                }"
+                                :style="`width: ${gridWidth}px; position: relative; min-width: ${gridWidth}px;`"
+                            >
+                                <!-- Hàng rào bên trái (icon lặp lại) -->
+                                <div 
+                                    :style="`position: absolute; top: 30px; left: 0; width: ${leftWidth}px; display: flex; align-items: center; gap: 2px;`"
+                                >
+                                    <template x-for="i in fenceCount" :key="'fence-left-' + i">
+                                        <img src="/images/fence.png" alt="Hàng rào" style="width: 18px; height: 18px; object-fit: contain;">
+                                    </template>
+                                </div>
+                                
+                                <!-- Cổng vào (ở giữa) -->
+                                <div 
+                                    :style="`position: absolute; top: 0; left: ${gatePosition}px; display: flex; flex-direction: column; align-items: center; gap: 4px; width: 80px;`"
+                                >
+                                    <!-- Label Cổng vào (ở trên) -->
+                                    <div style="display: flex; align-items: center; gap: 4px;">
+                                        <span style="font-size: 12px; font-weight: 700; color: #dc2626;">Cổng vào</span>
+                                    </div>
+                                    <!-- Icon cổng -->
+                                    <img src="/images/gate.png" alt="Cổng vào" style="width: 32px; height: 32px; object-fit: contain;">
+                                    <!-- Mũi tên chỉ xuống -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" style="width: 20px; height: 20px; color: #dc2626;">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3" />
+                                    </svg>
+                                </div>
+                                
+                                <!-- Hàng rào bên phải (icon lặp lại) -->
+                                <div 
+                                    :style="`position: absolute; top: 30px; right: 0; width: ${rightWidth}px; display: flex; align-items: center; gap: 2px;`"
+                                >
+                                    <template x-for="i in fenceCount" :key="'fence-right-' + i">
+                                        <img src="/images/fence.png" alt="Hàng rào" style="width: 18px; height: 18px; object-fit: contain;">
+                                    </template>
+                                </div>
+                                
+                                <!-- Label Bên trái -->
+                                <div style="position: absolute; top: 0; left: 0; display: flex; align-items: center; gap: 4px;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 16px; height: 16px; color: #16a34a;">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18" />
+                                    </svg>
+                                    <span style="font-size: 12px; font-weight: 700; color: #16a34a;">Bên trái</span>
+                                </div>
+                                
+                                <!-- Label Bên phải -->
+                                <div 
+                                    :style="`position: absolute; top: 0; right: 0; display: flex; align-items: center; gap: 4px;`"
+                                >
+                                    <span style="font-size: 12px; font-weight: 700; color: #16a34a;">Bên phải</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 16px; height: 16px; color: #16a34a;">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Grid with Row/Column Labels -->
                     <div class="overflow-x-auto" x-show="plots.length > 0 && maxRow > 0 && maxCol > 0">
                         <div class="inline-block">
-                            <!-- Column Headers -->
-                            <div style="display: flex; gap: 4px; margin-bottom: 4px; margin-left: 52px;">
-                                <template x-for="col in maxCol" :key="'col-header-' + col">
+                            <!-- Column Headers (hiển thị chữ cái ở trên) -->
+                            <div style="display: flex; gap: 4px; margin-bottom: 4px; margin-left: 48px;">
+                                <template x-for="col in colArray" :key="'col-header-' + col">
                                     <div style="width: 48px; text-align: center; font-weight: 600; color: #6b7280; font-size: 12px;">
-                                        <span x-text="col"></span>
+                                        <span x-text="String.fromCharCode(64 + col)"></span>
                                     </div>
                                 </template>
                             </div>
 
-                            <!-- Grid Rows -->
-                            <template x-for="row in maxRow" :key="'row-' + row">
+                            <!-- Grid Rows (hàng ngang với label số bên trái) -->
+                            <template x-for="row in rowArray" :key="'row-' + row">
                                 <div style="display: flex; gap: 4px; margin-bottom: 4px;">
-                                    <!-- Row Label -->
+                                    <!-- Row Label (số) -->
                                     <div style="width: 48px; display: flex; align-items: center; justify-content: center; font-weight: 600; color: #6b7280; font-size: 14px;">
-                                        <span x-text="String.fromCharCode(64 + row)"></span>
+                                        <span x-text="row"></span>
                                     </div>
 
-                                    <!-- Plot Cells - Using plotMap for O(1) lookup -->
-                                    <template x-for="col in maxCol" :key="'cell-' + row + '-' + col">
+                                    <!-- Plot Cells - Lặp qua các cột trong hàng này -->
+                                    <template x-for="col in colArray" :key="'cell-' + row + '-' + col">
                                         <div
-                                            x-data="{ plot: getPlotByPosition(row, col) }"
+                                            x-data="{ 
+                                                get plot() { return getPlotByPosition(col, row); }
+                                            }"
                                             @click="plot && selectPlot(plot.id)"
                                             :style="plot ? {
                                                 width: '48px',
@@ -386,7 +483,9 @@
                                             }"
                                             :title="plot ? (plot.plot_code + ' - ' + plot.status + (plot.grave ? ' (' + plot.grave.deceased_full_name + ')' : '')) : ''"
                                         >
-                                            <span x-show="plot" x-text="plot ? plot.plot_code : ''"></span>
+                                            <template x-if="plot">
+                                                <span x-text="plot.plot_code"></span>
+                                            </template>
                                         </div>
                                     </template>
                                 </div>

@@ -62,6 +62,13 @@ class Cemetery extends Model
     public function initializePlots(int $rows, int $columns, bool $clearExisting = false): int
     {
         if ($clearExisting) {
+            // Kiểm tra xem có lô nào đang được sử dụng (có grave) không
+            $usedPlotsCount = $this->plots()->whereHas('grave')->count();
+            
+            if ($usedPlotsCount > 0) {
+                throw new \Exception("Không thể xóa lưới hiện tại. Có {$usedPlotsCount} lô đang được sử dụng (có mộ liệt sĩ).");
+            }
+            
             // Delete all plots for this cemetery
             $this->plots()->delete();
         } else {

@@ -71,7 +71,8 @@
                 <div class="swiper-wrapper">
                     @foreach ($bannerImages as $image)
                         <div class="swiper-slide">
-                            <img src="{{ $image }}" alt="Banner" class="w-full h-auto object-cover" style="max-height: 500px;">
+                            <img src="{{ $image }}" alt="Banner" class="w-full h-auto object-cover"
+                                style="max-height: 500px;">
                         </div>
                     @endforeach
                 </div>
@@ -119,7 +120,8 @@
                                 <select name="birth_year" id="birth_year" class="select select-bordered w-full">
                                     <option value="">Chọn năm sinh</option>
                                     @for ($year = 1820; $year <= 1995; $year++)
-                                        <option value="{{ $year }}" {{ request('birth_year') == $year ? 'selected' : '' }}>
+                                        <option value="{{ $year }}"
+                                            {{ request('birth_year') == $year ? 'selected' : '' }}>
                                             {{ $year }}
                                         </option>
                                     @endfor
@@ -133,7 +135,8 @@
                                 <select name="death_year" id="death_year" class="select select-bordered w-full">
                                     <option value="">Chọn năm hy sinh</option>
                                     @for ($year = 1825; $year <= 2005; $year++)
-                                        <option value="{{ $year }}" {{ request('death_year') == $year ? 'selected' : '' }}>
+                                        <option value="{{ $year }}"
+                                            {{ request('death_year') == $year ? 'selected' : '' }}>
                                             {{ $year }}
                                         </option>
                                     @endfor
@@ -344,7 +347,8 @@
                                         <!-- Small Image -->
                                         <div class="flex-shrink-0">
                                             @if ($article->featured_image)
-                                                <img src="{{ $article->featured_image }}" alt="{{ $article->title }}"
+                                                <img src="{{ Storage::url($article->featured_image) }}"
+                                                    alt="{{ $article->title }}"
                                                     class="w-16 h-16 object-cover rounded-lg">
                                             @else
                                                 <div class="w-16 h-16 rounded-lg flex items-center justify-center"
@@ -468,6 +472,7 @@
             }
 
             @media (max-width: 768px) {
+
                 .banner-swiper .swiper-button-next,
                 .banner-swiper .swiper-button-prev {
                     width: 36px;
