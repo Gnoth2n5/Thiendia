@@ -12,7 +12,7 @@
                     <div>Xã/Phường: {{ $cemetery->commune }}</div>
                     @if($gridDimensions && $gridDimensions['rows'] > 0)
                         <div class="mt-2 text-sm font-semibold">
-                            Kích thước lưới: {{ $gridDimensions['rows'] }} hàng × {{ $gridDimensions['columns'] }} cột
+                            Kích thước hiển thị: {{ $gridDimensions['columns'] }} hàng × {{ $gridDimensions['rows'] }} cột
                             = {{ $gridDimensions['rows'] * $gridDimensions['columns'] }} lô
                         </div>
                     @endif
@@ -277,7 +277,7 @@
                                     <!-- Thông tin lô -->
                                     <div class="space-y-2">
                                         <div class="text-sm">
-                                            <strong>Vị trí:</strong> Hàng <span x-text="selectedPlot.row"></span>, Cột <span x-text="selectedPlot.column"></span>
+                                            <strong>Vị trí:</strong> Hàng <span x-text="selectedPlot.column"></span>, Cột <span x-text="selectedPlot.row"></span>
                                         </div>
                                         <div class="text-sm">
                                             <strong>Trạng thái hiện tại:</strong> 

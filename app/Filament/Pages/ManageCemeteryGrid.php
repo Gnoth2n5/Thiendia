@@ -181,7 +181,8 @@ class ManageCemeteryGrid extends Page implements HasForms
                 ->requiresConfirmation()
                 ->form([
                     TextInput::make('rows')
-                        ->label('Số hàng')
+                        ->label('Số cột')
+                        ->helperText('Số cột hiển thị trên màn hình')
                         ->required()
                         ->numeric()
                         ->minValue(1)
@@ -189,7 +190,8 @@ class ManageCemeteryGrid extends Page implements HasForms
                         ->default(10),
 
                     TextInput::make('columns')
-                        ->label('Số cột')
+                        ->label('Số hàng')
+                        ->helperText('Số hàng hiển thị trên màn hình')
                         ->required()
                         ->numeric()
                         ->minValue(1)
@@ -202,9 +204,14 @@ class ManageCemeteryGrid extends Page implements HasForms
                         ->default(false),
                 ])
                 ->action(function (array $data): void {
+                    // Logic xoay 90 độ:
+                    // - Người dùng nhập: số cột hiển thị vào field 'rows', số hàng hiển thị vào field 'columns'
+                    // - Sau khi xoay: hàng hiển thị = columns dữ liệu, cột hiển thị = rows dữ liệu
+                    // - Vậy để có: cột hiển thị = $data['rows'], hàng hiển thị = $data['columns']
+                    //   Cần lưu: rows dữ liệu = $data['rows'], columns dữ liệu = $data['columns']
                     $count = $this->cemetery->initializePlots(
-                        rows: $data['rows'],
-                        columns: $data['columns'],
+                        rows: $data['rows'],     // rows dữ liệu = số cột hiển thị
+                        columns: $data['columns'], // columns dữ liệu = số hàng hiển thị
                         clearExisting: $data['clear_existing'] ?? false
                     );
 
