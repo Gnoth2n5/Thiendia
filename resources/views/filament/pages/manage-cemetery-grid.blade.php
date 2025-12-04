@@ -354,9 +354,9 @@
                         </template>
                     </div>
 
-                    <!-- Entrance Line and Labels (đoạn thẳng ngang và nhãn cổng vào) - Đặt ngoài khối render lưới -->
-                    <div class="overflow-x-auto" x-show="plots.length > 0 && maxRow > 0 && maxCol > 0">
-                        <div style="display: flex; margin-bottom: 8px; margin-left: 48px; position: relative; min-height: 30px;">
+                    <!-- Entrance Line and Labels (hàng rào và cổng vào) - Đặt ngoài khối render lưới -->
+                    <div class="overflow-x-auto" x-show="plots.length > 0 && maxRow > 0 && maxCol > 0" style="overflow-x: visible;">
+                        <div style="display: flex; margin-bottom: 12px; margin-left: 48px; position: relative; min-height: 80px; overflow: visible;">
                             <!-- Tính chiều rộng của lưới -->
                             <div 
                                 x-data="{
@@ -365,34 +365,70 @@
                                         return (colArray.length * 48) + ((colArray.length - 1) * 4);
                                     },
                                     get leftWidth() {
-                                        return Math.floor(this.gridWidth / 2);
+                                        return Math.floor(this.gridWidth / 2) - 40;
                                     },
                                     get rightWidth() {
-                                        return this.gridWidth - this.leftWidth;
+                                        return this.gridWidth - this.leftWidth - 80;
+                                    },
+                                    get gatePosition() {
+                                        return this.leftWidth;
+                                    },
+                                    get fenceCount() {
+                                        return Math.floor(this.leftWidth / 20);
                                     }
                                 }"
-                                :style="`width: ${gridWidth}px; position: relative;`"
+                                :style="`width: ${gridWidth}px; position: relative; min-width: ${gridWidth}px;`"
                             >
-                                <!-- Đoạn thẳng ngang -->
-                                <div style="position: absolute; top: 20px; left: 0; right: 0; height: 2px; background-color: #3b82f6; z-index: 1;"></div>
-                                
-                                <!-- Label Bên trái -->
-                                <div style="position: absolute; top: 0; left: 0; text-align: left; font-size: 11px; font-weight: 600; color: #3b82f6;">
-                                    Bên trái
+                                <!-- Hàng rào bên trái (icon lặp lại) -->
+                                <div 
+                                    :style="`position: absolute; top: 30px; left: 0; width: ${leftWidth}px; display: flex; align-items: center; gap: 2px;`"
+                                >
+                                    <template x-for="i in fenceCount" :key="'fence-left-' + i">
+                                        <img src="/images/fence.png" alt="Hàng rào" style="width: 18px; height: 18px; object-fit: contain;">
+                                    </template>
                                 </div>
                                 
-                                <!-- Label Cổng vào (ở giữa) -->
+                                <!-- Cổng vào (ở giữa) -->
                                 <div 
-                                    :style="`position: absolute; top: 0; left: ${leftWidth - 30}px; text-align: center; font-size: 11px; font-weight: 600; color: #3b82f6; width: 60px;`"
+                                    :style="`position: absolute; top: 0; left: ${gatePosition}px; display: flex; flex-direction: column; align-items: center; gap: 4px; width: 80px;`"
                                 >
-                                    Cổng vào
+                                    <!-- Label Cổng vào (ở trên) -->
+                                    <div style="display: flex; align-items: center; gap: 4px;">
+                                        <span style="font-size: 12px; font-weight: 700; color: #dc2626;">Cổng vào</span>
+                                    </div>
+                                    <!-- Icon cổng -->
+                                    <img src="/images/gate.png" alt="Cổng vào" style="width: 32px; height: 32px; object-fit: contain;">
+                                    <!-- Mũi tên chỉ xuống -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" style="width: 20px; height: 20px; color: #dc2626;">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3" />
+                                    </svg>
+                                </div>
+                                
+                                <!-- Hàng rào bên phải (icon lặp lại) -->
+                                <div 
+                                    :style="`position: absolute; top: 30px; right: 0; width: ${rightWidth}px; display: flex; align-items: center; gap: 2px;`"
+                                >
+                                    <template x-for="i in fenceCount" :key="'fence-right-' + i">
+                                        <img src="/images/fence.png" alt="Hàng rào" style="width: 18px; height: 18px; object-fit: contain;">
+                                    </template>
+                                </div>
+                                
+                                <!-- Label Bên trái -->
+                                <div style="position: absolute; top: 0; left: 0; display: flex; align-items: center; gap: 4px;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 16px; height: 16px; color: #16a34a;">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18" />
+                                    </svg>
+                                    <span style="font-size: 12px; font-weight: 700; color: #16a34a;">Bên trái</span>
                                 </div>
                                 
                                 <!-- Label Bên phải -->
                                 <div 
-                                    :style="`position: absolute; top: 0; right: 0; text-align: right; font-size: 11px; font-weight: 600; color: #3b82f6;`"
+                                    :style="`position: absolute; top: 0; right: 0; display: flex; align-items: center; gap: 4px;`"
                                 >
-                                    Bên phải
+                                    <span style="font-size: 12px; font-weight: 700; color: #16a34a;">Bên phải</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 16px; height: 16px; color: #16a34a;">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+                                    </svg>
                                 </div>
                             </div>
                         </div>
