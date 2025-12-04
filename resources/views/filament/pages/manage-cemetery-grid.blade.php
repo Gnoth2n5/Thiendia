@@ -57,12 +57,19 @@
                         selectedPlot: null,
                         maxRow: @js($gridDimensions['rows'] ?? 0),
                         maxCol: @js($gridDimensions['columns'] ?? 0),
+                        rowArray: [],
+                        colArray: [],
                         isRendering: false,
                         renderError: null,
                         
                         init() {
                             try {
                                 console.log('[CemeteryGrid] Initialized with', this.plots.length, 'plots');
+                                console.log('[CemeteryGrid] Grid dimensions:', 'rows:', this.maxRow, 'cols:', this.maxCol);
+                                // Đảo 90 độ: số hàng hiển thị = số cột dữ liệu, số cột hiển thị = số hàng dữ liệu
+                                this.rowArray = Array.from({ length: this.maxCol }, (_, i) => i + 1);
+                                this.colArray = Array.from({ length: this.maxRow }, (_, i) => i + 1);
+                                console.log('[CemeteryGrid] Display arrays:', 'rowArray length:', this.rowArray.length, 'colArray length:', this.colArray.length);
                                 this.buildPlotMap();
                                 this.setupLivewireListeners();
                             } catch (error) {
@@ -101,10 +108,18 @@
                             });
                         },
                         
-                        getPlotByPosition(row, col) {
+                        getPlotByPosition(col, row) {
                             try {
-                                const key = `${row}-${col}`;
-                                return this.plotMap[key] || null;
+                                // Đảo 90 độ: 
+                                // - Hàng hiển thị (row) = Cột dữ liệu (column)
+                                // - Cột hiển thị (col) = Hàng dữ liệu (row)
+                                // Vậy khi hiển thị ở (row, col), cần tìm plot có (row dữ liệu = col, column dữ liệu = row)
+                                const key = `${col}-${row}`;
+                                const plot = this.plotMap[key] || null;
+                                if (!plot) {
+                                    console.debug(`[CemeteryGrid] No plot found at display position (row=${row}, col=${col}), key=${key}`);
+                                }
+                                return plot;
                             } catch (error) {
                                 console.error('[CemeteryGrid] Error getting plot:', error);
                                 return null;
@@ -344,7 +359,7 @@
                         <div class="inline-block">
                             <!-- Column Headers (hiển thị chữ cái ở trên) -->
                             <div style="display: flex; gap: 4px; margin-bottom: 4px; margin-left: 48px;">
-                                <template x-for="col in maxCol" :key="'col-header-' + col">
+                                <template x-for="col in colArray" :key="'col-header-' + col">
                                     <div style="width: 48px; text-align: center; font-weight: 600; color: #6b7280; font-size: 12px;">
                                         <span x-text="String.fromCharCode(64 + col)"></span>
                                     </div>
@@ -352,7 +367,7 @@
                             </div>
 
                             <!-- Grid Rows (hàng ngang với label số bên trái) -->
-                            <template x-for="row in maxRow" :key="'row-' + row">
+                            <template x-for="row in rowArray" :key="'row-' + row">
                                 <div style="display: flex; gap: 4px; margin-bottom: 4px;">
                                     <!-- Row Label (số) -->
                                     <div style="width: 48px; display: flex; align-items: center; justify-content: center; font-weight: 600; color: #6b7280; font-size: 14px;">
@@ -360,9 +375,11 @@
                                     </div>
 
                                     <!-- Plot Cells - Lặp qua các cột trong hàng này -->
-                                    <template x-for="col in maxCol" :key="'cell-' + row + '-' + col">
+                                    <template x-for="col in colArray" :key="'cell-' + row + '-' + col">
                                         <div
-                                            x-data="{ plot: getPlotByPosition(col, row) }"
+                                            x-data="{ 
+                                                get plot() { return getPlotByPosition(col, row); }
+                                            }"
                                             @click="plot && selectPlot(plot.id)"
                                             :style="plot ? {
                                                 width: '48px',
@@ -386,7 +403,9 @@
                                             }"
                                             :title="plot ? (plot.plot_code + ' - ' + plot.status + (plot.grave ? ' (' + plot.grave.deceased_full_name + ')' : '')) : ''"
                                         >
-                                            <span x-show="plot" x-text="plot ? plot.plot_code : ''"></span>
+                                            <template x-if="plot">
+                                                <span x-text="plot.plot_code"></span>
+                                            </template>
                                         </div>
                                     </template>
                                 </div>
