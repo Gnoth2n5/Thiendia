@@ -45,3 +45,7 @@ Route::get('/guide', function () {
 
 Route::get('/contact', [App\Http\Controllers\ContactController::class, 'index'])->name('contact');
 Route::post('/contact', [App\Http\Controllers\ContactController::class, 'store'])->name('contact.store');
+
+Route::get('/about', function () {
+    return view('about');
+})->name('about');

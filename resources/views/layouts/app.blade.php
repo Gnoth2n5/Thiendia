@@ -4,30 +4,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Tra cứu liệt sĩ tỉnh Ninh Bình')</title>
+    <title>@yield('title', 'Tra cứu liệt sĩ  xã Lý Nhân')</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="@yield('description', 'Hệ thống tra cứu thông tin liệt sĩ tỉnh Ninh Bình trực tuyến. Tìm kiếm nhanh chóng, chính xác và tiện lợi. Quản lý dữ liệu nghĩa trang khoa học, minh bạch và hiện đại.')">
+    <meta name="description" content="@yield('description', 'Hệ thống tra cứu thông tin liệt sĩ  xã Lý Nhân trực tuyến. Tìm kiếm nhanh chóng, chính xác và tiện lợi. Quản lý dữ liệu nghĩa trang khoa học, minh bạch và hiện đại.')">
     <meta name="keywords"
-        content="tra cứu liệt sĩ, nghĩa trang Ninh Bình, tìm kiếm liệt sĩ, quản lý nghĩa trang, hệ thống tra cứu trực tuyến, bản đồ số nghĩa trang">
-    <meta name="author" content="Hệ thống Tra cứu Liệt sĩ Ninh Bình">
+        content="tra cứu liệt sĩ, nghĩa trang xã Lý Nhân, tìm kiếm liệt sĩ, quản lý nghĩa trang, hệ thống tra cứu trực tuyến, bản đồ số nghĩa trang">
+    <meta name="author" content="Hệ thống Tra cứu Liệt sĩ xã Lý Nhân">
     <meta name="robots" content="index, follow">
     <meta name="language" content="vi">
     <meta name="geo.region" content="VN-18">
-    <meta name="geo.placename" content="Ninh Bình, Việt Nam">
+    <meta name="geo.placename" content="xã Lý Nhân, Việt Nam">
 
     <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="@yield('title', 'Tra cứu liệt sĩ tỉnh Ninh Bình')">
-    <meta property="og:description" content="@yield('description', 'Hệ thống tra cứu thông tin liệt sĩ tỉnh Ninh Bình trực tuyến. Tìm kiếm nhanh chóng, chính xác và tiện lợi.')">
+    <meta property="og:title" content="@yield('title', 'Tra cứu liệt sĩ xã Lý Nhân')">
+    <meta property="og:description" content="@yield('description', 'Hệ thống tra cứu thông tin liệt sĩ xã Lý Nhân trực tuyến. Tìm kiếm nhanh chóng, chính xác và tiện lợi.')">
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ url()->current() }}">
-    <meta property="og:site_name" content="Hệ thống Tra cứu Liệt sĩ Ninh Bình">
+    <meta property="og:site_name" content="Hệ thống Tra cứu Liệt sĩ xã Lý Nhân">
     <meta property="og:locale" content="vi_VN">
 
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="@yield('title', 'Tra cứu liệt sĩ tỉnh Ninh Bình')">
-    <meta name="twitter:description" content="@yield('description', 'Hệ thống tra cứu thông tin liệt sĩ tỉnh Ninh Bình trực tuyến. Tìm kiếm nhanh chóng, chính xác và tiện lợi.')">
+    <meta name="twitter:title" content="@yield('title', 'Tra cứu liệt sĩ xã Lý Nhân')">
+    <meta name="twitter:description" content="@yield('description', 'Hệ thống tra cứu thông tin liệt sĩ xã Lý Nhân trực tuyến. Tìm kiếm nhanh chóng, chính xác và tiện lợi.')">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -72,12 +72,12 @@
                 <!-- Logo Section -->
                 <div class="flex items-center gap-4">
                     <a href="{{ route('home') }}" class="flex items-center gap-3">
-                        <div class="p-2 rounded-lg" style="background-color: rgba(245, 243, 231, 0.2);">
-                            <img src="{{ asset('images/logo1.png') }}" alt="Logo" class="w-10 h-10">
+                        <div class="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center" style="background-color: #026acb;">
+                            <img src="{{ asset('images/logo1.png') }}" alt="Logo" class="w-8 h-8 object-contain">
                         </div>
                         <div class="hidden sm:block text-white">
                             <div class="text-lg font-bold">Hệ thống Tra cứu liệt sĩ</div>
-                            <div class="text-sm opacity-90">Tỉnh Ninh Bình</div>
+                            <div class="text-sm opacity-90"> xã Lý Nhân</div>
                         </div>
                     </a>
                 </div>
@@ -92,17 +92,12 @@
                         Trang Chủ
                     </a>
 
-                    {{-- <div class="relative group">
-                        <a href="#"
-                            class="px-4 py-2 text-white font-semibold hover:bg-red-700 transition-colors duration-300 rounded flex items-center gap-1">
-                            Giới Thiệu
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                stroke-width="2" stroke="currentColor" class="h-4 w-4">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                            </svg>
-                        </a>
-
-                    </div> --}}
+                    <a href="{{ route('about') }}"
+                        class="px-4 py-2 text-white font-semibold rounded transition-colors duration-200 {{ request()->routeIs('about') ? 'bg-[rgba(0,0,0,0.3)]' : '' }}"
+                        onmouseover="this.style.backgroundColor='rgba(0,0,0,0.3)'"
+                        onmouseout="this.style.backgroundColor='{{ request()->routeIs('about') ? 'rgba(0,0,0,0.3)' : 'transparent' }}'">
+                        Giới Thiệu
+                    </a>
 
                     <div class="relative group">
                         <a href="{{ route('articles.index') }}"
@@ -127,9 +122,6 @@
                             <a href="{{ route('articles.category', 'su_kien') }}"
                                 class="block px-4 py-2 transition-colors hover:bg-gray-100" style="color: #2b2b2b;">Sự
                                 kiện</a>
-                            <a href="{{ route('articles.category', 'thong_bao') }}"
-                                class="block px-4 py-2 transition-colors hover:bg-gray-100"
-                                style="color: #2b2b2b;">Thông báo</a>
                         </div>
                     </div>
 
@@ -144,13 +136,6 @@
                         Danh Sách Liệt Sĩ
                     </a>
 
-                    {{-- Ngày Giỗ Hôm Nay - TẠM THỜI TẮT --}}
-                    {{-- <a href="{{ route('anniversary.today') }}"
-                        class="px-4 py-2 text-white font-semibold rounded transition-colors duration-200 {{ request()->routeIs('anniversary.*') ? 'bg-[rgba(0,0,0,0.3)]' : '' }}"
-                        onmouseover="if(!this.classList.contains('active-link')) this.style.backgroundColor='rgba(0,0,0,0.3)'"
-                        onmouseout="this.style.backgroundColor='{{ request()->routeIs('anniversary.*') ? 'rgba(0,0,0,0.3)' : 'transparent' }}'">
-                        Ngày Giỗ Hôm Nay
-                    </a> --}}
 
                     <a href="{{ route('contact') }}"
                         class="px-4 py-2 text-white font-semibold rounded transition-colors duration-200"
@@ -186,6 +171,13 @@
                         onmouseover="if(!this.classList.contains('active-link')) this.style.backgroundColor='rgba(0,0,0,0.5)'"
                         onmouseout="this.style.backgroundColor='{{ request()->routeIs('home') ? 'rgba(0,0,0,0.5)' : 'transparent' }}'">
                         Trang Chủ
+                    </a>
+
+                    <a href="{{ route('about') }}"
+                        class="flex items-center gap-3 px-4 py-3 text-white font-semibold transition-colors duration-200 {{ request()->routeIs('about') ? 'bg-[rgba(0,0,0,0.5)]' : '' }}"
+                        onmouseover="if(!this.classList.contains('active-link')) this.style.backgroundColor='rgba(0,0,0,0.5)'"
+                        onmouseout="this.style.backgroundColor='{{ request()->routeIs('about') ? 'rgba(0,0,0,0.5)' : 'transparent' }}'">
+                        Giới Thiệu
                     </a>
 
                     <a href="{{ route('articles.index') }}"
@@ -301,11 +293,11 @@
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                 <div class="col-span-1 md:col-span-2">
                     <div class="flex items-center gap-3 mb-4">
-                        <div class="rounded-lg w-12">
-                            <img src="{{ asset('images/logo.png') }}" alt="Logo" class="w-10 h-10">
+                        <div class="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center" style="background-color: #026acb;">
+                            <img src="{{ asset('images/logo1.png') }}" alt="Logo" class="w-8 h-8 object-contain">
                         </div>
                         <div>
-                            <h3 class="text-lg font-bold">Hệ thống Tra cứu liệt sĩ tỉnh Ninh Bình</h3>
+                            <h3 class="text-lg font-bold">Hệ thống Tra cứu liệt sĩ xã Lý Nhân</h3>
                             <p class="text-sm opacity-80">Tra cứu thông tin trực tuyến</p>
                         </div>
                     </div>
@@ -367,7 +359,7 @@
         <div class="border-t" style="border-color: rgba(212, 208, 200, 0.3);">
             <div class="container mx-auto px-4 py-6">
                 <div class="flex flex-col md:flex-row justify-between items-center gap-4 text-sm opacity-80">
-                    <p>© {{ date('Y') }} Hệ thống Tra cứu liệt sĩ tỉnh Ninh Bình. All rights reserved.</p>
+                    <p>© {{ date('Y') }} Hệ thống Tra cứu liệt sĩ xã Lý Nhân. All rights reserved.</p>
                     <div class="flex gap-6">
                         <a href="{{ route('privacy-policy') }}" class="hover:text-white transition-colors">Chính sách
                             bảo mật</a>

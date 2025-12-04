@@ -54,10 +54,39 @@ class GravesImportParser
         for ($row = 2; $row <= $highestRow; $row++) {
             $data = [];
 
-            // Đọc 13 cột (index 0-12)
-            for ($col = 0; $col <= 12; $col++) {
-                $cellValue = $worksheet->getCellByColumnAndRow($col + 1, $row)->getValue();
-                $data[$col] = $cellValue;
+            // Đọc từ cột 2 (bỏ qua cột 1 là STT), tối đa 12 cột dữ liệu (index 0-11)
+            // Excel column: 1=STT (bỏ qua), 2-13 = dữ liệu
+            for ($excelCol = 2; $excelCol <= 13; $excelCol++) {
+                $dataIndex = $excelCol - 2; // Map Excel column 2->0, 3->1, 4->2, etc.
+                $cell = $worksheet->getCellByColumnAndRow($excelCol, $row);
+                $rawValue = $cell->getValue();
+
+                // Nếu là cột ngày tháng (Ngày sinh, Ngày nhập ngũ, Ngày hy sinh)
+                // Mapping: Excel col 4->data[2], col 5->data[3], col 6->data[4]
+                if (in_array($dataIndex, [2, 3, 4]) && $rawValue !== null) {
+                    // Nếu là số (Excel date serial number), convert sang date
+                    if (is_numeric($rawValue)) {
+                        try {
+                            $dateTime = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject((float) $rawValue);
+                            $data[$dataIndex] = $dateTime->format('d/m/Y');
+                        } catch (\Exception $e) {
+                            // Nếu không convert được, lấy formatted value
+                            $data[$dataIndex] = $cell->getFormattedValue() ?: $rawValue;
+                        }
+                    } else {
+                        // Nếu là string hoặc DateTime object, lấy formatted value hoặc raw value
+                        if ($rawValue instanceof \DateTime || $rawValue instanceof \DateTimeInterface) {
+                            $data[$dataIndex] = $rawValue->format('d/m/Y');
+                        } else {
+                            $formatted = $cell->getFormattedValue();
+                            $data[$dataIndex] = ! empty($formatted) ? $formatted : (string) $rawValue;
+                        }
+                    }
+                } else {
+                    // Các cột khác: lấy formatted value nếu có, nếu không thì raw value
+                    $formatted = $cell->getFormattedValue();
+                    $data[$dataIndex] = ! empty($formatted) ? $formatted : $rawValue;
+                }
             }
 
             // Bỏ qua row trống
@@ -96,23 +125,22 @@ class GravesImportParser
         }
         $validatedData['deceased_full_name'] = $fullName;
 
-        // 1: Năm sinh
-        $birthYear = $data[1] ?? null;
-        if (! empty($birthYear)) {
-            $birthYear = (int) $birthYear;
-            if ($birthYear < 1900 || $birthYear > 2100) {
-                $errors[] = 'Năm sinh không hợp lệ (1900-2100)';
-            }
-            $validatedData['birth_year'] = $birthYear;
-        } else {
-            $validatedData['birth_year'] = null;
+        // 1: Nguyên Quán
+        $validatedData['hometown'] = ! empty($data[1]) ? trim((string) $data[1]) : null;
+
+        // 2: Ngày tháng năm sinh
+        $birthDate = $this->parseDate($data[2] ?? null);
+        if (! empty($data[2]) && $birthDate === null) {
+            $errors[] = 'Ngày sinh không đúng định dạng';
         }
+        $validatedData['deceased_birth_date'] = $birthDate;
 
-        // 2: Cấp bậc, chức vụ, đơn vị
-        $validatedData['rank_and_unit'] = ! empty($data[2]) ? trim((string) $data[2]) : null;
-
-        // 3: Chức vụ
-        $validatedData['position'] = ! empty($data[3]) ? trim((string) $data[3]) : null;
+        // 3: Ngày tháng năm nhập ngũ
+        $enlistmentDate = $this->parseDate($data[3] ?? null);
+        if (! empty($data[3]) && $enlistmentDate === null) {
+            $errors[] = 'Ngày nhập ngũ không đúng định dạng';
+        }
+        $validatedData['enlistment_date'] = $enlistmentDate;
 
         // 4: Ngày tháng năm hy sinh
         $deathDate = $this->parseDate($data[4] ?? null);
@@ -121,25 +149,20 @@ class GravesImportParser
         }
         $validatedData['deceased_death_date'] = $deathDate;
 
-        // 5: Số bằng TQGC
-        $validatedData['certificate_number'] = ! empty($data[5]) ? trim((string) $data[5]) : null;
+        // 5: Cấp bậc
+        $validatedData['rank'] = ! empty($data[5]) ? trim((string) $data[5]) : null;
 
-        // 6: Số QĐ, ngày, tháng, năm cấp
-        $decisionData = $this->parseDecisionField($data[6] ?? null);
-        $validatedData['decision_number'] = $decisionData['number'];
-        $validatedData['decision_date'] = $decisionData['date'];
+        // 6: Chức vụ
+        $validatedData['position'] = ! empty($data[6]) ? trim((string) $data[6]) : null;
 
-        // 7: Quan hệ với liệt sỹ
-        $validatedData['deceased_relationship'] = ! empty($data[7]) ? trim((string) $data[7]) : null;
+        // 7: Đơn vị
+        $validatedData['unit'] = ! empty($data[7]) ? trim((string) $data[7]) : null;
 
-        // 8: Thân nhân
-        $validatedData['next_of_kin'] = ! empty($data[8]) ? trim((string) $data[8]) : null;
+        // 8: Ghi chú
+        $validatedData['notes'] = ! empty($data[8]) ? trim((string) $data[8]) : null;
 
-        // 9: Ghi chú
-        $validatedData['notes'] = ! empty($data[9]) ? trim((string) $data[9]) : null;
-
-        // 10: Lô - tìm plot_id
-        $plotCode = ! empty($data[10]) ? trim((string) $data[10]) : null;
+        // 9: Lô - tìm plot_id
+        $plotCode = ! empty($data[9]) ? trim((string) $data[9]) : null;
         $plotId = null;
         if ($plotCode) {
             $plot = CemeteryPlot::where('cemetery_id', $this->cemeteryId)
@@ -158,8 +181,8 @@ class GravesImportParser
         }
         $validatedData['plot_id'] = $plotId;
 
-        // 11: Ảnh liệt sỹ - Tên file hoặc path hoặc URL
-        $deceasedPhoto = ! empty($data[11]) ? trim((string) $data[11]) : null;
+        // 10: Ảnh liệt sỹ - Tên file hoặc path hoặc URL
+        $deceasedPhoto = ! empty($data[10]) ? trim((string) $data[10]) : null;
         if ($deceasedPhoto) {
             if ($this->isValidUrl($deceasedPhoto)) {
                 // URL đầy đủ - giữ nguyên
@@ -180,10 +203,10 @@ class GravesImportParser
             $validatedData['deceased_photo'] = null;
         }
 
-        // 12: Ảnh mộ - Nhiều tên file/path/URLs cách nhau bằng dấu phẩy
+        // 11: Ảnh mộ - Nhiều tên file/path/URLs cách nhau bằng dấu phẩy
         $gravePhotos = [];
-        if (! empty($data[12])) {
-            $photoItems = array_map('trim', explode(',', (string) $data[12]));
+        if (! empty($data[11])) {
+            $photoItems = array_map('trim', explode(',', (string) $data[11]));
             foreach ($photoItems as $item) {
                 if (! empty($item)) {
                     if ($this->isValidUrl($item)) {
@@ -208,8 +231,14 @@ class GravesImportParser
 
         // Thêm các trường mặc định
         $validatedData['cemetery_id'] = $this->cemeteryId;
-        $validatedData['grave_type'] = 'đá';
-        $validatedData['deceased_gender'] = 'nam';
+
+        // Kiểm tra duplicate: Họ tên + Ngày sinh + Ngày hy sinh
+        if (! empty($fullName) && ($birthDate || $deathDate)) {
+            $duplicateError = $this->checkDuplicate($fullName, $birthDate, $deathDate, $rowNumber);
+            if ($duplicateError) {
+                $errors[] = $duplicateError;
+            }
+        }
 
         return [
             'row_number' => $rowNumber,
@@ -264,6 +293,62 @@ class GravesImportParser
     }
 
     /**
+     * Kiểm tra duplicate dựa trên 3 cột: Họ tên, Ngày sinh, Ngày hy sinh
+     */
+    protected function checkDuplicate(string $fullName, ?string $birthDate, ?string $deathDate, int $currentRowNumber): ?string
+    {
+        $normalizedName = mb_strtolower(trim($fullName));
+
+        // Kiểm tra duplicate trong cùng file (các rows đã parse trước đó)
+        foreach ($this->rows as $parsedRow) {
+            if ($parsedRow['row_number'] >= $currentRowNumber) {
+                continue; // Chỉ kiểm tra các row trước đó
+            }
+
+            $existingData = $parsedRow['validated_data'] ?? [];
+            $existingName = mb_strtolower(trim($existingData['deceased_full_name'] ?? ''));
+            $existingBirth = $existingData['deceased_birth_date'] ?? null;
+            $existingDeath = $existingData['deceased_death_date'] ?? null;
+
+            // So sánh 3 trường: Họ tên phải trùng, ngày sinh và ngày hy sinh phải cùng null hoặc cùng giá trị
+            if ($normalizedName === $existingName) {
+                $birthMatch = ($birthDate === null && $existingBirth === null) || ($birthDate === $existingBirth);
+                $deathMatch = ($deathDate === null && $existingDeath === null) || ($deathDate === $existingDeath);
+
+                if ($birthMatch && $deathMatch) {
+                    return "Dữ liệu đã tồn tại trong file (dòng {$parsedRow['row_number']})";
+                }
+            }
+        }
+
+        // Kiểm tra duplicate trong database
+        $query = Grave::where('cemetery_id', $this->cemeteryId)
+            ->whereRaw('LOWER(TRIM(deceased_full_name)) = ?', [$normalizedName]);
+
+        // So sánh ngày sinh: cùng null hoặc cùng giá trị
+        if ($birthDate) {
+            $query->where('deceased_birth_date', $birthDate);
+        } else {
+            $query->whereNull('deceased_birth_date');
+        }
+
+        // So sánh ngày hy sinh: cùng null hoặc cùng giá trị
+        if ($deathDate) {
+            $query->where('deceased_death_date', $deathDate);
+        } else {
+            $query->whereNull('deceased_death_date');
+        }
+
+        $existing = $query->first();
+
+        if ($existing) {
+            return 'Dữ liệu đã tồn tại trong hệ thống';
+        }
+
+        return null;
+    }
+
+    /**
      * Parse date từ nhiều format khác nhau
      */
     protected function parseDate($date): ?string
@@ -273,15 +358,115 @@ class GravesImportParser
         }
 
         try {
+            // Xử lý DateTime object
             if ($date instanceof \DateTime) {
                 return $date->format('Y-m-d');
             }
 
-            if (is_numeric($date)) {
-                return Carbon::createFromFormat('Y-m-d', \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($date)->format('Y-m-d'))->format('Y-m-d');
+            // Xử lý DateTimeInterface (Carbon, etc.)
+            if ($date instanceof \DateTimeInterface) {
+                return $date->format('Y-m-d');
             }
 
-            return Carbon::parse($date)->format('Y-m-d');
+            // Nếu là số (Excel date serial number)
+            if (is_numeric($date)) {
+                try {
+                    $dateTime = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject((float) $date);
+
+                    return $dateTime->format('Y-m-d');
+                } catch (\Exception $e) {
+                    // Nếu không phải Excel serial number, thử parse như timestamp
+                    if ($date > 1000000000) {
+                        return Carbon::createFromTimestamp((int) $date)->format('Y-m-d');
+                    }
+                }
+            }
+
+            $dateString = trim((string) $date);
+
+            // Thử parse với format chỉ có năm (ví dụ: 1952, 1954)
+            if (preg_match('/^(\d{4})$/', $dateString, $matches)) {
+                $year = (int) $matches[1];
+                if ($year >= 1900 && $year <= 2100) {
+                    // Lưu ngày 01/01/năm
+                    return Carbon::createFromDate($year, 1, 1)->format('Y-m-d');
+                }
+            }
+
+            // Thử parse với format năm-tháng (ví dụ: 1952-02, 02/1952, 1952/02)
+            if (preg_match('/^(\d{4})[-\/](\d{1,2})$/', $dateString, $matches)) {
+                $year = (int) $matches[1];
+                $month = (int) $matches[2];
+                if ($month >= 1 && $month <= 12 && $year >= 1900 && $year <= 2100) {
+                    // Lưu ngày 01/tháng/năm
+                    return Carbon::createFromDate($year, $month, 1)->format('Y-m-d');
+                }
+            }
+
+            // Thử parse với format tháng/năm (ví dụ: 02/1952, 2/1952)
+            if (preg_match('/^(\d{1,2})[-\/](\d{4})$/', $dateString, $matches)) {
+                $month = (int) $matches[1];
+                $year = (int) $matches[2];
+                if ($month >= 1 && $month <= 12 && $year >= 1900 && $year <= 2100) {
+                    // Lưu ngày 01/tháng/năm
+                    return Carbon::createFromDate($year, $month, 1)->format('Y-m-d');
+                }
+            }
+
+            // Thử parse với format dd/mm/yyyy trước (format phổ biến ở Việt Nam)
+            if (preg_match('/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/', $dateString, $matches)) {
+                $day = (int) $matches[1];
+                $month = (int) $matches[2];
+                $year = (int) $matches[3];
+
+                // Validate ngày tháng hợp lệ
+                if ($day >= 1 && $day <= 31 && $month >= 1 && $month <= 12 && $year >= 1900 && $year <= 2100) {
+                    try {
+                        return Carbon::createFromDate($year, $month, $day)->format('Y-m-d');
+                    } catch (\Exception $e) {
+                        // Nếu không tạo được (ví dụ: 31/02/1952), thử parse tự động
+                    }
+                }
+            }
+
+            // Thử parse với format yyyy-mm-dd
+            if (preg_match('/^(\d{4})-(\d{1,2})-(\d{1,2})$/', $dateString, $matches)) {
+                $year = (int) $matches[1];
+                $month = (int) $matches[2];
+                $day = (int) $matches[3];
+
+                if ($day >= 1 && $day <= 31 && $month >= 1 && $month <= 12 && $year >= 1900 && $year <= 2100) {
+                    try {
+                        return Carbon::createFromDate($year, $month, $day)->format('Y-m-d');
+                    } catch (\Exception $e) {
+                        // Nếu không tạo được, thử parse tự động
+                    }
+                }
+            }
+
+            // Thử parse với format dd-mm-yyyy
+            if (preg_match('/^(\d{1,2})-(\d{1,2})-(\d{4})$/', $dateString, $matches)) {
+                $day = (int) $matches[1];
+                $month = (int) $matches[2];
+                $year = (int) $matches[3];
+
+                if ($day >= 1 && $day <= 31 && $month >= 1 && $month <= 12 && $year >= 1900 && $year <= 2100) {
+                    try {
+                        return Carbon::createFromDate($year, $month, $day)->format('Y-m-d');
+                    } catch (\Exception $e) {
+                        // Nếu không tạo được, thử parse tự động
+                    }
+                }
+            }
+
+            // Fallback: dùng Carbon::parse() để tự động detect format
+            // Carbon có thể parse nhiều format khác nhau
+            $parsed = Carbon::parse($dateString);
+            if ($parsed && $parsed->year >= 1900 && $parsed->year <= 2100) {
+                return $parsed->format('Y-m-d');
+            }
+
+            return null;
         } catch (\Exception $e) {
             return null;
         }

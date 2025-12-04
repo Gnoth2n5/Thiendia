@@ -73,7 +73,7 @@
                         onmouseout="this.style.boxShadow='none'">
                         <figure class="h-48 overflow-hidden">
                             @if ($article->featured_image)
-                                <img src="{{ $article->featured_image }}" alt="{{ $article->title }}"
+                                <img src="{{ Storage::url($article->featured_image) }}" alt="{{ $article->title }}"
                                     class="w-full h-full object-cover">
                             @else
                                 <div class="w-full h-full flex items-center justify-center"
@@ -176,8 +176,8 @@
                                     <!-- Image Section -->
                                     <div class="relative overflow-hidden">
                                         @if ($article->featured_image)
-                                            <img src="{{ $article->featured_image }}" alt="{{ $article->title }}"
-                                                class="w-full h-64 md:h-full object-cover">
+                                            <img src="{{ Storage::url($article->featured_image) }}" alt="{{ $article->title }}"
+                                                class="w-full h-48 md:h-64 object-cover">
                                         @else
                                             <div class="w-full h-64 md:h-full flex items-center justify-center"
                                                 style="background-color: #3b82f6;">
@@ -275,7 +275,7 @@
                                             <!-- Small Image -->
                                             <div class="flex-shrink-0">
                                                 @if ($article->featured_image)
-                                                    <img src="{{ $article->featured_image }}"
+                                                    <img src="{{ Storage::url($article->featured_image) }}"
                                                         alt="{{ $article->title }}"
                                                         class="w-16 h-16 object-cover rounded-lg">
                                                 @else

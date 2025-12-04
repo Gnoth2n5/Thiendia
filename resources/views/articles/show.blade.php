@@ -55,7 +55,7 @@
         <div class="mb-8">
             <div class="card bg-base-100 shadow-xl border border-base-300 overflow-hidden">
                 <figure>
-                    <img src="{{ $article->featured_image }}" alt="{{ $article->title }}" class="w-full h-96 object-cover">
+                    <img src="{{ Storage::url($article->featured_image) }}" alt="{{ $article->title }}" class="w-full h-64 object-cover">
                 </figure>
             </div>
         </div>
@@ -121,7 +121,7 @@
                                 <div class="flex gap-3">
                                     <div class="flex-shrink-0">
                                         @if ($relatedArticle->featured_image)
-                                            <img src="{{ $relatedArticle->featured_image }}"
+                                            <img src="{{ Storage::url($relatedArticle->featured_image) }}"
                                                 alt="{{ $relatedArticle->title }}"
                                                 class="w-16 h-16 object-cover rounded-lg">
                                         @else

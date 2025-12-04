@@ -51,7 +51,7 @@
                         class="card bg-base-100 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 border border-base-300">
                         <figure class="h-48 overflow-hidden">
                             @if ($article->featured_image)
-                                <img src="{{ $article->featured_image }}" alt="{{ $article->title }}"
+                                <img src="{{ Storage::url($article->featured_image) }}" alt="{{ $article->title }}"
                                     class="w-full h-full object-cover">
                             @else
                                 <div

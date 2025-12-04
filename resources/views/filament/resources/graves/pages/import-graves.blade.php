@@ -49,31 +49,37 @@
                                 Họ và tên
                             </th>
                             <th class="px-3 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                                Năm sinh
+                                Nguyên Quán
                             </th>
                             <th class="px-3 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                                Cấp bậc, đơn vị
+                                Ngày sinh
                             </th>
                             <th class="px-3 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                                Chức vụ
+                                Ngày nhập ngũ
                             </th>
                             <th class="px-3 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                                 Ngày hy sinh
                             </th>
                             <th class="px-3 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                                Số bằng
+                                Cấp bậc
                             </th>
                             <th class="px-3 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                                Số QĐ
+                                Chức vụ
                             </th>
                             <th class="px-3 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                                Quan hệ
+                                Đơn vị
                             </th>
                             <th class="px-3 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                                Thân nhân
+                                Ghi chú
                             </th>
                             <th class="px-3 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                                 Lô
+                            </th>
+                            <th class="px-3 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
+                                Ảnh liệt sỹ
+                            </th>
+                            <th class="px-3 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
+                                Ảnh mộ
                             </th>
                             <th class="px-3 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                                 Trạng thái
@@ -114,7 +120,13 @@
                                     {{ $row['data'][8] ?? '' }}
                                 </td>
                                 <td class="px-3 py-3 text-sm text-gray-900 dark:text-gray-100">
+                                    {{ $row['data'][9] ?? '' }}
+                                </td>
+                                <td class="px-3 py-3 text-sm text-gray-900 dark:text-gray-100">
                                     {{ $row['data'][10] ?? '' }}
+                                </td>
+                                <td class="px-3 py-3 text-sm text-gray-900 dark:text-gray-100">
+                                    {{ $row['data'][11] ?? '' }}
                                 </td>
                                 <td class="px-3 py-3 text-sm">
                                     @if ($row['is_valid'])

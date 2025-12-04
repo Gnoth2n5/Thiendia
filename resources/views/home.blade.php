@@ -64,6 +64,26 @@
     @endpush
 
 @section('content')
+    <!-- Banner Carousel Section -->
+    @if (!empty($bannerImages) && count($bannerImages) > 0)
+        <div class="mb-8">
+            <div class="swiper banner-swiper">
+                <div class="swiper-wrapper">
+                    @foreach ($bannerImages as $image)
+                        <div class="swiper-slide">
+                            <img src="{{ $image }}" alt="Banner" class="w-full h-auto object-cover" style="max-height: 500px;">
+                        </div>
+                    @endforeach
+                </div>
+                <!-- Navigation arrows -->
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+                <!-- Pagination dots -->
+                <div class="swiper-pagination"></div>
+            </div>
+        </div>
+    @endif
+
     <!-- Quick Search Section -->
     <div class="mb-12">
         <div class="text-center mb-8">
@@ -213,8 +233,8 @@
                             <!-- Image Section -->
                             <div class="relative overflow-hidden">
                                 @if ($article->featured_image)
-                                    <img src="{{ $article->featured_image }}" alt="{{ $article->title }}"
-                                        class="w-full h-64 md:h-full object-cover">
+                                    <img src="{{ Storage::url($article->featured_image) }}" alt="{{ $article->title }}"
+                                        class="w-full h-48 md:h-64 object-cover">
                                 @else
                                     <div class="w-full h-64 md:h-full flex items-center justify-center"
                                         style="background-color: #3b82f6;">
@@ -392,75 +412,123 @@
         </div>
     </div>
 
-    <!-- SEO Content Section -->
-    <div>
-        <div class="max-w-6xl mx-auto">
-            <div class="rounded-xl border p-8 md:p-12" style="background-color: #fafaf8; border-color: #d4d0c8;">
-                <h1 class="text-2xl md:text-4xl font-bold mb-6 text-center xl:mx-28" style="color: #2b2b2b;">
-                    HỆ THỐNG TRA CỨU THÔNG TIN LIỆT SĨ TỈNH NINH BÌNH TRỰC TUYẾN
-                </h1>
-                <p class="text-xl text-gray-600 text-center mb-8">
-                    Tra cứu thông tin liệt sĩ nhanh chóng, chính xác và tiện lợi
-                </p>
-
-                <div class="prose prose-lg max-w-none">
-                    <p class="text-lg leading-relaxed mb-6" style="color: #2b2b2b;">
-                        Hệ thống Tra cứu thông tin liệt sĩ tỉnh Ninh Bình là nền tảng trực tuyến giúp người dân dễ dàng tra
-                        cứu thông tin liệt sĩ, xác định vị trí an táng và quản lý dữ liệu nghĩa trang một cách
-                        khoa học, minh bạch và hiện đại. Với công nghệ bản đồ số tiên tiến, người dùng có thể tìm kiếm thông
-                        tin chính xác chỉ bằng vài thao tác đơn giản.
-                    </p>
-
-                    <h2 class="text-3xl font-bold mb-6" style="color: #3b82f6;">Giới thiệu hệ thống</h2>
-                    <p class="text-lg leading-relaxed mb-6" style="color: #2b2b2b;">
-                        Hệ thống được xây dựng nhằm số hóa dữ liệu nghĩa địa, phục vụ công tác quản lý, tra cứu và bảo tồn
-                        thông tin người đã khuất. Đây là giải pháp tối ưu cho các địa phương, ban quản lý nghĩa trang, cũng
-                        như thân nhân có nhu cầu tìm kiếm và cập nhật thông tin mộ phần.
-                    </p>
-
-                    <h2 class="text-3xl font-bold mb-6" style="color: #3b82f6;">Tính năng nổi bật</h2>
-                    <ul class="list-disc list-inside text-lg leading-relaxed mb-6 space-y-2" style="color: #2b2b2b;">
-                        <li>Tra cứu thông tin người đã khuất: Nhập tên, năm sinh, năm mất hoặc khu vực chôn cất để tìm kiếm
-                            dễ dàng.</li>
-                        <li>Xác định vị trí mộ liệt sĩ trên bản đồ số: Hỗ trợ định vị nhanh chóng, chính xác.</li>
-                        <li>Quản lý dữ liệu nghĩa trang: Cập nhật, chỉnh sửa thông tin mộ phần, phân khu, hàng, lô dễ dàng.
-                        </li>
-                        <li>Tích hợp hình ảnh và hồ sơ điện tử: Giúp lưu trữ và bảo tồn thông tin lâu dài.</li>
-                        <li>Báo cáo thống kê thông minh: Hỗ trợ cơ quan quản lý tổng hợp số liệu và lập kế hoạch hiệu quả.
-                        </li>
-                    </ul>
-
-                    <h2 class="text-3xl font-bold mb-6" style="color: #3b82f6;">Lợi ích mang lại</h2>
-                    <ul class="list-disc list-inside text-lg leading-relaxed mb-6 space-y-2" style="color: #2b2b2b;">
-                        <li>Đối với người dân: Dễ dàng tìm kiếm thông tin người thân mà không cần đến trực tiếp nghĩa trang.
-                        </li>
-                        <li>Đối với ban quản lý nghĩa trang: Tiết kiệm thời gian, giảm sai sót và quản lý tập trung, chuyên
-                            nghiệp.</li>
-                        <li>Đối với chính quyền địa phương: Góp phần vào công cuộc chuyển đổi số, nâng cao hiệu quả quản lý
-                            dân cư và di sản văn hóa tâm linh.</li>
-                    </ul>
-
-                    <h2 class="text-3xl font-bold mb-6" style="color: #3b82f6;">Tầm nhìn và sứ mệnh</h2>
-                    <p class="text-lg leading-relaxed mb-6" style="color: #2b2b2b;">
-                        Chúng tôi hướng tới mục tiêu xây dựng hệ thống tra cứu và quản lý nghĩa địa toàn diện, góp phần gìn
-                        giữ giá trị văn hóa truyền thống và tạo thuận tiện cho người dân trong hành trình tưởng nhớ tổ tiên.
-                    </p>
-
-                    <h2 class="text-3xl font-bold mb-6" style="color: #3b82f6;">Liên hệ</h2>
-                    <p class="text-lg leading-relaxed mb-6" style="color: #2b2b2b;">
-                        Nếu bạn là ban quản lý nghĩa trang, chính quyền địa phương hoặc người dân muốn sử dụng hệ thống, hãy
-                        liên hệ với chúng tôi để được tư vấn và hỗ trợ triển khai:
-                    </p>
-                    <ul class="list-disc list-inside text-lg leading-relaxed" style="color: #2b2b2b;">
-                        <li>📍 Địa chỉ: Ninh Bình, Việt Nam</li>
-                        <li>📞 Hotline: 0123 456 789</li>
-                        <li>🌐 Website: tenmiencuaban.vn</li>
-                        <li>✉️ Email: lienhe@tenmiencuaban.vn</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
 @endsection
+
+@push('styles')
+    @if (!empty($bannerImages) && count($bannerImages) > 0)
+        <!-- Swiper CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+        <style>
+            .banner-swiper {
+                width: 100%;
+                height: auto;
+                border-radius: 0.5rem;
+                overflow: hidden;
+            }
+
+            .banner-swiper .swiper-slide {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .banner-swiper .swiper-slide img {
+                width: 100%;
+                height: auto;
+                object-fit: cover;
+                display: block;
+            }
+
+            .banner-swiper .swiper-button-next,
+            .banner-swiper .swiper-button-prev {
+                color: white;
+                background-color: rgba(0, 0, 0, 0.5);
+                width: 44px;
+                height: 44px;
+                border-radius: 50%;
+            }
+
+            .banner-swiper .swiper-button-next:after,
+            .banner-swiper .swiper-button-prev:after {
+                font-size: 20px;
+            }
+
+            .banner-swiper .swiper-button-next:hover,
+            .banner-swiper .swiper-button-prev:hover {
+                background-color: rgba(0, 0, 0, 0.7);
+            }
+
+            .banner-swiper .swiper-pagination-bullet {
+                background-color: white;
+                opacity: 0.5;
+            }
+
+            .banner-swiper .swiper-pagination-bullet-active {
+                opacity: 1;
+            }
+
+            @media (max-width: 768px) {
+                .banner-swiper .swiper-button-next,
+                .banner-swiper .swiper-button-prev {
+                    width: 36px;
+                    height: 36px;
+                }
+
+                .banner-swiper .swiper-button-next:after,
+                .banner-swiper .swiper-button-prev:after {
+                    font-size: 16px;
+                }
+            }
+        </style>
+    @endif
+@endpush
+
+@push('scripts')
+    @if (!empty($bannerImages) && count($bannerImages) > 0)
+        <!-- Swiper JS -->
+        <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const swiper = new Swiper('.banner-swiper', {
+                    // Optional parameters
+                    loop: true,
+                    autoplay: {
+                        delay: 5000,
+                        disableOnInteraction: false,
+                    },
+                    effect: 'fade',
+                    fadeEffect: {
+                        crossFade: true
+                    },
+                    // Navigation arrows
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                    },
+                    // Pagination
+                    pagination: {
+                        el: '.swiper-pagination',
+                        clickable: true,
+                    },
+                    // Responsive breakpoints
+                    breakpoints: {
+                        320: {
+                            slidesPerView: 1,
+                            spaceBetween: 10
+                        },
+                        768: {
+                            slidesPerView: 1,
+                            spaceBetween: 20
+                        },
+                        1024: {
+                            slidesPerView: 1,
+                            spaceBetween: 30
+                        }
+                    }
+                });
+            });
+        </script>
+    @endif
+@endpush
 
 {{-- Temporarily disabled JavaScript to test form submission --}}
