@@ -204,23 +204,49 @@ class ManageCemeteryGrid extends Page implements HasForms
                         ->default(false),
                 ])
                 ->action(function (array $data): void {
-                    // Logic xoay 90 độ:
-                    // - Người dùng nhập: số cột hiển thị vào field 'rows', số hàng hiển thị vào field 'columns'
-                    // - Sau khi xoay: hàng hiển thị = columns dữ liệu, cột hiển thị = rows dữ liệu
-                    // - Vậy để có: cột hiển thị = $data['rows'], hàng hiển thị = $data['columns']
-                    //   Cần lưu: rows dữ liệu = $data['rows'], columns dữ liệu = $data['columns']
-                    $count = $this->cemetery->initializePlots(
-                        rows: $data['rows'],     // rows dữ liệu = số cột hiển thị
-                        columns: $data['columns'], // columns dữ liệu = số hàng hiển thị
-                        clearExisting: $data['clear_existing'] ?? false
-                    );
+                    // Kiểm tra nếu có yêu cầu xóa lưới hiện tại
+                    if ($data['clear_existing'] ?? false) {
+                        // Kiểm tra xem có lô nào đang được sử dụng (có grave) không
+                        $usedPlotsCount = CemeteryPlot::where('cemetery_id', $this->cemetery->id)
+                            ->whereHas('grave')
+                            ->count();
 
-                    $this->loadPlots();
+                        if ($usedPlotsCount > 0) {
+                            Notification::make()
+                                ->title('Không thể xóa lưới hiện tại')
+                                ->body("Có {$usedPlotsCount} lô đang được sử dụng (có mộ liệt sĩ). Vui lòng bỏ chọn 'Xóa lưới hiện tại' hoặc xóa/di chuyển các mộ trước.")
+                                ->danger()
+                                ->send();
 
-                    Notification::make()
-                        ->title("Đã tạo {$count} lô mộ")
-                        ->success()
-                        ->send();
+                            return;
+                        }
+                    }
+
+                    try {
+                        // Logic xoay 90 độ:
+                        // - Người dùng nhập: số cột hiển thị vào field 'rows', số hàng hiển thị vào field 'columns'
+                        // - Sau khi xoay: hàng hiển thị = columns dữ liệu, cột hiển thị = rows dữ liệu
+                        // - Vậy để có: cột hiển thị = $data['rows'], hàng hiển thị = $data['columns']
+                        //   Cần lưu: rows dữ liệu = $data['rows'], columns dữ liệu = $data['columns']
+                        $count = $this->cemetery->initializePlots(
+                            rows: $data['rows'],     // rows dữ liệu = số cột hiển thị
+                            columns: $data['columns'], // columns dữ liệu = số hàng hiển thị
+                            clearExisting: $data['clear_existing'] ?? false
+                        );
+
+                        $this->loadPlots();
+
+                        Notification::make()
+                            ->title("Đã tạo {$count} lô mộ")
+                            ->success()
+                            ->send();
+                    } catch (\Exception $e) {
+                        Notification::make()
+                            ->title('Lỗi khi tạo lưới')
+                            ->body($e->getMessage())
+                            ->danger()
+                            ->send();
+                    }
                 }),
 
             Action::make('reset_grid')
@@ -231,6 +257,21 @@ class ManageCemeteryGrid extends Page implements HasForms
                 ->modalHeading('Xác nhận xóa lưới')
                 ->modalDescription('Bạn có chắc muốn xóa toàn bộ lưới? Hành động này không thể hoàn tác.')
                 ->action(function (): void {
+                    // Kiểm tra xem có lô nào đang được sử dụng (có grave) không
+                    $usedPlotsCount = CemeteryPlot::where('cemetery_id', $this->cemetery->id)
+                        ->whereHas('grave')
+                        ->count();
+
+                    if ($usedPlotsCount > 0) {
+                        Notification::make()
+                            ->title('Không thể xóa lưới')
+                            ->body("Có {$usedPlotsCount} lô đang được sử dụng (có mộ liệt sĩ). Vui lòng xóa hoặc di chuyển các mộ trước khi xóa lưới.")
+                            ->danger()
+                            ->send();
+
+                        return;
+                    }
+
                     $count = CemeteryPlot::where('cemetery_id', $this->cemetery->id)->count();
                     CemeteryPlot::where('cemetery_id', $this->cemetery->id)->delete();
 
