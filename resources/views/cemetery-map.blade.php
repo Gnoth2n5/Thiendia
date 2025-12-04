@@ -77,28 +77,33 @@
                     <!-- Grid -->
                     <div class="overflow-x-auto p-4 bg-gray-50 rounded-lg">
                         <div class="inline-block">
-                            <!-- Column Headers -->
+                            @php
+                                // Đảo 90 độ: số hàng hiển thị = số cột dữ liệu, số cột hiển thị = số hàng dữ liệu
+                                $displayRows = $plotGrid['columns']; // Hàng hiển thị = Cột dữ liệu
+                                $displayCols = $plotGrid['rows'];    // Cột hiển thị = Hàng dữ liệu
+                            @endphp
+                            <!-- Column Headers (hiển thị chữ cái) -->
                             <div style="display: flex; gap: 4px; margin-bottom: 4px; margin-left: 40px;">
-                                @for ($col = 1; $col <= $plotGrid['columns']; $col++)
+                                @for ($col = 1; $col <= $displayCols; $col++)
                                     <div style="width: 48px; text-align: center; font-weight: 600; color: #6b7280; font-size: 11px;">
-                                        {{ $col }}
+                                        {{ chr(64 + $col) }}
                                     </div>
                                 @endfor
                             </div>
 
-                            <!-- Grid Rows -->
-                            @for ($row = 1; $row <= $plotGrid['rows']; $row++)
+                            <!-- Grid Rows (hiển thị số) -->
+                            @for ($row = 1; $row <= $displayRows; $row++)
                                 <div style="display: flex; gap: 4px; margin-bottom: 4px;">
-                                    <!-- Row Label -->
+                                    <!-- Row Label (số) -->
                                     <div style="width: 36px; display: flex; align-items: center; justify-content: center; font-weight: 600; color: #6b7280; font-size: 13px;">
-                                        {{ chr(64 + $row) }}
+                                        {{ $row }}
                                     </div>
 
-                                    <!-- Plot Cells -->
-                                    @for ($col = 1; $col <= $plotGrid['columns']; $col++)
-                                        @if (isset($plotMap[$row][$col]))
+                                    <!-- Plot Cells - đảo 90 độ: khi hiển thị ở (row, col), tìm plot có (row dữ liệu = col, column dữ liệu = row) -->
+                                    @for ($col = 1; $col <= $displayCols; $col++)
+                                        @if (isset($plotMap[$col][$row]))
                                             @php
-                                                $plot = $plotMap[$row][$col];
+                                                $plot = $plotMap[$col][$row];
                                                 $backgroundColor = $getPlotColor($plot->status);
                                                 $title = $plot->plot_code . ' - ' . $plot->status_label;
                                                 if ($plot->grave) {
