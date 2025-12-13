@@ -394,7 +394,7 @@
                                 >
                                     <!-- Label Tượng đài (ở trên) -->
                                     <div style="display: flex; align-items: center; gap: 4px;">
-                                        <span style="font-size: 12px; font-weight: 700; color: #dc2626;">Tượng đài</span>
+                                        <span style="font-size: 12px; font-weight: 700; color: #dc2626;">Đài tưởng niệm</span>
                                     </div>
                                     <!-- Icon tượng đài -->
                                     <img src="/images/rizal-park.png" alt="Tượng đài" style="width: 32px; height: 32px; object-fit: contain;">
