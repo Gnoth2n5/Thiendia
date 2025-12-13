@@ -179,8 +179,77 @@
                         <div>
                             {{-- <h3 class="text-lg font-semibold mb-3" style="color: #2b2b2b;">Mô phỏng bia liệt sĩ</h3> --}}
                             <div class="relative flex justify-center">
-                                <div class="relative" style="box-shadow: 0 4px 15px rgba(0,0,0,0.3); border: 2px solid #444; line-height: 0; display: inline-block;">
-                                    <canvas id="tombstoneCanvas" width="350" height="500" style="display: block;"></canvas>
+                                <div id="tombstoneContainer" class="tombstone-wrapper" style="box-shadow: 0 4px 15px rgba(0,0,0,0.3); border: 2px solid #444; position: relative; width: 350px; min-height: 500px;">
+                                    <!-- Nền granite -->
+                                    <div class="tombstone-background"></div>
+                                    
+                                    <!-- Viền trang trí -->
+                                    <div class="tombstone-border"></div>
+                                    
+                                    <!-- Nội dung bia -->
+                                    <div class="tombstone-content">
+                                        <!-- Ngôi sao -->
+                                        <div class="tombstone-star-wrapper">
+                                            <svg class="tombstone-star" viewBox="0 0 100 100" width="52" height="52">
+                                                <defs>
+                                                    <filter id="starGlow">
+                                                        <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                                                        <feMerge>
+                                                            <feMergeNode in="coloredBlur"/>
+                                                            <feMergeNode in="SourceGraphic"/>
+                                                        </feMerge>
+                                                    </filter>
+                                                </defs>
+                                                <circle cx="50" cy="50" r="34" fill="none" stroke="#FFD700" stroke-width="2"/>
+                                                <path d="M50,10 L61,38 L90,38 L68,56 L79,84 L50,66 L21,84 L32,56 L10,38 L39,38 Z" 
+                                                      fill="#e30000" stroke="#FFFF00" stroke-width="1" filter="url(#starGlow)"/>
+                                            </svg>
+                                        </div>
+                                        
+                                        <!-- Tiêu đề -->
+                                        <h2 class="tombstone-title">LIỆT SỸ</h2>
+                                        
+                                        <!-- Tên liệt sỹ -->
+                                        <h3 class="tombstone-name" id="tombstoneName"></h3>
+                                        
+                                        <!-- Divider -->
+                                        <div class="tombstone-divider"></div>
+                                        
+                                        <!-- Thông tin chi tiết -->
+                                        <div class="tombstone-info">
+                                            <div class="tombstone-field" data-field="birthYear" style="display: none;">
+                                                <span class="tombstone-label">Sinh năm:</span>
+                                                <span class="tombstone-value"></span>
+                                            </div>
+                                            <div class="tombstone-field" data-field="hometown" style="display: none;">
+                                                <span class="tombstone-label">Nguyên quán:</span>
+                                                <span class="tombstone-value"></span>
+                                            </div>
+                                            <div class="tombstone-field" data-field="rank" style="display: none;">
+                                                <span class="tombstone-label">Cấp bậc:</span>
+                                                <span class="tombstone-value"></span>
+                                            </div>
+                                            <div class="tombstone-field" data-field="unit" style="display: none;">
+                                                <span class="tombstone-label">Đơn vị:</span>
+                                                <span class="tombstone-value"></span>
+                                            </div>
+                                            <div class="tombstone-field" data-field="position" style="display: none;">
+                                                <span class="tombstone-label">Chức vụ:</span>
+                                                <span class="tombstone-value"></span>
+                                            </div>
+                                            <div class="tombstone-field" data-field="enlistmentDate" style="display: none;">
+                                                <span class="tombstone-label">Ngày nhập ngũ:</span>
+                                                <span class="tombstone-value"></span>
+                                            </div>
+                                            <div class="tombstone-field" data-field="sacrificeDate" style="display: none;">
+                                                <span class="tombstone-label">Hy sinh ngày:</span>
+                                                <span class="tombstone-value"></span>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Dòng kết -->
+                                        <div class="tombstone-footer">TỔ QUỐC GHI CÔNG</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -618,6 +687,180 @@
         </div>
     </div>
 
+    <style>
+        /* Tombstone Styles */
+        .tombstone-wrapper {
+            position: relative;
+            background: #0a0a0a;
+            overflow: hidden;
+        }
+
+        .tombstone-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(255,255,255,0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(255,255,255,0.02) 0%, transparent 50%),
+                linear-gradient(135deg, #0a0a0a 0%, #141414 100%);
+            background-size: 200% 200%, 150% 150%, 100% 100%;
+            animation: graniteShift 20s ease-in-out infinite;
+        }
+
+        @keyframes graniteShift {
+            0%, 100% { background-position: 0% 0%, 0% 0%, 0% 0%; }
+            50% { background-position: 100% 100%, 50% 50%, 0% 0%; }
+        }
+
+        .tombstone-background::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.02) 2px, rgba(255,255,255,0.02) 4px),
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,0.02) 2px, rgba(255,255,255,0.02) 4px);
+            pointer-events: none;
+        }
+
+        .tombstone-border {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            bottom: 15px;
+            border: 2px solid #C5A059;
+            pointer-events: none;
+        }
+
+        .tombstone-border::before {
+            content: '';
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            right: 4px;
+            bottom: 4px;
+            border: 1px solid #C5A059;
+        }
+
+        .tombstone-content {
+            position: relative;
+            z-index: 1;
+            padding: 30px 30px 35px;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .tombstone-star-wrapper {
+            margin-bottom: 20px;
+        }
+
+        .tombstone-star {
+            filter: drop-shadow(0 0 8px rgba(255, 0, 0, 0.6));
+        }
+
+        .tombstone-title {
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            font-size: 30px;
+            background: linear-gradient(90deg, #BF953F 0%, #FCF6BA 30%, #B38728 50%, #FBF5B7 70%, #AA771C 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.9);
+            margin: -5px 0;
+            text-align: center;
+        }
+
+        .tombstone-name {
+            font-family: 'Noto Serif', 'Times New Roman', serif;
+            font-weight: 700;
+            font-size: 26px;
+            background: linear-gradient(90deg, #BF953F 0%, #FCF6BA 30%, #B38728 50%, #FBF5B7 70%, #AA771C 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.9);
+            margin: 10px 0;
+            text-align: center;
+            text-transform: none !important;
+            font-variant: normal !important;
+            text-rendering: optimizeLegibility;
+            letter-spacing: 0.5px;
+        }
+        
+        #tombstoneName {
+            text-transform: none !important;
+        }
+
+        .tombstone-divider {
+            width: 120px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent 0%, #FFD700 50%, transparent 100%);
+            margin: 10px 0 20px;
+        }
+
+        .tombstone-info {
+            width: 100%;
+            margin-top: 10px;
+            margin-bottom: auto;
+            padding: 0 5px;
+        }
+
+        .tombstone-field {
+            display: flex;
+            margin-bottom: 14px;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tombstone-label {
+            font-family: 'Noto Serif', serif;
+            font-weight: 700;
+            font-size: 14px;
+            color: #cccccc;
+            min-width: 115px;
+            max-width: 115px;
+            flex-shrink: 0;
+            text-align: left;
+            line-height: 1.2;
+        }
+
+        .tombstone-value {
+            font-family: 'Noto Serif', serif;
+            font-weight: 400;
+            font-size: 15px;
+            background: linear-gradient(90deg, #BF953F 0%, #FCF6BA 30%, #B38728 50%, #FBF5B7 70%, #AA771C 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            flex: 1;
+            word-wrap: break-word;
+            text-align: left;
+            line-height: 1.2;
+        }
+
+        .tombstone-footer {
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            font-size: 22px;
+            background: linear-gradient(90deg, #BF953F 0%, #FCF6BA 30%, #B38728 50%, #FBF5B7 70%, #AA771C 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.9);
+            text-align: center;
+            margin-top: auto;
+            padding-top: 20px;
+        }
+    </style>
+
     <script>
         let currentImageIndex = 0;
         let allImages = [];
@@ -921,7 +1164,7 @@
             initCemeteryLocationMap();
         });
 
-        // Tombstone Generator Script
+        // Tombstone Generator Script - HTML/CSS Version
         document.addEventListener('DOMContentLoaded', function() {
             // Import fonts
             const link = document.createElement('link');
@@ -942,272 +1185,57 @@
                 note: @json($grave->notes ?? '')
             };
 
-            const canvas = document.getElementById('tombstoneCanvas');
-            if (!canvas) return;
-
-            const ctx = canvas.getContext('2d');
-
-            // Wait for fonts to load
-            document.fonts.ready.then(function() {
-                drawTombstone(martyrData);
-            });
-
-            function drawTombstone(data) {
-                const w = canvas.width;
-                const h = canvas.height;
-
-                // 1. Xóa canvas & Vẽ nền đá Granite đen bóng
-                drawGraniteBackground(w, h);
-
-                // 2. Vẽ khung viền hoa văn phức tạp hơn
-                drawDecorativeBorder(w, h);
-
-                // 3. Vẽ Quốc huy / Ngôi sao
-                drawStar(w / 2, 75, 26, 13);
-
-                // --- Cấu hình chữ chung ---
-                ctx.shadowColor = "rgba(0,0,0,0.9)";
-                ctx.shadowBlur = 2;
-                ctx.shadowOffsetX = 1;
-                ctx.shadowOffsetY = 1;
-                ctx.textAlign = "center";
-
-                // 4. Tiêu đề "LIỆT SỸ"
-                const goldGradient = ctx.createLinearGradient(0, 0, w, 0);
-                goldGradient.addColorStop(0, "#BF953F");
-                goldGradient.addColorStop(0.3, "#FCF6BA");
-                goldGradient.addColorStop(0.5, "#B38728");
-                goldGradient.addColorStop(0.7, "#FBF5B7");
-                goldGradient.addColorStop(1, "#AA771C");
-
-                ctx.fillStyle = goldGradient;
-                ctx.font = "700 30px 'Cinzel', serif";
-                ctx.fillText("LIỆT SỸ", w / 2, 145);
-
-                // 5. Tên liệt sỹ
-                ctx.font = "700 26px 'Cinzel', serif";
-                ctx.fillText(data.name, w / 2, 190);
-
-                // 6. Kẻ đường gạch chân trang trí dưới tên
-                drawDivider(w/2, 210);
-
-                // 7. Vẽ thông tin chi tiết
-                ctx.textAlign = "left";
+            function populateTombstone(data) {
+                console.log('Populating tombstone with data:', data);
                 
-                const labelX = 40;
-                // Tìm label dài nhất để căn thẳng hàng
-                ctx.font = "700 14px 'Noto Serif', serif";
-                const labels = ["Sinh năm:", "Nguyên quán:", "Cấp bậc:", "Đơn vị:", "Chức vụ:", "Ngày nhập ngũ:", "Hy sinh ngày:"];
-                let maxLabelWidth = 0;
-                labels.forEach(label => {
-                    const width = ctx.measureText(label).width;
-                    if (width > maxLabelWidth) maxLabelWidth = width;
-                });
-                const valueX = labelX + maxLabelWidth + 15; // Khoảng cách 15px giữa label và value
-                const rightMargin = 40;
-                let currentY = 240;
-                const lineHeight = 26;
-
-                function drawField(label, value) {
-                    if (!value) return;
-
-                    ctx.font = "700 14px 'Noto Serif', serif";
-                    ctx.fillStyle = "#cccccc";
-                    ctx.fillText(label, labelX, currentY);
-
-                    ctx.font = "400 15px 'Noto Serif', serif";
-                    ctx.fillStyle = goldGradient;
-
-                    const maxWidth = w - valueX - rightMargin;
-                    const words = value.split(' ');
-                    let line = '';
-                    let y = currentY;
-
-                    if (ctx.measureText(value).width <= maxWidth) {
-                         ctx.fillText(value, valueX, y);
-                         currentY += lineHeight;
-                         return;
-                    }
-
-                    for(let n = 0; n < words.length; n++) {
-                        const testLine = line + words[n] + ' ';
-                        const metrics = ctx.measureText(testLine);
-                        const testWidth = metrics.width;
-                        
-                        if (testWidth > maxWidth && n > 0) {
-                            ctx.fillText(line, valueX, y);
-                            line = words[n] + ' ';
-                            y += 20;
-                        }
-                        else {
-                            line = testLine;
-                        }
-                    }
-                    ctx.fillText(line, valueX, y);
-                    currentY = y + lineHeight;
-                }
-
-                drawField("Sinh năm:", data.birthYear);
-                drawField("Nguyên quán:", data.hometown);
-                drawField("Cấp bậc:", data.rank);
-                drawField("Đơn vị:", data.unit);
-                drawField("Chức vụ:", data.position);
-                drawField("Ngày nhập ngũ:", data.enlistmentDate);
-                drawField("Hy sinh ngày:", data.sacrificeDate);
-
-                // 8. Dòng kết "TỔ QUỐC GHI CÔNG"
-                ctx.textAlign = "center";
-                ctx.font = "700 22px 'Cinzel', serif";
-                ctx.fillStyle = goldGradient;
-                ctx.fillText("TỔ QUỐC GHI CÔNG", w / 2, h - 35);
-
-                ctx.shadowColor = "transparent";
-            }
-
-            function drawGraniteBackground(w, h) {
-                ctx.fillStyle = "#0a0a0a"; 
-                ctx.fillRect(0, 0, w, h);
-
-                const imageData = ctx.getImageData(0, 0, w, h);
-                const data = imageData.data;
-
-                for (let i = 0; i < data.length; i += 4) {
-                    const grain = (Math.random() - 0.5) * 40; 
-                    
-                    if (Math.random() > 0.995) {
-                        const sparkle = Math.random() * 100 + 100;
-                        data[i] = sparkle; 
-                        data[i+1] = sparkle;
-                        data[i+2] = sparkle;
-                        data[i+3] = 255;
+                // Set name - ensure no uppercase transformation
+                const nameEl = document.getElementById('tombstoneName');
+                if (nameEl) {
+                    if (data.name) {
+                        // Set text content directly without any transformation
+                        nameEl.textContent = data.name;
+                        // Force no text-transform via inline style
+                        nameEl.style.textTransform = 'none';
                     } else {
-                        let base = 20; 
-                        data[i] = Math.max(0, base + grain);
-                        data[i+1] = Math.max(0, base + grain);
-                        data[i+2] = Math.max(0, base + grain + 2);
-                        data[i+3] = 255;
+                        nameEl.textContent = '';
                     }
                 }
-                ctx.putImageData(imageData, 0, 0);
+
+                // Map field names
+                const fieldMap = {
+                    'birthYear': data.birthYear,
+                    'hometown': data.hometown,
+                    'rank': data.rank,
+                    'unit': data.unit,
+                    'position': data.position,
+                    'enlistmentDate': data.enlistmentDate,
+                    'sacrificeDate': data.sacrificeDate
+                };
+
+                // Populate fields
+                Object.keys(fieldMap).forEach(fieldName => {
+                    const fieldEl = document.querySelector(`[data-field="${fieldName}"]`);
+                    if (fieldEl) {
+                        const valueEl = fieldEl.querySelector('.tombstone-value');
+                        if (valueEl) {
+                            if (fieldMap[fieldName]) {
+                                valueEl.textContent = fieldMap[fieldName];
+                                fieldEl.style.display = 'flex';
+                            } else {
+                                fieldEl.style.display = 'none';
+                            }
+                        }
+                    }
+                });
             }
 
-            function drawDivider(x, y) {
-                ctx.beginPath();
-                ctx.moveTo(x - 60, y);
-                ctx.lineTo(x + 60, y);
-                
-                const grad = ctx.createLinearGradient(x - 60, y, x + 60, y);
-                grad.addColorStop(0, "transparent");
-                grad.addColorStop(0.5, "#FFD700");
-                grad.addColorStop(1, "transparent");
-                
-                ctx.strokeStyle = grad;
-                ctx.lineWidth = 1.5;
-                ctx.stroke();
-            }
-
-            function drawDecorativeBorder(w, h) {
-                const borderGold = "#C5A059"; 
-                ctx.strokeStyle = borderGold;
-                ctx.lineWidth = 2;
-
-                const pad = 15;
-                const cornerSize = 20;
-
-                ctx.strokeRect(pad, pad, w - pad*2, h - pad*2);
-                ctx.lineWidth = 1;
-                ctx.strokeRect(pad + 4, pad + 4, w - (pad+4)*2, h - (pad+4)*2);
-
-                drawCornerPattern(pad, pad, 1);
-                drawCornerPattern(w - pad, pad, 2);
-                drawCornerPattern(w - pad, h - pad, 3);
-                drawCornerPattern(pad, h - pad, 4);
-
-                ctx.fillStyle = borderGold;
-                
-                for(let y = pad + 40; y < h - pad - 40; y += 20) {
-                     ctx.beginPath();
-                     ctx.arc(pad + 2, y, 1, 0, Math.PI*2);
-                     ctx.arc(w - pad - 2, y, 1, 0, Math.PI*2);
-                     ctx.fill();
-                }
-            }
-
-            function drawCornerPattern(x, y, type) {
-                ctx.save();
-                ctx.translate(x, y);
-                const s = 20;
-                
-                ctx.beginPath();
-                ctx.strokeStyle = "#FFD700";
-                ctx.lineWidth = 2;
-
-                if (type === 2) ctx.rotate(Math.PI / 2);
-                if (type === 3) ctx.rotate(Math.PI);
-                if (type === 4) ctx.rotate(-Math.PI / 2);
-
-                ctx.moveTo(0, 0);
-                ctx.lineTo(s, 0);
-                ctx.moveTo(0, 0);
-                ctx.lineTo(0, s);
-
-                ctx.moveTo(2.5, 2.5);
-                ctx.lineTo(s - 5, 2.5);
-                ctx.lineTo(2.5, s - 5);
-                ctx.lineTo(2.5, 2.5);
-                
-                ctx.stroke();
-                
-                ctx.fillStyle = "#FFD700";
-                ctx.beginPath();
-                ctx.arc(7.5, 7.5, 2, 0, Math.PI * 2);
-                ctx.fill();
-
-                ctx.restore();
-            }
-
-            function drawStar(cx, cy, outerRadius, innerRadius) {
-                let rot = Math.PI / 2 * 3;
-                let x = cx;
-                let y = cy;
-                let step = Math.PI / 5;
-
-                ctx.beginPath();
-                ctx.moveTo(cx, cy - outerRadius);
-                for (let i = 0; i < 5; i++) {
-                    x = cx + Math.cos(rot) * outerRadius;
-                    y = cy + Math.sin(rot) * outerRadius;
-                    ctx.lineTo(x, y);
-                    rot += step;
-
-                    x = cx + Math.cos(rot) * innerRadius;
-                    y = cy + Math.sin(rot) * innerRadius;
-                    ctx.lineTo(x, y);
-                    rot += step;
-                }
-                ctx.lineTo(cx, cy - outerRadius);
-                ctx.closePath();
-                
-                ctx.fillStyle = "#e30000";
-                ctx.fill();
-                
-                ctx.strokeStyle = "#FFFF00"; 
-                ctx.lineWidth = 1;
-                ctx.stroke();
-
-                ctx.shadowColor = "#FF0000";
-                ctx.shadowBlur = 8;
-                ctx.stroke();
-                ctx.shadowBlur = 0;
-
-                // Vẽ viền tròn xung quanh ngôi sao
-                ctx.beginPath();
-                const circleRadius = outerRadius + 8; // Bán kính vòng tròn lớn hơn ngôi sao 8px
-                ctx.arc(cx, cy, circleRadius, 0, Math.PI * 2);
-                ctx.strokeStyle = "#FFD700"; // Màu vàng
-                ctx.lineWidth = 2;
-                ctx.stroke();
-            }
+            // Populate immediately
+            populateTombstone(martyrData);
+            
+            // Also populate when fonts are ready (for better rendering)
+            document.fonts.ready.then(function() {
+                populateTombstone(martyrData);
+            });
         });
 
     </script>
