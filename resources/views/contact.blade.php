@@ -17,9 +17,9 @@
             </p>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <!-- Contact Information -->
-            <div class="space-y-8">
+            <div class="lg:col-span-1 space-y-8">
                 <div>
                     <h2 class="text-2xl font-bold text-gray-900 mb-6">Thông Tin Liên Hệ</h2>
 
@@ -121,27 +121,116 @@
                 @endif
             </div>
 
-            <!-- Google Maps -->
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+            <!-- Leaflet Map -->
+            <div class="lg:col-span-2 bg-white rounded-lg shadow-lg overflow-hidden">
                 <h2 class="text-2xl font-bold text-gray-900 mb-6 p-8 pb-0">Vị Trí</h2>
                 <div class="p-8 pt-4">
-                    <div class="w-full h-96 rounded-lg overflow-hidden">
-                        <iframe
-                            src="https://www.google.com/maps?q=20.5167,105.9833&hl=vi&z=14&output=embed"
-                            width="100%"
-                            height="100%"
-                            style="border:0;"
-                            allowfullscreen=""
-                            loading="lazy"
-                            referrerpolicy="no-referrer-when-downgrade">
-                        </iframe>
+                    <div x-data="contactMap()" x-init="initMap()">
+                        <div x-ref="mapContainer" style="height: 500px; width: 100%; border: 1px solid #d1d5db; border-radius: 0.5rem;"></div>
+                        <div class="mt-4 space-y-2">
+                            <p class="text-sm font-semibold text-gray-700">Các xã trong hệ thống:</p>
+                            <div class="flex flex-wrap gap-3 text-sm">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-4 h-4 rounded-full bg-blue-600"></div>
+                                    <span class="text-gray-600">Chính Lý</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <div class="w-4 h-4 rounded-full bg-green-600"></div>
+                                    <span class="text-gray-600">Hợp Lý</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <div class="w-4 h-4 rounded-full bg-red-600"></div>
+                                    <span class="text-gray-600">Văn Lý</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <p class="text-sm text-gray-600 mt-4 text-center">
-                        Xã Lý Nhân, Hà Nam, Việt Nam
-                    </p>
                 </div>
             </div>
         </div>
 
     </div>
+
+    <script>
+        function contactMap() {
+            return {
+                map: null,
+                markers: [],
+                
+                initMap() {
+                    // Wait for Leaflet to be available
+                    if (typeof L === 'undefined') {
+                        setTimeout(() => this.initMap(), 100);
+                        return;
+                    }
+                    
+                    // Check if already initialized
+                    if (this.map) return;
+                    
+                    try {
+                        // Calculate center point (average of all locations)
+                        const centerLat = (20.6003 + 21.4873 + 20.5869) / 3;
+                        const centerLng = (106.0189 + 105.4440 + 105.9925) / 3;
+                        
+                        // Initialize map
+                        this.map = L.map(this.$refs.mapContainer).setView([centerLat, centerLng], 10);
+                        
+                        // Add OpenStreetMap tiles
+                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                            maxZoom: 19
+                        }).addTo(this.map);
+                        
+                        // Add markers for 3 communes
+                        const communes = [
+                            {
+                                name: 'Chính Lý',
+                                lat: 20.6003,
+                                lng: 106.0189,
+                                color: 'blue'
+                            },
+                            {
+                                name: 'Hợp Lý',
+                                lat: 21.4873,
+                                lng: 105.4440,
+                                color: 'green'
+                            },
+                            {
+                                name: 'Văn Lý',
+                                lat: 20.5869,
+                                lng: 105.9925,
+                                color: 'red'
+                            }
+                        ];
+                        
+                        communes.forEach(commune => {
+                            const marker = L.marker([commune.lat, commune.lng], {
+                                icon: L.divIcon({
+                                    className: 'custom-marker',
+                                    html: `<div style="background-color: ${commune.color}; width: 20px; height: 20px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);"></div>`,
+                                    iconSize: [20, 20],
+                                    iconAnchor: [10, 10]
+                                })
+                            })
+                            .addTo(this.map)
+                            .bindPopup(`<strong>${commune.name}</strong><br>Tọa độ: ${commune.lat.toFixed(4)}°N, ${commune.lng.toFixed(4)}°E`);
+                            
+                            this.markers.push(marker);
+                        });
+                        
+                        // Fit map to show all markers
+                        if (this.markers.length > 0) {
+                            const group = new L.featureGroup(this.markers);
+                            this.map.fitBounds(group.getBounds().pad(0.1));
+                        }
+                        
+                        console.log('Contact map initialized successfully');
+                        
+                    } catch (error) {
+                        console.error('Error initializing contact map:', error);
+                    }
+                }
+            }
+        }
+    </script>
 @endsection
