@@ -797,11 +797,11 @@
                         </div>
                     </div>
 
-                    <!-- Hovered Plot Info -->
+                    <!-- Selected Plot Info -->
                     <div id="mapHoverInfo" class="p-4 rounded-lg border-2 transition-all"
-                        style="background-color: #fafaf8; border-color: #d4d0c8; height: 140px; overflow: hidden;">
+                        style="background-color: #fafaf8; border-color: #d4d0c8; min-height: 140px; overflow: hidden;">
                         <div class="text-center" style="padding-top: 45px; color: #2b2b2b; opacity: 0.7;">
-                            Di chuột vào các ô để xem thông tin
+                            Click vào các ô để xem thông tin
                         </div>
                     </div>
 
@@ -981,6 +981,7 @@
     // Cemetery Map Modal Functions
     let currentCemeteryGrid = null;
     let targetPlotId = null;
+    let selectedPlotId = null;
 
     async function openCemeteryMapModal(cemeteryId, plotId = null) {
         const modal = document.getElementById('cemeteryMapModal');
@@ -1004,6 +1005,9 @@
 
             // Update cemetery name
             document.getElementById('mapCemeteryName').textContent = data.cemetery.name;
+
+            // Set selected plot to target plot if exists
+            selectedPlotId = plotId || null;
 
             // Render grid
             renderCemeteryGrid(data, plotId);
@@ -1034,6 +1038,8 @@
             } else {
                 // Hide banner if no target plot
                 document.getElementById('targetPlotBanner').classList.add('hidden');
+                // Reset info box
+                resetPlotInfo();
             }
         } catch (error) {
             console.error('Lỗi khi tải sơ đồ nghĩa trang:', error);
@@ -1046,6 +1052,7 @@
         document.body.style.overflow = 'auto';
         currentCemeteryGrid = null;
         targetPlotId = null;
+        selectedPlotId = null;
     }
 
     function renderCemeteryGrid(data, highlightPlotId = null) {
@@ -1143,17 +1150,17 @@
 
                 if (plot) {
                     const isHighlighted = highlightPlotId && plot.id === highlightPlotId;
+                    const isSelected = selectedPlotId && plot.id === selectedPlotId;
                     const color = isHighlighted ? '#3b82f6' : getPlotColor(plot.status);
-                    const border = isHighlighted ? '3px solid #1e40af' : '1px solid rgba(0,0,0,0.1)';
-                    const shadow = isHighlighted ? '0 4px 12px rgba(59, 130, 246, 0.5)' : '0 1px 2px rgba(0,0,0,0.1)';
+                    const border = isHighlighted || isSelected ? '3px solid #1e40af' : '1px solid rgba(0,0,0,0.1)';
+                    const shadow = isHighlighted || isSelected ? '0 4px 12px rgba(59, 130, 246, 0.5)' : '0 1px 2px rgba(0,0,0,0.1)';
                     const plotId = `plot-${plot.id}`;
 
                     gridHTML += `
                         <div
                             id="${plotId}"
                             data-plot-id="${plot.id}"
-                            onmouseenter="showPlotInfo(${JSON.stringify(plot).replace(/"/g, '&quot;')})"
-                            onmouseleave="hidePlotInfo()"
+                            onclick="selectPlot(${JSON.stringify(plot).replace(/"/g, '&quot;')})"
                             style="
                                 width: 40px;
                                 height: 40px;
@@ -1258,15 +1265,46 @@
         return labels[status] || status;
     }
 
+    function selectPlot(plot) {
+        selectedPlotId = plot.id;
+        showPlotInfo(plot);
+        updatePlotHighlight();
+    }
+
     function showPlotInfo(plot) {
         const infoBox = document.getElementById('mapHoverInfo');
 
         let html = `
-            <div class="flex flex-col justify-center" style="min-height: 108px;">
-                <div class="font-bold text-base mb-2" style="color: #3b82f6;">Lô ${plot.plot_code}</div>
-                <div class="space-y-1 text-sm" style="color: #2b2b2b;">
-                    <div><strong>Vị trí:</strong> Hàng ${plot.column}, Cột ${plot.row}</div>
-                    <div><strong>Trạng thái:</strong> ${getStatusLabel(plot.status)}</div>
+            <div class="flex gap-3" style="min-height: 108px;">
+        `;
+
+        // Hiển thị ảnh liệt sĩ nếu có
+        if (plot.grave && plot.grave.deceased_photo) {
+            html += `
+                <div class="flex-shrink-0">
+                    <img src="${plot.grave.deceased_photo}" 
+                         alt="${plot.grave.deceased_full_name || 'Liệt sĩ'}" 
+                         class="w-20 h-24 object-cover rounded-lg border-2 border-blue-300"
+                         style="border-color: #3b82f6;">
+                </div>
+            `;
+        } else if (plot.grave) {
+            // Placeholder nếu không có ảnh
+            html += `
+                <div class="flex-shrink-0 w-20 h-24 rounded-lg border-2 flex items-center justify-center" style="background-color: #e5e7eb; border-color: #3b82f6;">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8" style="color: #9ca3af;">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                    </svg>
+                </div>
+            `;
+        }
+
+        html += `
+                <div class="flex-1 flex flex-col justify-center">
+                    <div class="font-bold text-base mb-2" style="color: #3b82f6;">Lô ${plot.plot_code}</div>
+                    <div class="space-y-1 text-sm" style="color: #2b2b2b;">
+                        <div><strong>Vị trí:</strong> Hàng ${plot.column}, Cột ${plot.row}</div>
+                        <div><strong>Trạng thái:</strong> ${getStatusLabel(plot.status)}</div>
         `;
 
         if (plot.grave) {
@@ -1275,6 +1313,7 @@
         }
 
         html += `
+                    </div>
                 </div>
             </div>
         `;
@@ -1284,12 +1323,32 @@
         infoBox.innerHTML = html;
     }
 
-    function hidePlotInfo() {
+    function resetPlotInfo() {
         const infoBox = document.getElementById('mapHoverInfo');
         infoBox.style.backgroundColor = '#fafaf8';
         infoBox.style.borderColor = '#d4d0c8';
         infoBox.innerHTML =
-            '<div class="text-center flex items-center justify-center" style="min-height: 108px; color: #2b2b2b; opacity: 0.7;">Di chuột vào các ô để xem thông tin</div>';
+            '<div class="text-center flex items-center justify-center" style="min-height: 108px; color: #2b2b2b; opacity: 0.7;">Click vào các ô để xem thông tin</div>';
+    }
+
+    function updatePlotHighlight() {
+        if (!currentCemeteryGrid) return;
+
+        // Update all plot cells
+        currentCemeteryGrid.plots.forEach(plot => {
+            const plotElement = document.getElementById(`plot-${plot.id}`);
+            if (plotElement) {
+                const isHighlighted = targetPlotId && plot.id === targetPlotId;
+                const isSelected = selectedPlotId && plot.id === selectedPlotId;
+                const color = isHighlighted ? '#3b82f6' : getPlotColor(plot.status);
+                const border = isHighlighted || isSelected ? '3px solid #1e40af' : '1px solid rgba(0,0,0,0.1)';
+                const shadow = isHighlighted || isSelected ? '0 4px 12px rgba(59, 130, 246, 0.5)' : '0 1px 2px rgba(0,0,0,0.1)';
+                
+                plotElement.style.backgroundColor = color;
+                plotElement.style.border = border;
+                plotElement.style.boxShadow = shadow;
+            }
+        });
     }
 
     // Image modal functions (reused from grave-detail.blade.php)
