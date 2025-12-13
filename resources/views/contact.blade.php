@@ -125,8 +125,9 @@
             <div class="lg:col-span-2 bg-white rounded-lg shadow-lg overflow-hidden">
                 <h2 class="text-2xl font-bold text-gray-900 mb-6 p-8 pb-0">Vị Trí</h2>
                 <div class="p-8 pt-4">
-                    <div x-data="contactMap()" x-init="initMap()">
-                        <div x-ref="mapContainer" style="height: 500px; width: 100%; border: 1px solid #d1d5db; border-radius: 0.5rem;"></div>
+                    <div id="contactMapWrapper">
+                        <div id="contactMapContainer"
+                            style="height: 500px; width: 100%; border: 1px solid #d1d5db; border-radius: 0.5rem;"></div>
                         <div class="mt-4 space-y-2">
                             <p class="text-sm font-semibold text-gray-700">Các xã trong hệ thống:</p>
                             <div class="flex flex-wrap gap-3 text-sm">
@@ -152,59 +153,61 @@
     </div>
 
     <script>
-        function contactMap() {
-            return {
-                map: null,
-                markers: [],
-                
-                initMap() {
-                    // Wait for Leaflet to be available
-                    if (typeof L === 'undefined') {
-                        setTimeout(() => this.initMap(), 100);
-                        return;
-                    }
-                    
-                    // Check if already initialized
-                    if (this.map) return;
-                    
-                    try {
-                        // Calculate center point (average of all locations)
-                        const centerLat = (20.6003 + 21.4873 + 20.5869) / 3;
-                        const centerLng = (106.0189 + 105.4440 + 105.9925) / 3;
-                        
-                        // Initialize map
-                        this.map = L.map(this.$refs.mapContainer).setView([centerLat, centerLng], 10);
-                        
-                        // Add OpenStreetMap tiles
-                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-                            maxZoom: 19
-                        }).addTo(this.map);
-                        
-                        // Add markers for 3 communes
-                        const communes = [
-                            {
-                                name: 'Chính Lý',
-                                lat: 20.6003,
-                                lng: 106.0189,
-                                color: 'blue'
-                            },
-                            {
-                                name: 'Hợp Lý',
-                                lat: 21.4873,
-                                lng: 105.4440,
-                                color: 'green'
-                            },
-                            {
-                                name: 'Văn Lý',
-                                lat: 20.5869,
-                                lng: 105.9925,
-                                color: 'red'
-                            }
-                        ];
-                        
-                        communes.forEach(commune => {
-                            const marker = L.marker([commune.lat, commune.lng], {
+        document.addEventListener('DOMContentLoaded', function() {
+            function initContactMap() {
+                // Wait for Leaflet to be available
+                if (typeof L === 'undefined') {
+                    setTimeout(initContactMap, 100);
+                    return;
+                }
+
+                const mapContainer = document.getElementById('contactMapContainer');
+                if (!mapContainer) {
+                    setTimeout(initContactMap, 100);
+                    return;
+                }
+
+                try {
+                    // Add markers for 3 communes
+                    const communes = [{
+                            name: 'Chính Lý',
+                            lat: 20.6003355,
+                            lng: 105.9976607,
+                            color: '#2563eb'
+                        },
+                        {
+                            name: 'Hợp Lý',
+                            lat: 20.6102271,
+                            lng: 105.9815351,
+                            color: '#16a34a'
+                        },
+                        {
+                            name: 'Văn Lý',
+                            lat: 20.585758,
+                            lng: 105.9737588,
+                            color: '#dc2626'
+                        }
+                    ];
+
+                    // Calculate center point (average of all locations)
+                    const centerLat = communes.reduce((sum, c) => sum + c.lat, 0) / communes.length;
+                    const centerLng = communes.reduce((sum, c) => sum + c.lng, 0) / communes.length;
+
+                    // Initialize map
+                    const map = L.map(mapContainer, {
+                        zoomControl: true
+                    }).setView([centerLat, centerLng], 12);
+
+                    // Add OpenStreetMap tiles
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                        maxZoom: 19
+                    }).addTo(map);
+
+                    const markers = [];
+
+                    communes.forEach(commune => {
+                        const marker = L.marker([commune.lat, commune.lng], {
                                 icon: L.divIcon({
                                     className: 'custom-marker',
                                     html: `<div style="background-color: ${commune.color}; width: 20px; height: 20px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);"></div>`,
@@ -212,25 +215,34 @@
                                     iconAnchor: [10, 10]
                                 })
                             })
-                            .addTo(this.map)
-                            .bindPopup(`<strong>${commune.name}</strong><br>Tọa độ: ${commune.lat.toFixed(4)}°N, ${commune.lng.toFixed(4)}°E`);
-                            
-                            this.markers.push(marker);
-                        });
-                        
-                        // Fit map to show all markers
-                        if (this.markers.length > 0) {
-                            const group = new L.featureGroup(this.markers);
-                            this.map.fitBounds(group.getBounds().pad(0.1));
-                        }
-                        
-                        console.log('Contact map initialized successfully');
-                        
-                    } catch (error) {
-                        console.error('Error initializing contact map:', error);
+                            .addTo(map)
+                            .bindPopup(
+                                `<strong>${commune.name}</strong><br>Tọa độ: ${commune.lat.toFixed(4)}°N, ${commune.lng.toFixed(4)}°E`
+                                );
+
+                        markers.push(marker);
+                    });
+
+                    // Fit map to show all markers
+                    if (markers.length > 0) {
+                        const group = new L.featureGroup(markers);
+                        map.fitBounds(group.getBounds().pad(0.1));
                     }
+
+                    // Invalidate size after a short delay to ensure proper rendering
+                    setTimeout(() => {
+                        map.invalidateSize();
+                    }, 300);
+
+                    console.log('Contact map initialized successfully');
+
+                } catch (error) {
+                    console.error('Error initializing contact map:', error);
                 }
             }
-        }
+
+            // Initialize map
+            initContactMap();
+        });
     </script>
 @endsection
