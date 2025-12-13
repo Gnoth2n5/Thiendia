@@ -530,9 +530,22 @@
                     <h3 class="font-bold text-lg mb-4" style="color: #2b2b2b;">Vị trí nghĩa trang</h3>
                     <div id="cemeteryLocationMapContainer" 
                          style="height: 300px; width: 100%; border: 1px solid #d1d5db; border-radius: 0.5rem; margin-bottom: 12px;"></div>
-                    <p class="text-xs text-center" style="color: #2b2b2b; opacity: 0.6;">
+                    <p class="text-xs text-center mb-3" style="color: #2b2b2b; opacity: 0.6;">
                         {{ $cemeteryName ?: 'Vị trí nghĩa trang' }}
                     </p>
+                    <a id="openGoogleMapsBtn" 
+                       href="#" 
+                       target="_blank"
+                       class="btn btn-sm w-full gap-2"
+                       style="background-color: #4285f4; border-color: #4285f4; color: white;"
+                       onmouseover="this.style.backgroundColor='#357ae8'"
+                       onmouseout="this.style.backgroundColor='#4285f4'">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-4 w-4">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+                        </svg>
+                        Mở Google Maps
+                    </a>
                 </div>
             </div>
         </div>
@@ -849,6 +862,13 @@
                     })
                     .addTo(map)
                     .bindPopup(`<strong>${selectedCommune.name}</strong><br>Tọa độ: ${selectedCommune.lat.toFixed(4)}°N, ${selectedCommune.lng.toFixed(4)}°E`);
+
+                    // Update Google Maps button with coordinates
+                    const googleMapsBtn = document.getElementById('openGoogleMapsBtn');
+                    if (googleMapsBtn) {
+                        const googleMapsUrl = `https://www.google.com/maps?q=${selectedCommune.lat},${selectedCommune.lng}`;
+                        googleMapsBtn.href = googleMapsUrl;
+                    }
 
                     // Invalidate size after a short delay to ensure proper rendering
                     setTimeout(() => {
