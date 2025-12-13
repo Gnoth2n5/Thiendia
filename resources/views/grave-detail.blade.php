@@ -162,43 +162,60 @@
                 </div>
             @endif
 
-
             <!-- Grave Photos -->
-            @if ($grave->grave_photos && count($grave->grave_photos) > 0)
-                <div class="card border" style="background-color: #fafaf8; border-color: #d4d0c8; box-shadow: none;">
-                    <div class="card-body">
-                        <h2 class="card-title text-xl mb-4" style="color: #2b2b2b;">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                                stroke="currentColor" class="h-6 w-6" style="color: #3b82f6;">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
-                            </svg>
-                            Hình ảnh bia mộ
-                        </h2>
+            <div class="card border" style="background-color: #fafaf8; border-color: #d4d0c8; box-shadow: none;">
+                <div class="card-body">
+                    <h2 class="card-title text-xl mb-4" style="color: #2b2b2b;">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                            stroke="currentColor" class="h-6 w-6" style="color: #3b82f6;">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+                        </svg>
+                        Hình ảnh bia mộ
+                    </h2>
 
-                        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                            @foreach ($grave->grave_photos as $index => $photo)
-                                <div class="relative group cursor-pointer"
-                                    onclick="openImageModal('{{ Storage::url($photo) }}')">
-                                    <img src="{{ Storage::url($photo) }}" alt="Ảnh bia mộ"
-                                        class="w-full h-48 object-cover rounded-lg" />
-                                    <div
-                                        class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-300 rounded-lg flex items-center justify-center">
-                                        <div class="rounded-full p-3 opacity-0 group-hover:opacity-100 transition-all duration-300"
-                                            style="background-color: rgba(255,255,255,0.2);">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                stroke-width="2" stroke="currentColor" class="h-6 w-6 text-white">
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-                                            </svg>
-                                        </div>
-                                    </div>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Bên trái: Mô phỏng bia liệt sĩ -->
+                        <div>
+                            {{-- <h3 class="text-lg font-semibold mb-3" style="color: #2b2b2b;">Mô phỏng bia liệt sĩ</h3> --}}
+                            <div class="relative">
+                                <div class="relative rounded-lg overflow-hidden" style="box-shadow: 0 4px 15px rgba(0,0,0,0.3); border: 2px solid #444;">
+                                    <canvas id="tombstoneCanvas" width="350" height="500" style="width: 100%; height: 450px; object-fit: contain;"></canvas>
                                 </div>
-                            @endforeach
+                            </div>
+                        </div>
+
+                        <!-- Bên phải: Ảnh lăng mộ thực tế -->
+                        <div>
+                            <h3 class="text-lg font-semibold mb-3" style="color: #2b2b2b;">Ảnh lăng mộ thực tế</h3>
+                            @if ($grave->grave_photos && count($grave->grave_photos) > 0)
+                                <div class="grid grid-cols-2 gap-4">
+                                    @foreach ($grave->grave_photos as $index => $photo)
+                                        <div class="relative group cursor-pointer"
+                                            onclick="openImageModal('{{ Storage::url($photo) }}')">
+                                            <img src="{{ Storage::url($photo) }}" alt="Ảnh bia mộ"
+                                                class="w-full h-48 object-cover rounded-lg" />
+                                            <div
+                                                class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-300 rounded-lg flex items-center justify-center">
+                                                <div class="rounded-full p-3 opacity-0 group-hover:opacity-100 transition-all duration-300"
+                                                    style="background-color: rgba(255,255,255,0.2);">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                        stroke-width="2" stroke="currentColor" class="h-6 w-6 text-white">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @else
+                                <p class="text-sm text-gray-500">Chưa có ảnh lăng mộ</p>
+                            @endif
                         </div>
                     </div>
                 </div>
-            @endif
+            </div>
 
             <!-- Cemetery Plot Grid -->
             @if ($grave->plot && $plotGrid)
@@ -902,6 +919,283 @@
 
             // Initialize map
             initCemeteryLocationMap();
+        });
+
+        // Tombstone Generator Script
+        document.addEventListener('DOMContentLoaded', function() {
+            // Import fonts
+            const link = document.createElement('link');
+            link.href = 'https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Noto+Serif:ital,wght@0,400;0,700;1,400&display=swap';
+            link.rel = 'stylesheet';
+            document.head.appendChild(link);
+
+            // Prepare martyr data from PHP
+            const martyrData = {
+                name: @json($grave->deceased_full_name ?? ''),
+                birthYear: @json($grave->deceased_birth_date ? $grave->deceased_birth_date->format('Y') : ''),
+                hometown: @json($grave->hometown ?? ''),
+                rank: @json($grave->rank ?? ''),
+                unit: @json($grave->unit ?? ''),
+                sacrificeDate: @json($grave->deceased_death_date ? $grave->deceased_death_date->format('d/m/Y') : ''),
+                note: @json($grave->notes ?? '')
+            };
+
+            const canvas = document.getElementById('tombstoneCanvas');
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d');
+
+            // Wait for fonts to load
+            document.fonts.ready.then(function() {
+                drawTombstone(martyrData);
+            });
+
+            function drawTombstone(data) {
+                const w = canvas.width;
+                const h = canvas.height;
+
+                // 1. Xóa canvas & Vẽ nền đá Granite đen bóng
+                drawGraniteBackground(w, h);
+
+                // 2. Vẽ khung viền hoa văn phức tạp hơn
+                drawDecorativeBorder(w, h);
+
+                // 3. Vẽ Quốc huy / Ngôi sao
+                drawStar(w / 2, 75, 26, 13);
+
+                // --- Cấu hình chữ chung ---
+                ctx.shadowColor = "rgba(0,0,0,0.9)";
+                ctx.shadowBlur = 2;
+                ctx.shadowOffsetX = 1;
+                ctx.shadowOffsetY = 1;
+                ctx.textAlign = "center";
+
+                // 4. Tiêu đề "LIỆT SỸ"
+                const goldGradient = ctx.createLinearGradient(0, 0, w, 0);
+                goldGradient.addColorStop(0, "#BF953F");
+                goldGradient.addColorStop(0.3, "#FCF6BA");
+                goldGradient.addColorStop(0.5, "#B38728");
+                goldGradient.addColorStop(0.7, "#FBF5B7");
+                goldGradient.addColorStop(1, "#AA771C");
+
+                ctx.fillStyle = goldGradient;
+                ctx.font = "700 30px 'Cinzel', serif";
+                ctx.fillText("LIỆT SỸ", w / 2, 130);
+
+                // 5. Tên liệt sỹ
+                ctx.font = "700 26px 'Cinzel', serif";
+                ctx.fillText(data.name, w / 2, 175);
+
+                // 6. Kẻ đường gạch chân trang trí dưới tên
+                drawDivider(w/2, 195);
+
+                // 7. Vẽ thông tin chi tiết
+                ctx.textAlign = "left";
+                
+                const labelX = 40;
+                // Tìm label dài nhất để căn thẳng hàng
+                ctx.font = "700 14px 'Noto Serif', serif";
+                const labels = ["Sinh năm:", "Nguyên quán:", "Cấp bậc:", "Đơn vị:", "Hy sinh ngày:"];
+                let maxLabelWidth = 0;
+                labels.forEach(label => {
+                    const width = ctx.measureText(label).width;
+                    if (width > maxLabelWidth) maxLabelWidth = width;
+                });
+                const valueX = labelX + maxLabelWidth + 15; // Khoảng cách 15px giữa label và value
+                const rightMargin = 40;
+                let currentY = 240;
+                const lineHeight = 32;
+
+                function drawField(label, value) {
+                    if (!value) return;
+
+                    ctx.font = "700 14px 'Noto Serif', serif";
+                    ctx.fillStyle = "#cccccc";
+                    ctx.fillText(label, labelX, currentY);
+
+                    ctx.font = "400 15px 'Noto Serif', serif";
+                    ctx.fillStyle = goldGradient;
+
+                    const maxWidth = w - valueX - rightMargin;
+                    const words = value.split(' ');
+                    let line = '';
+                    let y = currentY;
+
+                    if (ctx.measureText(value).width <= maxWidth) {
+                         ctx.fillText(value, valueX, y);
+                         currentY += lineHeight;
+                         return;
+                    }
+
+                    for(let n = 0; n < words.length; n++) {
+                        const testLine = line + words[n] + ' ';
+                        const metrics = ctx.measureText(testLine);
+                        const testWidth = metrics.width;
+                        
+                        if (testWidth > maxWidth && n > 0) {
+                            ctx.fillText(line, valueX, y);
+                            line = words[n] + ' ';
+                            y += 24;
+                        }
+                        else {
+                            line = testLine;
+                        }
+                    }
+                    ctx.fillText(line, valueX, y);
+                    currentY = y + lineHeight;
+                }
+
+                drawField("Sinh năm:", data.birthYear);
+                drawField("Nguyên quán:", data.hometown);
+                drawField("Cấp bậc:", data.rank);
+                drawField("Đơn vị:", data.unit);
+                drawField("Hy sinh ngày:", data.sacrificeDate);
+
+                // 8. Dòng kết "TỔ QUỐC GHI CÔNG"
+                ctx.textAlign = "center";
+                ctx.font = "700 22px 'Cinzel', serif";
+                ctx.fillStyle = goldGradient;
+                ctx.fillText("TỔ QUỐC GHI CÔNG", w / 2, h - 40);
+
+                ctx.shadowColor = "transparent";
+            }
+
+            function drawGraniteBackground(w, h) {
+                ctx.fillStyle = "#0a0a0a"; 
+                ctx.fillRect(0, 0, w, h);
+
+                const imageData = ctx.getImageData(0, 0, w, h);
+                const data = imageData.data;
+
+                for (let i = 0; i < data.length; i += 4) {
+                    const grain = (Math.random() - 0.5) * 40; 
+                    
+                    if (Math.random() > 0.995) {
+                        const sparkle = Math.random() * 100 + 100;
+                        data[i] = sparkle; 
+                        data[i+1] = sparkle;
+                        data[i+2] = sparkle;
+                        data[i+3] = 255;
+                    } else {
+                        let base = 20; 
+                        data[i] = Math.max(0, base + grain);
+                        data[i+1] = Math.max(0, base + grain);
+                        data[i+2] = Math.max(0, base + grain + 2);
+                        data[i+3] = 255;
+                    }
+                }
+                ctx.putImageData(imageData, 0, 0);
+            }
+
+            function drawDivider(x, y) {
+                ctx.beginPath();
+                ctx.moveTo(x - 60, y);
+                ctx.lineTo(x + 60, y);
+                
+                const grad = ctx.createLinearGradient(x - 60, y, x + 60, y);
+                grad.addColorStop(0, "transparent");
+                grad.addColorStop(0.5, "#FFD700");
+                grad.addColorStop(1, "transparent");
+                
+                ctx.strokeStyle = grad;
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+            }
+
+            function drawDecorativeBorder(w, h) {
+                const borderGold = "#C5A059"; 
+                ctx.strokeStyle = borderGold;
+                ctx.lineWidth = 2;
+
+                const pad = 15;
+                const cornerSize = 20;
+
+                ctx.strokeRect(pad, pad, w - pad*2, h - pad*2);
+                ctx.lineWidth = 1;
+                ctx.strokeRect(pad + 4, pad + 4, w - (pad+4)*2, h - (pad+4)*2);
+
+                drawCornerPattern(pad, pad, 1);
+                drawCornerPattern(w - pad, pad, 2);
+                drawCornerPattern(w - pad, h - pad, 3);
+                drawCornerPattern(pad, h - pad, 4);
+
+                ctx.fillStyle = borderGold;
+                
+                for(let y = pad + 40; y < h - pad - 40; y += 20) {
+                     ctx.beginPath();
+                     ctx.arc(pad + 2, y, 1, 0, Math.PI*2);
+                     ctx.arc(w - pad - 2, y, 1, 0, Math.PI*2);
+                     ctx.fill();
+                }
+            }
+
+            function drawCornerPattern(x, y, type) {
+                ctx.save();
+                ctx.translate(x, y);
+                const s = 20;
+                
+                ctx.beginPath();
+                ctx.strokeStyle = "#FFD700";
+                ctx.lineWidth = 2;
+
+                if (type === 2) ctx.rotate(Math.PI / 2);
+                if (type === 3) ctx.rotate(Math.PI);
+                if (type === 4) ctx.rotate(-Math.PI / 2);
+
+                ctx.moveTo(0, 0);
+                ctx.lineTo(s, 0);
+                ctx.moveTo(0, 0);
+                ctx.lineTo(0, s);
+
+                ctx.moveTo(2.5, 2.5);
+                ctx.lineTo(s - 5, 2.5);
+                ctx.lineTo(2.5, s - 5);
+                ctx.lineTo(2.5, 2.5);
+                
+                ctx.stroke();
+                
+                ctx.fillStyle = "#FFD700";
+                ctx.beginPath();
+                ctx.arc(7.5, 7.5, 2, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.restore();
+            }
+
+            function drawStar(cx, cy, outerRadius, innerRadius) {
+                let rot = Math.PI / 2 * 3;
+                let x = cx;
+                let y = cy;
+                let step = Math.PI / 5;
+
+                ctx.beginPath();
+                ctx.moveTo(cx, cy - outerRadius);
+                for (let i = 0; i < 5; i++) {
+                    x = cx + Math.cos(rot) * outerRadius;
+                    y = cy + Math.sin(rot) * outerRadius;
+                    ctx.lineTo(x, y);
+                    rot += step;
+
+                    x = cx + Math.cos(rot) * innerRadius;
+                    y = cy + Math.sin(rot) * innerRadius;
+                    ctx.lineTo(x, y);
+                    rot += step;
+                }
+                ctx.lineTo(cx, cy - outerRadius);
+                ctx.closePath();
+                
+                ctx.fillStyle = "#e30000";
+                ctx.fill();
+                
+                ctx.strokeStyle = "#FFFF00"; 
+                ctx.lineWidth = 1;
+                ctx.stroke();
+
+                ctx.shadowColor = "#FF0000";
+                ctx.shadowBlur = 8;
+                ctx.stroke();
+                ctx.shadowBlur = 0;
+            }
         });
 
     </script>

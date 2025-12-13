@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mô Phỏng Bia Liệt Sỹ</title>
+    <style>
+        /* Import font trang trọng hơn: Cinzel cho tiêu đề lớn, Noto Serif cho nội dung */
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Noto+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+        body {
+            font-family: 'Noto Serif', serif;
+            background-color: #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            font-family: 'Cinzel', serif;
+        }
+
+        .controls {
+            background: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        select {
+            padding: 10px 15px;
+            border: 1px solid #bbb;
+            border-radius: 4px;
+            font-size: 16px;
+            font-family: 'Noto Serif', serif;
+            min-width: 200px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #8b0000; /* Đỏ đô */
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-family: 'Cinzel', serif;
+            letter-spacing: 1px;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background-color: #a52a2a;
+        }
+
+        .canvas-container {
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            border-radius: 2px;
+            line-height: 0;
+            border: 5px solid #444; /* Viền ngoài vật lý */
+        }
+
+        canvas {
+            display: block;
+            background-color: #000;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Mô Phỏng Bia Ghi Danh Liệt Sỹ</h1>
+
+    <div class="controls">
+        <label for="martyrSelect"><strong>Chọn Liệt Sỹ:</strong></label>
+        <select id="martyrSelect" onchange="renderCurrentMartyr()"></select>
+        <button onclick="downloadImage()">Tải Ảnh Về</button>
+    </div>
+
+    <div class="canvas-container">
+        <canvas id="stoneCanvas" width="700" height="900"></canvas>
+    </div>
+
+    <script>
+        /**
+         * DỮ LIỆU LIỆT SỸ
+         */
+        const martyrsData = [
+            {
+                name: "NGUYỄN VĂN A",
+                birthYear: "1945",
+                hometown: "Xã Hoằng Lộc, Huyện Hoằng Hóa, Tỉnh Thanh Hóa",
+                rank: "Thượng sĩ",
+                unit: "Tiểu đoàn 307",
+                sacrificeDate: "30/04/1975",
+                note: ""
+            },
+            {
+                name: "TRẦN VĂN BÌNH",
+                birthYear: "1950",
+                hometown: "Xã Điện Bàn, Tỉnh Quảng Nam",
+                rank: "Trung úy",
+                unit: "Sư đoàn 320",
+                sacrificeDate: "12/1972",
+                note: ""
+            },
+            {
+                name: "LÊ THỊ HỒNG",
+                birthYear: "1952",
+                hometown: "Huyện Củ Chi, TP. Hồ Chí Minh",
+                rank: "Du kích",
+                unit: "Đội nữ du kích Củ Chi",
+                sacrificeDate: "1968",
+                note: ""
+            }
+        ];
+
+        const canvas = document.getElementById('stoneCanvas');
+        const ctx = canvas.getContext('2d');
+        const select = document.getElementById('martyrSelect');
+
+        function initSelect() {
+            martyrsData.forEach((martyr, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.text = martyr.name;
+                select.appendChild(option);
+            });
+            // Đợi font tải xong mới vẽ lần đầu để tránh lỗi font
+            document.fonts.ready.then(function () {
+               renderCurrentMartyr();
+            });
+        }
+
+        function renderCurrentMartyr() {
+            const index = select.value;
+            const data = martyrsData[index];
+            drawTombstone(data);
+        }
+
+        function drawTombstone(data) {
+            const w = canvas.width;
+            const h = canvas.height;
+
+            // 1. Xóa canvas & Vẽ nền đá Granite đen bóng
+            drawGraniteBackground(w, h);
+
+            // 2. Vẽ khung viền hoa văn phức tạp hơn
+            drawDecorativeBorder(w, h);
+
+            // 3. Vẽ Quốc huy / Ngôi sao
+            drawStar(w / 2, 140, 45, 22);
+
+            // --- Cấu hình chữ chung ---
+            ctx.shadowColor = "rgba(0,0,0,0.9)";
+            ctx.shadowBlur = 4;
+            ctx.shadowOffsetX = 2;
+            ctx.shadowOffsetY = 2;
+            ctx.textAlign = "center";
+
+            // 4. Tiêu đề "LIỆT SỸ"
+            // Tạo gradient vàng kim loại
+            const goldGradient = ctx.createLinearGradient(0, 0, w, 0);
+            goldGradient.addColorStop(0, "#BF953F");
+            goldGradient.addColorStop(0.3, "#FCF6BA");
+            goldGradient.addColorStop(0.5, "#B38728");
+            goldGradient.addColorStop(0.7, "#FBF5B7");
+            goldGradient.addColorStop(1, "#AA771C");
+
+            ctx.fillStyle = goldGradient;
+            ctx.font = "700 55px 'Cinzel', serif"; // Font dày, kiểu La Mã
+            ctx.fillText("LIỆT SỸ", w / 2, 230);
+
+            // 5. Tên liệt sỹ
+            ctx.font = "700 48px 'Cinzel', serif";
+            ctx.fillText(data.name, w / 2, 310);
+
+            // 6. Kẻ đường gạch chân trang trí dưới tên
+            drawDivider(w/2, 330);
+
+            // 7. Vẽ thông tin chi tiết
+            // Reset align về left
+            ctx.textAlign = "left";
+            
+            // Cấu hình vị trí
+            const labelX = 80;         // Vị trí bắt đầu của nhãn
+            const valueX = 260;        // Vị trí bắt đầu của nội dung (Tách xa ra để không dính)
+            const rightMargin = 80;    // Lề phải
+            let currentY = 400;        // Vị trí Y bắt đầu
+            const lineHeight = 55;     // Khoảng cách giữa các dòng chính
+
+            function drawField(label, value) {
+                if (!value) return;
+
+                // Vẽ Nhãn (Label)
+                ctx.font = "700 24px 'Noto Serif', serif"; // In đậm
+                ctx.fillStyle = "#cccccc"; // Màu xám bạc
+                ctx.fillText(label, labelX, currentY);
+
+                // Vẽ Nội dung (Value)
+                ctx.font = "400 26px 'Noto Serif', serif"; // Chữ thường, nét thanh
+                ctx.fillStyle = goldGradient; // Chữ mạ vàng
+
+                // Xử lý xuống dòng tự động (Word wrap)
+                const maxWidth = w - valueX - rightMargin;
+                const words = value.split(' ');
+                let line = '';
+                let y = currentY;
+
+                // Nếu nội dung quá ngắn, vẽ luôn
+                if (ctx.measureText(value).width <= maxWidth) {
+                     ctx.fillText(value, valueX, y);
+                     currentY += lineHeight;
+                     return;
+                }
+
+                // Nếu nội dung dài, tính toán từng từ
+                for(let n = 0; n < words.length; n++) {
+                    const testLine = line + words[n] + ' ';
+                    const metrics = ctx.measureText(testLine);
+                    const testWidth = metrics.width;
+                    
+                    if (testWidth > maxWidth && n > 0) {
+                        ctx.fillText(line, valueX, y);
+                        line = words[n] + ' ';
+                        y += 40; // Khoảng cách dòng phụ (nhỏ hơn lineHeight chính)
+                    }
+                    else {
+                        line = testLine;
+                    }
+                }
+                ctx.fillText(line, valueX, y); // Vẽ dòng cuối
+                currentY = y + lineHeight; // Cập nhật Y cho trường tiếp theo
+            }
+
+            drawField("Sinh năm:", data.birthYear);
+            drawField("Nguyên quán:", data.hometown); // Đây là dòng thường bị dài
+            drawField("Cấp bậc:", data.rank);
+            drawField("Đơn vị:", data.unit);
+            drawField("Hy sinh ngày:", data.sacrificeDate);
+
+            // 8. Dòng kết "TỔ QUỐC GHI CÔNG"
+            // Vẽ ở dưới cùng, căn giữa
+            ctx.textAlign = "center";
+            ctx.font = "700 38px 'Cinzel', serif";
+            ctx.fillStyle = goldGradient;
+            ctx.fillText("TỔ QUỐC GHI CÔNG", w / 2, h - 80);
+
+            // Reset shadow để không ảnh hưởng lần vẽ sau
+            ctx.shadowColor = "transparent";
+        }
+
+        // --- CÁC HÀM HỖ TRỢ VẼ ---
+
+        function drawGraniteBackground(w, h) {
+            // Nền đen tuyền
+            ctx.fillStyle = "#0a0a0a"; 
+            ctx.fillRect(0, 0, w, h);
+
+            // Tạo lớp vân đá
+            const imageData = ctx.getImageData(0, 0, w, h);
+            const data = imageData.data;
+
+            for (let i = 0; i < data.length; i += 4) {
+                // Tạo noise ngẫu nhiên
+                const grain = (Math.random() - 0.5) * 40; 
+                
+                // Thêm các đốm khoáng chất lấp lánh (mica trong đá hoa cương)
+                if (Math.random() > 0.995) {
+                    const sparkle = Math.random() * 100 + 100;
+                    data[i] = sparkle; 
+                    data[i+1] = sparkle;
+                    data[i+2] = sparkle;
+                    data[i+3] = 255;
+                } else {
+                    // Màu nền đá hơi xám xanh đen
+                    let base = 20; 
+                    data[i] = Math.max(0, base + grain);     // R
+                    data[i+1] = Math.max(0, base + grain);   // G
+                    data[i+2] = Math.max(0, base + grain + 2); // B (hơi xanh xíu)
+                    data[i+3] = 255;
+                }
+            }
+            ctx.putImageData(imageData, 0, 0);
+        }
+
+        function drawDivider(x, y) {
+            ctx.beginPath();
+            ctx.moveTo(x - 100, y);
+            ctx.lineTo(x + 100, y);
+            
+            // Tạo gradient cho đường kẻ
+            const grad = ctx.createLinearGradient(x - 100, y, x + 100, y);
+            grad.addColorStop(0, "transparent");
+            grad.addColorStop(0.5, "#FFD700");
+            grad.addColorStop(1, "transparent");
+            
+            ctx.strokeStyle = grad;
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
+
+        function drawDecorativeBorder(w, h) {
+            // Màu viền vàng đồng
+            const borderGold = "#C5A059"; 
+            ctx.strokeStyle = borderGold;
+            ctx.lineWidth = 3;
+
+            const pad = 30; // Khoảng cách từ mép
+            const cornerSize = 40;
+
+            // 1. Viền Kép
+            // Viền ngoài
+            ctx.strokeRect(pad, pad, w - pad*2, h - pad*2);
+            // Viền trong
+            ctx.lineWidth = 1;
+            ctx.strokeRect(pad + 8, pad + 8, w - (pad+8)*2, h - (pad+8)*2);
+
+            // 2. Vẽ họa tiết góc (Hoa văn cổ điển)
+            drawCornerPattern(pad, pad, 1);           // Top Left
+            drawCornerPattern(w - pad, pad, 2);       // Top Right
+            drawCornerPattern(w - pad, h - pad, 3);   // Bottom Right
+            drawCornerPattern(pad, h - pad, 4);       // Bottom Left
+
+            // 3. Vẽ họa tiết đường diềm (Pattern chạy dọc)
+            // Đơn giản hóa bằng các đoạn thẳng trang trí giữa 2 viền
+            ctx.fillStyle = borderGold;
+            
+            // Chấm trang trí dọc 2 bên
+            for(let y = pad + 80; y < h - pad - 80; y += 40) {
+                 ctx.beginPath();
+                 ctx.arc(pad + 4, y, 2, 0, Math.PI*2); // Trái
+                 ctx.arc(w - pad - 4, y, 2, 0, Math.PI*2); // Phải
+                 ctx.fill();
+            }
+        }
+
+        function drawCornerPattern(x, y, type) {
+            ctx.save();
+            ctx.translate(x, y);
+            const s = 40; // Size
+            
+            ctx.beginPath();
+            ctx.strokeStyle = "#FFD700";
+            ctx.lineWidth = 3;
+
+            // Xoay góc tọa độ tùy theo góc phần tư
+            if (type === 2) ctx.rotate(Math.PI / 2);
+            if (type === 3) ctx.rotate(Math.PI);
+            if (type === 4) ctx.rotate(-Math.PI / 2);
+
+            // Vẽ hoa văn uốn lượn (Scroll pattern)
+            ctx.moveTo(0, 0); // Góc nhọn
+            ctx.lineTo(s, 0); // Cạnh ngang
+            ctx.moveTo(0, 0);
+            ctx.lineTo(0, s); // Cạnh dọc
+
+            // Đường chéo trang trí
+            ctx.moveTo(5, 5);
+            ctx.lineTo(s - 10, 5);
+            ctx.lineTo(5, s - 10);
+            ctx.lineTo(5, 5);
+            
+            ctx.stroke();
+            
+            // Thêm chấm tròn trang trí
+            ctx.fillStyle = "#FFD700";
+            ctx.beginPath();
+            ctx.arc(15, 15, 4, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.restore();
+        }
+
+        function drawStar(cx, cy, outerRadius, innerRadius) {
+            let rot = Math.PI / 2 * 3;
+            let x = cx;
+            let y = cy;
+            let step = Math.PI / 5;
+
+            ctx.beginPath();
+            ctx.moveTo(cx, cy - outerRadius);
+            for (let i = 0; i < 5; i++) {
+                x = cx + Math.cos(rot) * outerRadius;
+                y = cy + Math.sin(rot) * outerRadius;
+                ctx.lineTo(x, y);
+                rot += step;
+
+                x = cx + Math.cos(rot) * innerRadius;
+                y = cy + Math.sin(rot) * innerRadius;
+                ctx.lineTo(x, y);
+                rot += step;
+            }
+            ctx.lineTo(cx, cy - outerRadius);
+            ctx.closePath();
+            
+            ctx.fillStyle = "#e30000"; // Đỏ đậm hơn chút
+            ctx.fill();
+            
+            // Viền sao sáng hơn
+            ctx.strokeStyle = "#FFFF00"; 
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Hiệu ứng bóng (Glow) cho ngôi sao
+            ctx.shadowColor = "#FF0000";
+            ctx.shadowBlur = 15;
+            ctx.stroke();
+            ctx.shadowBlur = 0; // Reset
+        }
+
+        function downloadImage() {
+            const link = document.createElement('a');
+            const currentName = martyrsData[select.value].name;
+            link.download = `bia-liet-sy-${currentName}.png`;
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+
+        initSelect();
+
+    </script>
+</body>
+</html>
