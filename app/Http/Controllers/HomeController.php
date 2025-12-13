@@ -80,12 +80,13 @@ class HomeController extends Controller
 
     public function show($id)
     {
-        $grave = Grave::with('cemetery', 'plot')->findOrFail($id);
+        $grave = Grave::with('cemetery', 'plot.cemetery')->findOrFail($id);
 
         // Load plot grid data if grave has a plot
         $plotGrid = null;
         if ($grave->plot) {
-            $cemetery = $grave->cemetery;
+            // Use plot's cemetery instead of grave's cemetery
+            $cemetery = $grave->plot->cemetery;
             $dimensions = $cemetery->getGridDimensions();
 
             $plots = \App\Models\CemeteryPlot::where('cemetery_id', $cemetery->id)

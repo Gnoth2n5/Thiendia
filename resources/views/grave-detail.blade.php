@@ -35,7 +35,7 @@
                     Liệt Sỹ {{ $grave->deceased_full_name }}
                 </h1>
             </div>
-            <p class="text-lg mb-6" style="color: #2b2b2b;">{{ $grave->cemetery->name }}</p>
+            <p class="text-lg mb-6" style="color: #2b2b2b;">{{ $grave->plot && $grave->plot->cemetery ? $grave->plot->cemetery->name : $grave->cemetery->name }}</p>
 
         </div>
     </div>
@@ -475,12 +475,12 @@
                     <div class="space-y-3">
                         <div>
                             <p class="text-sm mb-1" style="color: #2b2b2b; opacity: 0.6;">Tên nghĩa trang</p>
-                            <p class="font-medium" style="color: #2b2b2b;">{{ $grave->cemetery->name }}</p>
+                            <p class="font-medium" style="color: #2b2b2b;">{{ $grave->plot && $grave->plot->cemetery ? $grave->plot->cemetery->name : $grave->cemetery->name }}</p>
                         </div>
 
                         <div>
                             <p class="text-sm mb-1" style="color: #2b2b2b; opacity: 0.6;">Địa chỉ</p>
-                            <p class="text-sm" style="color: #2b2b2b;">{{ $grave->cemetery->address }}</p>
+                            <p class="text-sm" style="color: #2b2b2b;">{{ $grave->plot && $grave->plot->cemetery ? $grave->plot->cemetery->address : $grave->cemetery->address }}</p>
                         </div>
 
                         @if ($grave->plot)
@@ -505,7 +505,7 @@
                     <p class="text-sm mb-4" style="color: #2b2b2b; opacity: 0.7;">
                         Xem toàn bộ sơ đồ lưới lô của nghĩa trang
                     </p>
-                    <a href="{{ route('cemetery.map', ['id' => $grave->cemetery_id]) }}"
+                    <a href="{{ route('cemetery.map', ['id' => ($grave->plot && $grave->plot->cemetery ? $grave->plot->cemetery->id : $grave->cemetery_id)]) }}"
                         class="btn btn-primary w-full gap-2"
                         style="background-color: #3b82f6; border-color: #1e40af;"
                         onmouseover="this.style.backgroundColor='#1e40af'"
@@ -517,6 +517,22 @@
                         </svg>
                         Xem sơ đồ nghĩa trang
                     </a>
+                </div>
+            </div>
+
+            <!-- Cemetery Location Map Card -->
+            @php
+                $cemetery = $grave->plot && $grave->plot->cemetery ? $grave->plot->cemetery : $grave->cemetery;
+                $cemeteryName = $cemetery->name ?? '';
+            @endphp
+            <div class="card border" style="background-color: #fafaf8; border-color: #d4d0c8; box-shadow: none;">
+                <div class="card-body">
+                    <h3 class="font-bold text-lg mb-4" style="color: #2b2b2b;">Vị trí nghĩa trang</h3>
+                    <div id="cemeteryLocationMapContainer" 
+                         style="height: 300px; width: 100%; border: 1px solid #d1d5db; border-radius: 0.5rem; margin-bottom: 12px;"></div>
+                    <p class="text-xs text-center" style="color: #2b2b2b; opacity: 0.6;">
+                        {{ $cemeteryName ?: 'Vị trí nghĩa trang' }}
+                    </p>
                 </div>
             </div>
         </div>
@@ -749,6 +765,105 @@
                     navigateImage(1);
                     break;
             }
+        });
+
+        // Cemetery Location Map
+        document.addEventListener('DOMContentLoaded', function() {
+            function initCemeteryLocationMap() {
+                // Wait for Leaflet to be available
+                if (typeof L === 'undefined') {
+                    setTimeout(initCemeteryLocationMap, 100);
+                    return;
+                }
+
+                const mapContainer = document.getElementById('cemeteryLocationMapContainer');
+                if (!mapContainer) {
+                    setTimeout(initCemeteryLocationMap, 100);
+                    return;
+                }
+
+                try {
+                    // Mapping từ tên xã đến tọa độ
+                    const communeCoordinates = {
+                        'Chính Lý': {
+                            lat: 20.6003355,
+                            lng: 105.9976607,
+                            color: '#2563eb'
+                        },
+                        'Hợp Lý': {
+                            lat: 20.6102271,
+                            lng: 105.9815351,
+                            color: '#16a34a'
+                        },
+                        'Văn Lý': {
+                            lat: 20.585758,
+                            lng: 105.9737588,
+                            color: '#dc2626'
+                        }
+                    };
+
+                    // Lấy tên nghĩa trang từ PHP
+                    const cemeteryName = @json($cemeteryName ?? '');
+                    
+                    // Tìm xã phù hợp (match tên nghĩa trang)
+                    let selectedCommune = null;
+                    if (cemeteryName) {
+                        // Thử match tên nghĩa trang với tên xã
+                        for (const [name, coords] of Object.entries(communeCoordinates)) {
+                            // Match nếu tên nghĩa trang chứa tên xã hoặc ngược lại
+                            if (cemeteryName.includes(name) || name.includes(cemeteryName)) {
+                                selectedCommune = { name, ...coords };
+                                break;
+                            }
+                        }
+                    }
+
+                    // Nếu không tìm thấy, sử dụng xã đầu tiên làm mặc định
+                    if (!selectedCommune) {
+                        const firstCommune = Object.entries(communeCoordinates)[0];
+                        selectedCommune = {
+                            name: firstCommune[0],
+                            ...firstCommune[1]
+                        };
+                    }
+
+                    // Initialize map centered on the selected commune
+                    const map = L.map(mapContainer, {
+                        zoomControl: true
+                    }).setView([selectedCommune.lat, selectedCommune.lng], 13);
+
+                    // Add OpenStreetMap tiles
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                        maxZoom: 19
+                    }).addTo(map);
+
+                    // Add marker for the selected commune
+                    L.marker([selectedCommune.lat, selectedCommune.lng], {
+                        icon: L.divIcon({
+                            className: 'custom-marker',
+                            html: `<div style="background-color: ${selectedCommune.color}; width: 24px; height: 24px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);"></div>`,
+                            iconSize: [24, 24],
+                            iconAnchor: [12, 12]
+                        })
+                    })
+                    .addTo(map)
+                    .bindPopup(`<strong>${selectedCommune.name}</strong><br>Tọa độ: ${selectedCommune.lat.toFixed(4)}°N, ${selectedCommune.lng.toFixed(4)}°E`);
+
+                    // Invalidate size after a short delay to ensure proper rendering
+                    setTimeout(() => {
+                        map.invalidateSize();
+                    }, 300);
+
+                    console.log('Cemetery location map initialized successfully');
+
+                } catch (error) {
+                    console.error('Error initializing cemetery location map:', error);
+                }
+            }
+
+            // Initialize map
+            initCemeteryLocationMap();
         });
 
     </script>
