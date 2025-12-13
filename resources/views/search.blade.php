@@ -799,8 +799,8 @@
 
                     <!-- Selected Plot Info -->
                     <div id="mapHoverInfo" class="p-4 rounded-lg border-2 transition-all"
-                        style="background-color: #fafaf8; border-color: #d4d0c8; min-height: 140px; overflow: hidden;">
-                        <div class="text-center" style="padding-top: 45px; color: #2b2b2b; opacity: 0.7;">
+                        style="background-color: #fafaf8; border-color: #d4d0c8; min-height: 100px; overflow: hidden;">
+                        <div class="text-center flex items-center justify-center" style="min-height: 100px; color: #2b2b2b; opacity: 0.7;">
                             Click vào các ô để xem thông tin
                         </div>
                     </div>
@@ -1275,7 +1275,7 @@
         const infoBox = document.getElementById('mapHoverInfo');
 
         let html = `
-            <div class="flex gap-3" style="min-height: 108px;">
+            <div class="flex gap-3 items-start">
         `;
 
         // Hiển thị ảnh liệt sĩ nếu có
@@ -1284,15 +1284,14 @@
                 <div class="flex-shrink-0">
                     <img src="${plot.grave.deceased_photo}" 
                          alt="${plot.grave.deceased_full_name || 'Liệt sĩ'}" 
-                         class="w-20 h-24 object-cover rounded-lg border-2 border-blue-300 cursor-pointer hover:opacity-80 transition-opacity"
-                         style="border-color: #3b82f6;"
-                         onclick="openImageModal('${plot.grave.deceased_photo}')">
+                         class="object-cover rounded border"
+                         style="width: 64px; height: 80px; border-color: #3b82f6;">
                 </div>
             `;
         } else if (plot.grave) {
             // Placeholder nếu không có ảnh
             html += `
-                <div class="flex-shrink-0 w-20 h-24 rounded-lg border-2 flex items-center justify-center" style="background-color: #e5e7eb; border-color: #3b82f6;">
+                <div class="flex-shrink-0 rounded border flex items-center justify-center" style="width: 64px; height: 80px; background-color: #e5e7eb; border-color: #3b82f6;">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8" style="color: #9ca3af;">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
                     </svg>
@@ -1301,16 +1300,16 @@
         }
 
         html += `
-                <div class="flex-1 flex flex-col justify-center">
-                    <div class="font-bold text-base mb-2" style="color: #3b82f6;">Lô ${plot.plot_code}</div>
-                    <div class="space-y-1 text-sm" style="color: #2b2b2b;">
+                <div class="flex-1">
+                    <div class="font-bold text-lg mb-2" style="color: #3b82f6;">Lô ${plot.plot_code}</div>
+                    <div class="space-y-1.5 text-sm" style="color: #2b2b2b;">
                         <div><strong>Vị trí:</strong> Hàng ${plot.column}, Cột ${plot.row}</div>
                         <div><strong>Trạng thái:</strong> ${getStatusLabel(plot.status)}</div>
         `;
 
         if (plot.grave) {
             html +=
-                `<div class="mt-1 text-sm" style="color: #2b2b2b;"><strong>👤 Liệt sĩ:</strong> ${plot.grave.deceased_full_name}</div>`;
+                `<div class="mt-2 text-sm" style="color: #2b2b2b;"><strong>👤 Liệt sĩ:</strong> ${plot.grave.deceased_full_name}</div>`;
         }
 
         html += `
