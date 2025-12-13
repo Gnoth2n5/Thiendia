@@ -83,7 +83,7 @@ Route::get('/graves/{id}', function ($id) {
 Route::get('/cemeteries/{id}/plots', function ($id) {
   $cemetery = Cemetery::findOrFail($id);
   $plots = CemeteryPlot::where('cemetery_id', $id)
-    ->with('grave:id,plot_id,deceased_full_name')
+    ->with('grave:id,plot_id,deceased_full_name,deceased_photo')
     ->orderBy('row')
     ->orderBy('column')
     ->get();
@@ -112,6 +112,7 @@ Route::get('/cemeteries/{id}/plots', function ($id) {
         'grave' => $plot->grave ? [
           'id' => $plot->grave->id,
           'deceased_full_name' => $plot->grave->deceased_full_name,
+          'deceased_photo' => $plot->grave->deceased_photo ? \Illuminate\Support\Facades\Storage::url($plot->grave->deceased_photo) : null,
         ] : null,
       ];
     }),

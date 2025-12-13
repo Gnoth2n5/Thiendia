@@ -1284,8 +1284,9 @@
                 <div class="flex-shrink-0">
                     <img src="${plot.grave.deceased_photo}" 
                          alt="${plot.grave.deceased_full_name || 'Liệt sĩ'}" 
-                         class="w-20 h-24 object-cover rounded-lg border-2 border-blue-300"
-                         style="border-color: #3b82f6;">
+                         class="w-20 h-24 object-cover rounded-lg border-2 border-blue-300 cursor-pointer hover:opacity-80 transition-opacity"
+                         style="border-color: #3b82f6;"
+                         onclick="openImageModal('${plot.grave.deceased_photo}')">
                 </div>
             `;
         } else if (plot.grave) {
