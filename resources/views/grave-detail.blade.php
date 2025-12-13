@@ -529,7 +529,7 @@
                 <div class="card-body">
                     <h3 class="font-bold text-lg mb-4" style="color: #2b2b2b;">Vị trí nghĩa trang</h3>
                     <div id="cemeteryLocationMapContainer" 
-                         style="height: 300px; width: 100%; border: 1px solid #d1d5db; border-radius: 0.5rem; margin-bottom: 12px;"></div>
+                         style="height: 300px; width: 100%; border: 1px solid #d1d5db; border-radius: 0.5rem; margin-bottom: 12px; position: relative; z-index: 1;"></div>
                     <p class="text-xs text-center mb-3" style="color: #2b2b2b; opacity: 0.6;">
                         {{ $cemeteryName ?: 'Vị trí nghĩa trang' }}
                     </p>
@@ -782,6 +782,24 @@
 
         // Cemetery Location Map
         document.addEventListener('DOMContentLoaded', function() {
+            // Fix z-index cho Leaflet map để không đè lên navbar
+            const style = document.createElement('style');
+            style.textContent = `
+                #cemeteryLocationMapContainer .leaflet-container,
+                #cemeteryLocationMapContainer .leaflet-pane,
+                #cemeteryLocationMapContainer .leaflet-map-pane,
+                #cemeteryLocationMapContainer .leaflet-tile-pane,
+                #cemeteryLocationMapContainer .leaflet-overlay-pane,
+                #cemeteryLocationMapContainer .leaflet-shadow-pane,
+                #cemeteryLocationMapContainer .leaflet-marker-pane,
+                #cemeteryLocationMapContainer .leaflet-tooltip-pane,
+                #cemeteryLocationMapContainer .leaflet-popup-pane,
+                #cemeteryLocationMapContainer .leaflet-control-container {
+                    z-index: 1 !important;
+                }
+            `;
+            document.head.appendChild(style);
+
             function initCemeteryLocationMap() {
                 // Wait for Leaflet to be available
                 if (typeof L === 'undefined') {

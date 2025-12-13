@@ -127,7 +127,7 @@
                 <div class="p-8 pt-4">
                     <div id="contactMapWrapper">
                         <div id="contactMapContainer"
-                            style="height: 500px; width: 100%; border: 1px solid #d1d5db; border-radius: 0.5rem;"></div>
+                            style="height: 500px; width: 100%; border: 1px solid #d1d5db; border-radius: 0.5rem; position: relative; z-index: 1;"></div>
                         <div class="mt-4 space-y-2">
                             <p class="text-sm font-semibold text-gray-700">Các xã trong hệ thống:</p>
                             <div class="flex flex-wrap gap-3 text-sm">
@@ -152,6 +152,21 @@
 
     </div>
 
+    <style>
+        /* Fix z-index cho Leaflet map để không đè lên navbar */
+        #contactMapContainer .leaflet-container,
+        #contactMapContainer .leaflet-pane,
+        #contactMapContainer .leaflet-map-pane,
+        #contactMapContainer .leaflet-tile-pane,
+        #contactMapContainer .leaflet-overlay-pane,
+        #contactMapContainer .leaflet-shadow-pane,
+        #contactMapContainer .leaflet-marker-pane,
+        #contactMapContainer .leaflet-tooltip-pane,
+        #contactMapContainer .leaflet-popup-pane,
+        #contactMapContainer .leaflet-control-container {
+            z-index: 1 !important;
+        }
+    </style>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             function initContactMap() {
