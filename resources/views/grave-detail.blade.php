@@ -178,9 +178,9 @@
                         <!-- Bên trái: Mô phỏng bia liệt sĩ -->
                         <div>
                             {{-- <h3 class="text-lg font-semibold mb-3" style="color: #2b2b2b;">Mô phỏng bia liệt sĩ</h3> --}}
-                            <div class="relative">
-                                <div class="relative rounded-lg overflow-hidden" style="box-shadow: 0 4px 15px rgba(0,0,0,0.3); border: 2px solid #444;">
-                                    <canvas id="tombstoneCanvas" width="350" height="500" style="width: 100%; height: 450px; object-fit: contain;"></canvas>
+                            <div class="relative flex justify-center">
+                                <div class="relative" style="box-shadow: 0 4px 15px rgba(0,0,0,0.3); border: 2px solid #444; line-height: 0; display: inline-block;">
+                                    <canvas id="tombstoneCanvas" width="350" height="500" style="display: block;"></canvas>
                                 </div>
                             </div>
                         </div>
