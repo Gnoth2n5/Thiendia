@@ -936,6 +936,8 @@
                 hometown: @json($grave->hometown ?? ''),
                 rank: @json($grave->rank ?? ''),
                 unit: @json($grave->unit ?? ''),
+                position: @json($grave->position ?? ''),
+                enlistmentDate: @json($grave->enlistment_date ? $grave->enlistment_date->format('d/m/Y') : ''),
                 sacrificeDate: @json($grave->deceased_death_date ? $grave->deceased_death_date->format('d/m/Y') : ''),
                 note: @json($grave->notes ?? '')
             };
@@ -980,14 +982,14 @@
 
                 ctx.fillStyle = goldGradient;
                 ctx.font = "700 30px 'Cinzel', serif";
-                ctx.fillText("LIỆT SỸ", w / 2, 130);
+                ctx.fillText("LIỆT SỸ", w / 2, 145);
 
                 // 5. Tên liệt sỹ
                 ctx.font = "700 26px 'Cinzel', serif";
-                ctx.fillText(data.name, w / 2, 175);
+                ctx.fillText(data.name, w / 2, 190);
 
                 // 6. Kẻ đường gạch chân trang trí dưới tên
-                drawDivider(w/2, 195);
+                drawDivider(w/2, 210);
 
                 // 7. Vẽ thông tin chi tiết
                 ctx.textAlign = "left";
@@ -995,7 +997,7 @@
                 const labelX = 40;
                 // Tìm label dài nhất để căn thẳng hàng
                 ctx.font = "700 14px 'Noto Serif', serif";
-                const labels = ["Sinh năm:", "Nguyên quán:", "Cấp bậc:", "Đơn vị:", "Hy sinh ngày:"];
+                const labels = ["Sinh năm:", "Nguyên quán:", "Cấp bậc:", "Đơn vị:", "Chức vụ:", "Ngày nhập ngũ:", "Hy sinh ngày:"];
                 let maxLabelWidth = 0;
                 labels.forEach(label => {
                     const width = ctx.measureText(label).width;
@@ -1004,7 +1006,7 @@
                 const valueX = labelX + maxLabelWidth + 15; // Khoảng cách 15px giữa label và value
                 const rightMargin = 40;
                 let currentY = 240;
-                const lineHeight = 32;
+                const lineHeight = 26;
 
                 function drawField(label, value) {
                     if (!value) return;
@@ -1035,7 +1037,7 @@
                         if (testWidth > maxWidth && n > 0) {
                             ctx.fillText(line, valueX, y);
                             line = words[n] + ' ';
-                            y += 24;
+                            y += 20;
                         }
                         else {
                             line = testLine;
@@ -1049,13 +1051,15 @@
                 drawField("Nguyên quán:", data.hometown);
                 drawField("Cấp bậc:", data.rank);
                 drawField("Đơn vị:", data.unit);
+                drawField("Chức vụ:", data.position);
+                drawField("Ngày nhập ngũ:", data.enlistmentDate);
                 drawField("Hy sinh ngày:", data.sacrificeDate);
 
                 // 8. Dòng kết "TỔ QUỐC GHI CÔNG"
                 ctx.textAlign = "center";
                 ctx.font = "700 22px 'Cinzel', serif";
                 ctx.fillStyle = goldGradient;
-                ctx.fillText("TỔ QUỐC GHI CÔNG", w / 2, h - 40);
+                ctx.fillText("TỔ QUỐC GHI CÔNG", w / 2, h - 35);
 
                 ctx.shadowColor = "transparent";
             }
@@ -1195,6 +1199,14 @@
                 ctx.shadowBlur = 8;
                 ctx.stroke();
                 ctx.shadowBlur = 0;
+
+                // Vẽ viền tròn xung quanh ngôi sao
+                ctx.beginPath();
+                const circleRadius = outerRadius + 8; // Bán kính vòng tròn lớn hơn ngôi sao 8px
+                ctx.arc(cx, cy, circleRadius, 0, Math.PI * 2);
+                ctx.strokeStyle = "#FFD700"; // Màu vàng
+                ctx.lineWidth = 2;
+                ctx.stroke();
             }
         });
 
