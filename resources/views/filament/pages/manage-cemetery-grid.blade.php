@@ -365,10 +365,10 @@
                                         return (colArray.length * 48) + ((colArray.length - 1) * 4);
                                     },
                                     get leftWidth() {
-                                        return Math.floor(this.gridWidth / 2) - 40;
+                                        return Math.floor(this.gridWidth / 2) - 50;
                                     },
                                     get rightWidth() {
-                                        return this.gridWidth - this.leftWidth - 80;
+                                        return this.gridWidth - this.leftWidth - 100;
                                     },
                                     get gatePosition() {
                                         return this.leftWidth;
@@ -390,11 +390,11 @@
                                 
                                 <!-- Tượng đài (ở giữa) -->
                                 <div 
-                                    :style="`position: absolute; top: 0; left: ${gatePosition}px; display: flex; flex-direction: column; align-items: center; gap: 4px; width: 80px;`"
+                                    :style="`position: absolute; top: 0; left: ${gatePosition}px; display: flex; flex-direction: column; align-items: center; gap: 4px; width: 100px;`"
                                 >
                                     <!-- Label Tượng đài (ở trên) -->
-                                    <div style="display: flex; align-items: center; gap: 4px;">
-                                        <span style="font-size: 12px; font-weight: 700; color: #dc2626;">Đài tưởng niệm</span>
+                                    <div style="display: flex; align-items: center; gap: 4px; white-space: nowrap;">
+                                        <span style="font-size: 12px; font-weight: 700; color: #dc2626; white-space: nowrap;">Đài tưởng niệm</span>
                                     </div>
                                     <!-- Icon tượng đài -->
                                     <img src="/images/rizal-park.png" alt="Tượng đài" style="width: 32px; height: 32px; object-fit: contain;">
@@ -504,10 +504,10 @@
                                         return (colArray.length * 48) + ((colArray.length - 1) * 4);
                                     },
                                     get leftWidth() {
-                                        return Math.floor(this.gridWidth / 2) - 40;
+                                        return Math.floor(this.gridWidth / 2) - 50;
                                     },
                                     get rightWidth() {
-                                        return this.gridWidth - this.leftWidth - 80;
+                                        return this.gridWidth - this.leftWidth - 100;
                                     },
                                     get gatePosition() {
                                         return this.leftWidth;
@@ -529,7 +529,7 @@
                                 
                                 <!-- Cổng vào (ở giữa) -->
                                 <div 
-                                    :style="`position: absolute; top: 0; left: ${gatePosition}px; display: flex; flex-direction: column; align-items: center; gap: 4px; width: 80px;`"
+                                    :style="`position: absolute; top: 0; left: ${gatePosition}px; display: flex; flex-direction: column; align-items: center; gap: 4px; width: 100px;`"
                                 >
                                     <!-- Mũi tên chỉ lên -->
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" style="width: 20px; height: 20px; color: #dc2626;">
@@ -538,8 +538,8 @@
                                     <!-- Icon cổng -->
                                     <img src="/images/gate.png" alt="Cổng vào" style="width: 32px; height: 32px; object-fit: contain;">
                                     <!-- Label Cổng vào (ở dưới) -->
-                                    <div style="display: flex; align-items: center; gap: 4px;">
-                                        <span style="font-size: 12px; font-weight: 700; color: #dc2626;">Cổng vào</span>
+                                    <div style="display: flex; align-items: center; gap: 4px; white-space: nowrap;">
+                                        <span style="font-size: 12px; font-weight: 700; color: #dc2626; white-space: nowrap;">Cổng vào</span>
                                     </div>
                                 </div>
                                 

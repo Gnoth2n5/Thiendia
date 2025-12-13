@@ -1076,13 +1076,13 @@
 
         // Tính toán chiều rộng và vị trí cho hàng rào và cổng
         const gridWidth = (displayCols * 40) + ((displayCols - 1) * 4);
-        const leftWidth = Math.floor(gridWidth / 2) - 40;
-        const rightWidth = gridWidth - leftWidth - 80;
+        const leftWidth = Math.floor(gridWidth / 2) - 50;
+        const rightWidth = gridWidth - leftWidth - 100;
         const gatePosition = leftWidth;
         const fenceCount = Math.floor(leftWidth / 20);
 
-        // Entrance Line and Labels (hàng rào và cổng vào)
-        gridHTML += '<div style="display: flex; margin-bottom: 12px; margin-left: 40px; position: relative; min-height: 80px; overflow: visible;">';
+        // Entrance Line and Labels (hàng rào và tượng đài)
+        gridHTML += '<div style="display: flex; margin-bottom: 12px; margin-left: 40px; position: relative; min-height: 100px; overflow: visible;">';
         gridHTML += `<div style="width: ${gridWidth}px; position: relative; min-width: ${gridWidth}px;">`;
         
         // Hàng rào bên trái
@@ -1092,10 +1092,10 @@
         }
         gridHTML += '</div>';
         
-        // Cổng vào (ở giữa)
-        gridHTML += `<div style="position: absolute; top: 0; left: ${gatePosition}px; display: flex; flex-direction: column; align-items: center; gap: 4px; width: 80px;">`;
-        gridHTML += '<div style="display: flex; align-items: center; gap: 4px;"><span style="font-size: 12px; font-weight: 700; color: #dc2626;">Cổng vào</span></div>';
-        gridHTML += '<img src="/images/gate.png" alt="Cổng vào" style="width: 32px; height: 32px; object-fit: contain;">';
+        // Tượng đài (ở giữa)
+        gridHTML += `<div style="position: absolute; top: 0; left: ${gatePosition}px; display: flex; flex-direction: column; align-items: center; gap: 4px; width: 100px;">`;
+        gridHTML += '<div style="display: flex; align-items: center; gap: 4px; white-space: nowrap;"><span style="font-size: 12px; font-weight: 700; color: #dc2626; white-space: nowrap;">Đài tưởng niệm</span></div>';
+        gridHTML += '<img src="/images/rizal-park.png" alt="Tượng đài" style="width: 32px; height: 32px; object-fit: contain;">';
         gridHTML += '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" style="width: 20px; height: 20px; color: #dc2626;"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3" /></svg>';
         gridHTML += '</div>';
         
@@ -1182,6 +1182,44 @@
 
             gridHTML += '</div>';
         }
+
+        // Exit Line and Labels (hàng rào và cổng vào) - Đặt dưới lưới
+        gridHTML += '<div style="display: flex; margin-top: 12px; margin-left: 40px; position: relative; min-height: 100px; overflow: visible;">';
+        gridHTML += `<div style="width: ${gridWidth}px; position: relative; min-width: ${gridWidth}px;">`;
+        
+        // Hàng rào bên trái
+        gridHTML += `<div style="position: absolute; top: 30px; left: 0; width: ${leftWidth}px; display: flex; align-items: center; gap: 2px;">`;
+        for (let i = 0; i < fenceCount; i++) {
+            gridHTML += '<img src="/images/fence.png" alt="Hàng rào" style="width: 18px; height: 18px; object-fit: contain;">';
+        }
+        gridHTML += '</div>';
+        
+        // Cổng vào (ở giữa)
+        gridHTML += `<div style="position: absolute; top: 0; left: ${gatePosition}px; display: flex; flex-direction: column; align-items: center; gap: 4px; width: 100px;">`;
+        gridHTML += '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" style="width: 20px; height: 20px; color: #dc2626;"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 10.5L12 3m0 0l7.5 7.5M12 3v18" /></svg>';
+        gridHTML += '<img src="/images/gate.png" alt="Cổng vào" style="width: 32px; height: 32px; object-fit: contain;">';
+        gridHTML += '<div style="display: flex; align-items: center; gap: 4px; white-space: nowrap;"><span style="font-size: 12px; font-weight: 700; color: #dc2626; white-space: nowrap;">Cổng vào</span></div>';
+        gridHTML += '</div>';
+        
+        // Hàng rào bên phải
+        gridHTML += `<div style="position: absolute; top: 30px; right: 0; width: ${rightWidth}px; display: flex; align-items: center; gap: 2px;">`;
+        for (let i = 0; i < fenceCount; i++) {
+            gridHTML += '<img src="/images/fence.png" alt="Hàng rào" style="width: 18px; height: 18px; object-fit: contain;">';
+        }
+        gridHTML += '</div>';
+        
+        // Label Bên trái
+        gridHTML += '<div style="position: absolute; top: 0; left: 0; display: flex; align-items: center; gap: 4px;">';
+        gridHTML += '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 16px; height: 16px; color: #16a34a;"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18" /></svg>';
+        gridHTML += '<span style="font-size: 12px; font-weight: 700; color: #16a34a;">Bên trái</span></div>';
+        
+        // Label Bên phải
+        gridHTML += '<div style="position: absolute; top: 0; right: 0; display: flex; align-items: center; gap: 4px;">';
+        gridHTML += '<span style="font-size: 12px; font-weight: 700; color: #16a34a;">Bên phải</span>';
+        gridHTML += '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 16px; height: 16px; color: #16a34a;"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" /></svg>';
+        gridHTML += '</div>';
+        
+        gridHTML += '</div></div>';
 
         gridHTML += '</div>';
         container.innerHTML = gridHTML;
