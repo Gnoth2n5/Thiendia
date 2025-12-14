@@ -1119,9 +1119,9 @@
                         </div>
                     </div>
 
-                    <!-- Selected Plot Info -->
-                    <div id="mapHoverInfo" class="p-4 rounded-lg border-2 transition-all"
-                        style="background-color: #fafaf8; border-color: #d4d0c8; min-height: 100px; overflow: hidden;">
+                    <!-- Selected Plot Info - Sticky -->
+                    <div id="mapHoverInfo" class="p-4 rounded-lg border-2 transition-all sticky top-0 z-50"
+                        style="background-color: #fafaf8; border-color: #d4d0c8; min-height: 100px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);">
                         <div class="text-center flex items-center justify-center" style="min-height: 100px; color: #2b2b2b; opacity: 0.7;">
                             Click vào các ô để xem thông tin
                         </div>
@@ -1730,6 +1730,7 @@
 
         infoBox.style.backgroundColor = '#f5f3e7';
         infoBox.style.borderColor = '#3b82f6';
+        infoBox.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)';
         infoBox.innerHTML = html;
     }
 
@@ -1737,6 +1738,7 @@
         const infoBox = document.getElementById('mapHoverInfo');
         infoBox.style.backgroundColor = '#fafaf8';
         infoBox.style.borderColor = '#d4d0c8';
+        infoBox.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)';
         infoBox.innerHTML =
             '<div class="text-center flex items-center justify-center" style="min-height: 108px; color: #2b2b2b; opacity: 0.7;">Click vào các ô để xem thông tin</div>';
     }
