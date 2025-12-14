@@ -3,6 +3,244 @@
 @section('title', 'Kết quả tìm kiếm - Tra cứu liệt sĩ tỉnh Ninh Bình')
 
 @section('content')
+    <style>
+        /* Tombstone Styles */
+        .tombstone-wrapper {
+            position: relative;
+            background: #0a0a0a;
+            overflow: hidden;
+        }
+
+        .tombstone-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(255,255,255,0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(255,255,255,0.02) 0%, transparent 50%),
+                linear-gradient(135deg, #0a0a0a 0%, #141414 100%);
+            background-size: 200% 200%, 150% 150%, 100% 100%;
+            animation: graniteShift 20s ease-in-out infinite;
+        }
+
+        @keyframes graniteShift {
+            0%, 100% { background-position: 0% 0%, 0% 0%, 0% 0%; }
+            50% { background-position: 100% 100%, 50% 50%, 0% 0%; }
+        }
+
+        .tombstone-background::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.02) 2px, rgba(255,255,255,0.02) 4px),
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,0.02) 2px, rgba(255,255,255,0.02) 4px);
+            pointer-events: none;
+        }
+
+        .tombstone-border {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            bottom: 15px;
+            border: 2px solid #C5A059;
+            pointer-events: none;
+        }
+
+        .tombstone-border::before {
+            content: '';
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            right: 4px;
+            bottom: 4px;
+            border: 1px solid #C5A059;
+        }
+
+        .tombstone-content {
+            position: relative;
+            z-index: 1;
+            padding: 30px 30px 35px;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .tombstone-star-wrapper {
+            margin-bottom: 20px;
+        }
+
+        .tombstone-star {
+            filter: drop-shadow(0 0 8px rgba(255, 0, 0, 0.6));
+        }
+
+        .tombstone-title {
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            font-size: 30px;
+            background: linear-gradient(90deg, #BF953F 0%, #FCF6BA 30%, #B38728 50%, #FBF5B7 70%, #AA771C 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.9);
+            margin: -5px 0;
+            text-align: center;
+        }
+
+        .tombstone-name {
+            font-family: 'Noto Serif', 'Times New Roman', serif;
+            font-weight: 700;
+            font-size: 26px;
+            background: linear-gradient(90deg, #BF953F 0%, #FCF6BA 30%, #B38728 50%, #FBF5B7 70%, #AA771C 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.9);
+            margin: 10px 0;
+            text-align: center;
+            text-transform: none !important;
+            font-variant: normal !important;
+            text-rendering: optimizeLegibility;
+            letter-spacing: 0.5px;
+        }
+        
+        #modalTombstoneName {
+            text-transform: none !important;
+        }
+
+        .tombstone-divider {
+            width: 120px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent 0%, #FFD700 50%, transparent 100%);
+            margin: 10px 0 20px;
+        }
+
+        .tombstone-info {
+            width: 100%;
+            margin-top: 10px;
+            margin-bottom: auto;
+            padding: 0 5px;
+        }
+
+        .tombstone-field {
+            display: flex;
+            margin-bottom: 14px;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tombstone-label {
+            font-family: 'Noto Serif', serif;
+            font-weight: 700;
+            font-size: 14px;
+            color: #cccccc;
+            min-width: 115px;
+            max-width: 115px;
+            flex-shrink: 0;
+            text-align: left;
+            line-height: 1.2;
+        }
+
+        .tombstone-value {
+            font-family: 'Noto Serif', serif;
+            font-weight: 400;
+            font-size: 15px;
+            background: linear-gradient(90deg, #BF953F 0%, #FCF6BA 30%, #B38728 50%, #FBF5B7 70%, #AA771C 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            flex: 1;
+            word-wrap: break-word;
+            text-align: left;
+            line-height: 1.2;
+        }
+
+        .tombstone-footer {
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            font-size: 22px;
+            background: linear-gradient(90deg, #BF953F 0%, #FCF6BA 30%, #B38728 50%, #FBF5B7 70%, #AA771C 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.9);
+            text-align: center;
+            margin-top: auto;
+            padding-top: 20px;
+        }
+
+        /* Modal Tombstone - Smaller Size */
+        .modal-tombstone .tombstone-content {
+            padding: 20px 20px 25px;
+            min-height: 350px;
+        }
+
+        .modal-tombstone .tombstone-star-wrapper {
+            margin-bottom: 12px;
+        }
+
+        .modal-tombstone .tombstone-title {
+            font-size: 22px;
+            margin: 6px 0;
+        }
+
+        .modal-tombstone .tombstone-name {
+            font-size: 18px;
+            margin: 6px 0;
+        }
+
+        .modal-tombstone .tombstone-divider {
+            width: 90px;
+            height: 2px;
+            margin: 8px 0 14px;
+        }
+
+        .modal-tombstone .tombstone-info {
+            margin-top: 8px;
+            padding: 0 4px;
+        }
+
+        .modal-tombstone .tombstone-field {
+            margin-bottom: 10px;
+            gap: 6px;
+        }
+
+        .modal-tombstone .tombstone-label {
+            font-size: 12px;
+            min-width: 90px;
+            max-width: 90px;
+        }
+
+        .modal-tombstone .tombstone-value {
+            font-size: 13px;
+        }
+
+        .modal-tombstone .tombstone-footer {
+            font-size: 16px;
+            padding-top: 15px;
+        }
+
+        .modal-tombstone .tombstone-border {
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+        }
+
+        .modal-tombstone .tombstone-border::before {
+            top: 3px;
+            left: 3px;
+            right: 3px;
+            bottom: 3px;
+        }
+    </style>
     <!-- Page Header -->
     <div class="mb-8">
         <div class="text-center mb-8">
@@ -677,10 +915,94 @@
                                     <path stroke-linecap="round" stroke-linejoin="round"
                                         d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
                                 </svg>
-                                Ảnh chụp mộ liệt sĩ
+                                Hình ảnh bia mộ
                             </h3>
-                            <div id="gravePhotos" class="flex gap-4 justify-center flex-wrap">
-                                <!-- Photos will be populated by JavaScript -->
+                            
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                <!-- Bên trái: Mô phỏng bia liệt sĩ -->
+                                <div>
+                                    <div class="relative flex justify-center">
+                                        <div id="modalTombstoneContainer" class="tombstone-wrapper modal-tombstone" style="box-shadow: 0 4px 15px rgba(0,0,0,0.3); border: 2px solid #444; position: relative; width: 250px; min-height: 350px;">
+                                            <!-- Nền granite -->
+                                            <div class="tombstone-background"></div>
+                                            
+                                            <!-- Viền trang trí -->
+                                            <div class="tombstone-border"></div>
+                                            
+                                            <!-- Nội dung bia -->
+                                            <div class="tombstone-content">
+                                                <!-- Ngôi sao -->
+                                                <div class="tombstone-star-wrapper">
+                                                    <svg class="tombstone-star" viewBox="0 0 100 100" width="36" height="36">
+                                                        <defs>
+                                                            <filter id="modalStarGlow">
+                                                                <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                                                                <feMerge>
+                                                                    <feMergeNode in="coloredBlur"/>
+                                                                    <feMergeNode in="SourceGraphic"/>
+                                                                </feMerge>
+                                                            </filter>
+                                                        </defs>
+                                                        <circle cx="50" cy="50" r="34" fill="none" stroke="#FFD700" stroke-width="2"/>
+                                                        <path d="M50,10 L61,38 L90,38 L68,56 L79,84 L50,66 L21,84 L32,56 L10,38 L39,38 Z" 
+                                                              fill="#e30000" stroke="#FFFF00" stroke-width="1" filter="url(#modalStarGlow)"/>
+                                                    </svg>
+                                                </div>
+                                                
+                                                <!-- Tiêu đề -->
+                                                <h2 class="tombstone-title">LIỆT SỸ</h2>
+                                                
+                                                <!-- Tên liệt sỹ -->
+                                                <h3 class="tombstone-name" id="modalTombstoneName"></h3>
+                                                
+                                                <!-- Divider -->
+                                                <div class="tombstone-divider"></div>
+                                                
+                                                <!-- Thông tin chi tiết -->
+                                                <div class="tombstone-info">
+                                                    <div class="tombstone-field" data-field="birthYear" style="display: none;">
+                                                        <span class="tombstone-label">Sinh năm:</span>
+                                                        <span class="tombstone-value"></span>
+                                                    </div>
+                                                    <div class="tombstone-field" data-field="hometown" style="display: none;">
+                                                        <span class="tombstone-label">Nguyên quán:</span>
+                                                        <span class="tombstone-value"></span>
+                                                    </div>
+                                                    <div class="tombstone-field" data-field="rank" style="display: none;">
+                                                        <span class="tombstone-label">Cấp bậc:</span>
+                                                        <span class="tombstone-value"></span>
+                                                    </div>
+                                                    <div class="tombstone-field" data-field="unit" style="display: none;">
+                                                        <span class="tombstone-label">Đơn vị:</span>
+                                                        <span class="tombstone-value"></span>
+                                                    </div>
+                                                    <div class="tombstone-field" data-field="position" style="display: none;">
+                                                        <span class="tombstone-label">Chức vụ:</span>
+                                                        <span class="tombstone-value"></span>
+                                                    </div>
+                                                    <div class="tombstone-field" data-field="enlistmentDate" style="display: none;">
+                                                        <span class="tombstone-label">Ngày nhập ngũ:</span>
+                                                        <span class="tombstone-value"></span>
+                                                    </div>
+                                                    <div class="tombstone-field" data-field="sacrificeDate" style="display: none;">
+                                                        <span class="tombstone-label">Hy sinh ngày:</span>
+                                                        <span class="tombstone-value"></span>
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- Dòng kết -->
+                                                <div class="tombstone-footer">TỔ QUỐC GHI CÔNG</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Bên phải: Ảnh chụp mộ liệt sĩ -->
+                                <div>
+                                    <div id="gravePhotos" class="flex gap-4 justify-center flex-wrap">
+                                        <!-- Photos will be populated by JavaScript -->
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -819,6 +1141,14 @@
 <script>
     let currentGraveData = null;
 
+    // Load fonts for tombstone
+    document.addEventListener('DOMContentLoaded', function() {
+        const link = document.createElement('link');
+        link.href = 'https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Noto+Serif:ital,wght@0,400;0,700;1,400&display=swap';
+        link.rel = 'stylesheet';
+        document.head.appendChild(link);
+    });
+
     async function openGraveModal(graveId) {
         const modal = document.getElementById('graveModal');
         const loading = document.getElementById('modalLoading');
@@ -890,6 +1220,9 @@
 
         // Chức vụ
         document.getElementById('position').textContent = grave.position || '—';
+
+        // === POPULATE BIA MÔ PHỎNG ===
+        populateModalTombstone(grave);
 
         // Ảnh liệt sĩ
         const photoContainer = document.getElementById('deceasedPhoto');
@@ -971,6 +1304,83 @@
 
         // Update view details button URL
         document.getElementById('viewDetailsBtn').href = `/grave/${grave.id}`;
+    }
+
+    function populateModalTombstone(grave) {
+        // Set name
+        const nameEl = document.getElementById('modalTombstoneName');
+        if (nameEl) {
+            if (grave.deceased_full_name) {
+                nameEl.textContent = grave.deceased_full_name;
+                nameEl.style.textTransform = 'none';
+            } else {
+                nameEl.textContent = '';
+            }
+        }
+
+        // Format dates
+        let birthYear = '';
+        if (grave.deceased_birth_date) {
+            const birthDate = new Date(grave.deceased_birth_date);
+            if (!isNaN(birthDate.getTime())) {
+                birthYear = birthDate.getFullYear().toString();
+            }
+        }
+
+        let sacrificeDate = '';
+        if (grave.deceased_death_date) {
+            // Nếu đã là string format d/m/Y thì dùng luôn
+            if (typeof grave.deceased_death_date === 'string' && grave.deceased_death_date.includes('/')) {
+                sacrificeDate = grave.deceased_death_date;
+            } else {
+                // Nếu là date object hoặc ISO string thì parse
+                const deathDate = new Date(grave.deceased_death_date);
+                if (!isNaN(deathDate.getTime())) {
+                    const day = String(deathDate.getDate()).padStart(2, '0');
+                    const month = String(deathDate.getMonth() + 1).padStart(2, '0');
+                    const year = deathDate.getFullYear();
+                    sacrificeDate = `${day}/${month}/${year}`;
+                }
+            }
+        }
+
+        let enlistmentDate = '';
+        if (grave.enlistment_date) {
+            const enlistDate = new Date(grave.enlistment_date);
+            if (!isNaN(enlistDate.getTime())) {
+                const day = String(enlistDate.getDate()).padStart(2, '0');
+                const month = String(enlistDate.getMonth() + 1).padStart(2, '0');
+                const year = enlistDate.getFullYear();
+                enlistmentDate = `${day}/${month}/${year}`;
+            }
+        }
+
+        // Map field names
+        const fieldMap = {
+            'birthYear': birthYear,
+            'hometown': grave.hometown || '',
+            'rank': grave.rank || '',
+            'unit': grave.unit || '',
+            'position': grave.position || '',
+            'enlistmentDate': enlistmentDate,
+            'sacrificeDate': sacrificeDate
+        };
+
+        // Populate fields
+        Object.keys(fieldMap).forEach(fieldName => {
+            const fieldEl = document.querySelector(`#modalTombstoneContainer [data-field="${fieldName}"]`);
+            if (fieldEl) {
+                const valueEl = fieldEl.querySelector('.tombstone-value');
+                if (valueEl) {
+                    if (fieldMap[fieldName]) {
+                        valueEl.textContent = fieldMap[fieldName];
+                        fieldEl.style.display = 'flex';
+                    } else {
+                        fieldEl.style.display = 'none';
+                    }
+                }
+            }
+        });
     }
 
     function closeGraveModal() {
