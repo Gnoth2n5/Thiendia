@@ -17,17 +17,24 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: 
-                radial-gradient(circle at 20% 30%, rgba(255,255,255,0.03) 0%, transparent 50%),
-                radial-gradient(circle at 80% 70%, rgba(255,255,255,0.02) 0%, transparent 50%),
+            background:
+                radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.02) 0%, transparent 50%),
                 linear-gradient(135deg, #0a0a0a 0%, #141414 100%);
             background-size: 200% 200%, 150% 150%, 100% 100%;
             animation: graniteShift 20s ease-in-out infinite;
         }
 
         @keyframes graniteShift {
-            0%, 100% { background-position: 0% 0%, 0% 0%, 0% 0%; }
-            50% { background-position: 100% 100%, 50% 50%, 0% 0%; }
+
+            0%,
+            100% {
+                background-position: 0% 0%, 0% 0%, 0% 0%;
+            }
+
+            50% {
+                background-position: 100% 100%, 50% 50%, 0% 0%;
+            }
         }
 
         .tombstone-background::before {
@@ -37,9 +44,9 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-image: 
-                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.02) 2px, rgba(255,255,255,0.02) 4px),
-                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,0.02) 2px, rgba(255,255,255,0.02) 4px);
+            background-image:
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.02) 2px, rgba(255, 255, 255, 0.02) 4px),
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 255, 255, 0.02) 2px, rgba(255, 255, 255, 0.02) 4px);
             pointer-events: none;
         }
 
@@ -89,7 +96,7 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.9);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
             margin: -5px 0;
             text-align: center;
         }
@@ -102,7 +109,7 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.9);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
             margin: 10px 0;
             text-align: center;
             text-transform: none !important;
@@ -110,7 +117,7 @@
             text-rendering: optimizeLegibility;
             letter-spacing: 0.5px;
         }
-        
+
         #modalTombstoneName {
             text-transform: none !important;
         }
@@ -170,7 +177,7 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.9);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
             text-align: center;
             margin-top: auto;
             padding-top: 20px;
@@ -547,7 +554,8 @@
                                                 <div class="flex flex-col gap-1">
                                                     <span
                                                         class="font-bold text-blue-700">{{ $grave->plot->plot_code }}</span>
-                                                    <span class="text-xs text-gray-500">Hàng {{ $grave->plot->column }}, Cột
+                                                    <span class="text-xs text-gray-500">Hàng {{ $grave->plot->column }},
+                                                        Cột
                                                         {{ $grave->plot->row }}</span>
                                                 </div>
                                             @else
@@ -774,8 +782,8 @@
                             style="background-color: rgba(255,255,255,0.1);"
                             onmouseover="this.style.backgroundColor='rgba(255,255,255,0.2)'"
                             onmouseout="this.style.backgroundColor='rgba(255,255,255,0.1)';">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
-                                stroke="currentColor" class="h-6 w-6">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="2.5" stroke="currentColor" class="h-6 w-6">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
                             </svg>
                         </button>
@@ -820,38 +828,38 @@
                                         <span class="text-sm text-gray-600">Họ và tên:</span>
                                         <p id="deceasedName" class="font-bold text-lg text-red-600"></p>
                                     </div>
-                                    
+
                                     <div>
                                         <span class="text-sm text-gray-600">Cấp bậc:</span>
                                         <p id="rank" class="font-medium text-gray-900">—</p>
                                     </div>
-                                    
+
                                     <div>
                                         <span class="text-sm text-gray-600">Đơn vị:</span>
                                         <p id="unit" class="font-medium text-gray-900">—</p>
                                     </div>
-                                    
+
                                     <div>
                                         <span class="text-sm text-gray-600">Chức vụ:</span>
                                         <p id="position" class="font-medium text-gray-900">—</p>
                                     </div>
-                                    
+
                                     <div class="grid grid-cols-2 gap-x-4 gap-y-3">
                                         <div>
                                             <span class="text-sm text-gray-600">Nguyên Quán:</span>
                                             <p id="hometown" class="font-medium text-gray-900">—</p>
                                         </div>
-                                        
+
                                         <div>
                                             <span class="text-sm text-gray-600">Ngày sinh:</span>
                                             <p id="deceasedBirth" class="font-medium text-gray-900">—</p>
                                         </div>
-                                        
+
                                         <div>
                                             <span class="text-sm text-gray-600">Ngày nhập ngũ:</span>
                                             <p id="enlistmentDate" class="font-medium text-gray-900">—</p>
                                         </div>
-                                        
+
                                         <div>
                                             <span class="text-sm text-gray-600">Ngày hy sinh:</span>
                                             <p id="deceasedDeath" class="font-medium text-gray-900">—</p>
@@ -917,79 +925,91 @@
                                 </svg>
                                 Hình ảnh bia mộ
                             </h3>
-                            
+
                             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                                 <!-- Bên trái: Mô phỏng bia liệt sĩ -->
                                 <div>
                                     <div class="relative flex justify-center">
-                                        <div id="modalTombstoneContainer" class="tombstone-wrapper modal-tombstone" style="box-shadow: 0 4px 15px rgba(0,0,0,0.3); border: 2px solid #444; position: relative; width: 250px; min-height: 350px;">
+                                        <div id="modalTombstoneContainer" class="tombstone-wrapper modal-tombstone"
+                                            style="box-shadow: 0 4px 15px rgba(0,0,0,0.3); border: 2px solid #444; position: relative; width: 250px; min-height: 350px;">
                                             <!-- Nền granite -->
                                             <div class="tombstone-background"></div>
-                                            
+
                                             <!-- Viền trang trí -->
                                             <div class="tombstone-border"></div>
-                                            
+
                                             <!-- Nội dung bia -->
                                             <div class="tombstone-content">
                                                 <!-- Ngôi sao -->
                                                 <div class="tombstone-star-wrapper">
-                                                    <svg class="tombstone-star" viewBox="0 0 100 100" width="36" height="36">
+                                                    <svg class="tombstone-star" viewBox="0 0 100 100" width="36"
+                                                        height="36">
                                                         <defs>
                                                             <filter id="modalStarGlow">
-                                                                <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                                                                <feGaussianBlur stdDeviation="2" result="coloredBlur" />
                                                                 <feMerge>
-                                                                    <feMergeNode in="coloredBlur"/>
-                                                                    <feMergeNode in="SourceGraphic"/>
+                                                                    <feMergeNode in="coloredBlur" />
+                                                                    <feMergeNode in="SourceGraphic" />
                                                                 </feMerge>
                                                             </filter>
                                                         </defs>
-                                                        <circle cx="50" cy="50" r="34" fill="none" stroke="#FFD700" stroke-width="2"/>
-                                                        <path d="M50,10 L61,38 L90,38 L68,56 L79,84 L50,66 L21,84 L32,56 L10,38 L39,38 Z" 
-                                                              fill="#e30000" stroke="#FFFF00" stroke-width="1" filter="url(#modalStarGlow)"/>
+                                                        <circle cx="50" cy="50" r="34" fill="none"
+                                                            stroke="#FFD700" stroke-width="2" />
+                                                        <path
+                                                            d="M50,10 L61,38 L90,38 L68,56 L79,84 L50,66 L21,84 L32,56 L10,38 L39,38 Z"
+                                                            fill="#e30000" stroke="#FFFF00" stroke-width="1"
+                                                            filter="url(#modalStarGlow)" />
                                                     </svg>
                                                 </div>
-                                                
+
                                                 <!-- Tiêu đề -->
                                                 <h2 class="tombstone-title">LIỆT SỸ</h2>
-                                                
+
                                                 <!-- Tên liệt sỹ -->
                                                 <h3 class="tombstone-name" id="modalTombstoneName"></h3>
-                                                
+
                                                 <!-- Divider -->
                                                 <div class="tombstone-divider"></div>
-                                                
+
                                                 <!-- Thông tin chi tiết -->
                                                 <div class="tombstone-info">
-                                                    <div class="tombstone-field" data-field="birthYear" style="display: none;">
+                                                    <div class="tombstone-field" data-field="birthYear"
+                                                        style="display: none;">
                                                         <span class="tombstone-label">Sinh năm:</span>
                                                         <span class="tombstone-value"></span>
                                                     </div>
-                                                    <div class="tombstone-field" data-field="hometown" style="display: none;">
+                                                    <div class="tombstone-field" data-field="hometown"
+                                                        style="display: none;">
                                                         <span class="tombstone-label">Nguyên quán:</span>
                                                         <span class="tombstone-value"></span>
                                                     </div>
-                                                    <div class="tombstone-field" data-field="rank" style="display: none;">
+                                                    <div class="tombstone-field" data-field="rank"
+                                                        style="display: none;">
                                                         <span class="tombstone-label">Cấp bậc:</span>
                                                         <span class="tombstone-value"></span>
                                                     </div>
-                                                    <div class="tombstone-field" data-field="unit" style="display: none;">
+                                                    <div class="tombstone-field" data-field="unit"
+                                                        style="display: none;">
                                                         <span class="tombstone-label">Đơn vị:</span>
                                                         <span class="tombstone-value"></span>
                                                     </div>
-                                                    <div class="tombstone-field" data-field="position" style="display: none;">
+                                                    <div class="tombstone-field" data-field="position"
+                                                        style="display: none;">
                                                         <span class="tombstone-label">Chức vụ:</span>
                                                         <span class="tombstone-value"></span>
                                                     </div>
-                                                    <div class="tombstone-field" data-field="enlistmentDate" style="display: none;">
+                                                    <div class="tombstone-field" data-field="enlistmentDate"
+                                                        style="display: none;">
                                                         <span class="tombstone-label">Ngày nhập ngũ:</span>
                                                         <span class="tombstone-value"></span>
                                                     </div>
-                                                    <div class="tombstone-field" data-field="sacrificeDate" style="display: none;">
+                                                    <div class="tombstone-field" data-field="sacrificeDate"
+                                                        style="display: none;">
                                                         <span class="tombstone-label">Hy sinh ngày:</span>
                                                         <span class="tombstone-value"></span>
                                                     </div>
                                                 </div>
-                                                
+
                                                 <!-- Dòng kết -->
                                                 <div class="tombstone-footer">TỔ QUỐC GHI CÔNG</div>
                                             </div>
@@ -1040,16 +1060,16 @@
             <!-- Modal Header -->
             <div class="p-6" style="background-color: #3b82f6;">
                 <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-3 text-white">
+                    <div class="flex items-center gap-2 sm:gap-3 text-white flex-wrap sm:flex-nowrap">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                            stroke="currentColor" class="h-8 w-8">
+                            stroke="currentColor" class="h-6 w-6 sm:h-8 sm:w-8 flex-shrink-0">
                             <path stroke-linecap="round" stroke-linejoin="round"
                                 d="M9 6.75V15m6-6v8.25m.503 3.498 4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 0 0-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0z" />
                         </svg>
-                        <div>
-                            <h3 class="text-2xl font-bold" style="font-family: 'Merriweather', serif;">Sơ đồ lưới nghĩa
-                                trang</h3>
-                            <p class="text-sm opacity-90" id="mapCemeteryName">Đang tải...</p>
+                        <div class="min-w-0">
+                            <h3 class="text-lg sm:text-xl md:text-2xl font-bold leading-tight"
+                                style="font-family: 'Merriweather', serif;">Sơ đồ lưới nghĩa trang</h3>
+                            <p class="text-xs sm:text-sm opacity-90 truncate" id="mapCemeteryName">Đang tải...</p>
                         </div>
                     </div>
                     <button onclick="closeCemeteryMapModal()" class="text-white rounded-lg p-2 transition"
@@ -1095,17 +1115,19 @@
                     </div>
 
                     <!-- Info + Legend Wrapper (Sticky) -->
-                    <div id="mapInfoWrapper" class="space-y-3 sticky top-0 z-50">
+                    <div id="mapInfoWrapper" class="space-y-3 sticky top-[-25px] z-50"
+                        style="background-color: #f5f3e7; padding-top: 14px; margin-top: -14px;">
                         <!-- Selected Plot Info -->
                         <div id="mapHoverInfo" class="p-4 rounded-lg border-2 transition-all"
                             style="background-color: #fafaf8; border-color: #d4d0c8; min-height: 100px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);">
-                            <div class="text-center flex items-center justify-center" style="min-height: 100px; color: #2b2b2b; opacity: 0.7;">
+                            <div class="text-center flex items-center justify-center"
+                                style="min-height: 100px; color: #2b2b2b; opacity: 0.7;">
                                 Click vào các ô để xem thông tin
                             </div>
                         </div>
 
                         <!-- Legend (Trạng thái lô) -->
-                        <div class="flex items-center gap-4 text-sm p-3 rounded-lg"
+                        <div class="flex flex-wrap sm:flex-nowrap items-center gap-3 sm:gap-4 text-sm p-3 rounded-lg"
                             style="background-color: #ffffff; border: 1px solid #d4d0c8;">
                             <div class="flex items-center gap-2">
                                 <div class="w-4 h-4 rounded" style="background-color: #3b82f6;"></div>
@@ -1147,7 +1169,8 @@
     // Load fonts for tombstone
     document.addEventListener('DOMContentLoaded', function() {
         const link = document.createElement('link');
-        link.href = 'https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Noto+Serif:ital,wght@0,400;0,700;1,400&display=swap';
+        link.href =
+            'https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Noto+Serif:ital,wght@0,400;0,700;1,400&display=swap';
         link.rel = 'stylesheet';
         document.head.appendChild(link);
     });
@@ -1486,7 +1509,7 @@
 
         // Đảo 90 độ: số hàng hiển thị = số cột dữ liệu, số cột hiển thị = số hàng dữ liệu
         const displayRows = grid.columns; // Hàng hiển thị = Cột dữ liệu
-        const displayCols = grid.rows;    // Cột hiển thị = Hàng dữ liệu
+        const displayCols = grid.rows; // Cột hiển thị = Hàng dữ liệu
 
         // Build grid HTML
         let gridHTML = '<div class="inline-block">';
@@ -1499,41 +1522,52 @@
         const fenceCount = Math.floor(leftWidth / 20);
 
         // Entrance Line and Labels (hàng rào và tượng đài)
-        gridHTML += '<div style="display: flex; margin-bottom: 12px; margin-left: 40px; position: relative; min-height: 100px; overflow: visible;">';
+        gridHTML +=
+            '<div style="display: flex; margin-bottom: 12px; margin-left: 40px; position: relative; min-height: 100px; overflow: visible;">';
         gridHTML += `<div style="width: ${gridWidth}px; position: relative; min-width: ${gridWidth}px;">`;
-        
+
         // Hàng rào bên trái
-        gridHTML += `<div style="position: absolute; top: 30px; left: 0; width: ${leftWidth}px; display: flex; align-items: center; gap: 2px;">`;
+        gridHTML +=
+            `<div style="position: absolute; top: 30px; left: 0; width: ${leftWidth}px; display: flex; align-items: center; gap: 2px;">`;
         for (let i = 0; i < fenceCount; i++) {
-            gridHTML += '<img src="/images/fence.png" alt="Hàng rào" style="width: 18px; height: 18px; object-fit: contain;">';
+            gridHTML +=
+                '<img src="/images/fence.png" alt="Hàng rào" style="width: 18px; height: 18px; object-fit: contain;">';
         }
         gridHTML += '</div>';
-        
+
         // Tượng đài (ở giữa)
-        gridHTML += `<div style="position: absolute; top: 0; left: ${gatePosition}px; display: flex; flex-direction: column; align-items: center; gap: 4px; width: 100px;">`;
-        gridHTML += '<div style="display: flex; align-items: center; gap: 4px; white-space: nowrap;"><span style="font-size: 12px; font-weight: 700; color: #dc2626; white-space: nowrap;">Đài tưởng niệm</span></div>';
-        gridHTML += '<img src="/images/rizal-park.png" alt="Tượng đài" style="width: 32px; height: 32px; object-fit: contain;">';
-        gridHTML += '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" style="width: 20px; height: 20px; color: #dc2626;"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3" /></svg>';
+        gridHTML +=
+            `<div style="position: absolute; top: 0; left: ${gatePosition}px; display: flex; flex-direction: column; align-items: center; gap: 4px; width: 100px;">`;
+        gridHTML +=
+            '<div style="display: flex; align-items: center; gap: 4px; white-space: nowrap;"><span style="font-size: 12px; font-weight: 700; color: #dc2626; white-space: nowrap;">Đài tưởng niệm</span></div>';
+        gridHTML +=
+            '<img src="/images/rizal-park.png" alt="Tượng đài" style="width: 32px; height: 32px; object-fit: contain;">';
+        gridHTML +=
+            '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" style="width: 20px; height: 20px; color: #dc2626;"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3" /></svg>';
         gridHTML += '</div>';
-        
+
         // Hàng rào bên phải
-        gridHTML += `<div style="position: absolute; top: 30px; right: 0; width: ${rightWidth}px; display: flex; align-items: center; gap: 2px;">`;
+        gridHTML +=
+            `<div style="position: absolute; top: 30px; right: 0; width: ${rightWidth}px; display: flex; align-items: center; gap: 2px;">`;
         for (let i = 0; i < fenceCount; i++) {
-            gridHTML += '<img src="/images/fence.png" alt="Hàng rào" style="width: 18px; height: 18px; object-fit: contain;">';
+            gridHTML +=
+                '<img src="/images/fence.png" alt="Hàng rào" style="width: 18px; height: 18px; object-fit: contain;">';
         }
         gridHTML += '</div>';
-        
+
         // Label Bên trái
         gridHTML += '<div style="position: absolute; top: 0; left: 0; display: flex; align-items: center; gap: 4px;">';
-        gridHTML += '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 16px; height: 16px; color: #16a34a;"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18" /></svg>';
+        gridHTML +=
+            '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 16px; height: 16px; color: #16a34a;"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18" /></svg>';
         gridHTML += '<span style="font-size: 12px; font-weight: 700; color: #16a34a;">Bên trái</span></div>';
-        
+
         // Label Bên phải
         gridHTML += '<div style="position: absolute; top: 0; right: 0; display: flex; align-items: center; gap: 4px;">';
         gridHTML += '<span style="font-size: 12px; font-weight: 700; color: #16a34a;">Bên phải</span>';
-        gridHTML += '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 16px; height: 16px; color: #16a34a;"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" /></svg>';
+        gridHTML +=
+            '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 16px; height: 16px; color: #16a34a;"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" /></svg>';
         gridHTML += '</div>';
-        
+
         gridHTML += '</div></div>';
 
         // Column headers (hiển thị chữ cái)
@@ -1563,7 +1597,8 @@
                     const isSelected = selectedPlotId && plot.id === selectedPlotId;
                     const color = isHighlighted ? '#3b82f6' : getPlotColor(plot.status);
                     const border = isHighlighted || isSelected ? '3px solid #1e40af' : '1px solid rgba(0,0,0,0.1)';
-                    const shadow = isHighlighted || isSelected ? '0 4px 12px rgba(59, 130, 246, 0.5)' : '0 1px 2px rgba(0,0,0,0.1)';
+                    const shadow = isHighlighted || isSelected ? '0 4px 12px rgba(59, 130, 246, 0.5)' :
+                        '0 1px 2px rgba(0,0,0,0.1)';
                     const plotId = `plot-${plot.id}`;
 
                     gridHTML += `
@@ -1601,41 +1636,52 @@
         }
 
         // Exit Line and Labels (hàng rào và cổng vào) - Đặt dưới lưới
-        gridHTML += '<div style="display: flex; margin-top: 12px; margin-left: 40px; position: relative; min-height: 100px; overflow: visible;">';
+        gridHTML +=
+            '<div style="display: flex; margin-top: 12px; margin-left: 40px; position: relative; min-height: 100px; overflow: visible;">';
         gridHTML += `<div style="width: ${gridWidth}px; position: relative; min-width: ${gridWidth}px;">`;
-        
+
         // Hàng rào bên trái
-        gridHTML += `<div style="position: absolute; top: 30px; left: 0; width: ${leftWidth}px; display: flex; align-items: center; gap: 2px;">`;
+        gridHTML +=
+            `<div style="position: absolute; top: 30px; left: 0; width: ${leftWidth}px; display: flex; align-items: center; gap: 2px;">`;
         for (let i = 0; i < fenceCount; i++) {
-            gridHTML += '<img src="/images/fence.png" alt="Hàng rào" style="width: 18px; height: 18px; object-fit: contain;">';
+            gridHTML +=
+                '<img src="/images/fence.png" alt="Hàng rào" style="width: 18px; height: 18px; object-fit: contain;">';
         }
         gridHTML += '</div>';
-        
+
         // Cổng vào (ở giữa)
-        gridHTML += `<div style="position: absolute; top: 0; left: ${gatePosition}px; display: flex; flex-direction: column; align-items: center; gap: 4px; width: 100px;">`;
-        gridHTML += '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" style="width: 20px; height: 20px; color: #dc2626;"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 10.5L12 3m0 0l7.5 7.5M12 3v18" /></svg>';
-        gridHTML += '<img src="/images/gate.png" alt="Cổng vào" style="width: 32px; height: 32px; object-fit: contain;">';
-        gridHTML += '<div style="display: flex; align-items: center; gap: 4px; white-space: nowrap;"><span style="font-size: 12px; font-weight: 700; color: #dc2626; white-space: nowrap;">Cổng vào</span></div>';
+        gridHTML +=
+            `<div style="position: absolute; top: 0; left: ${gatePosition}px; display: flex; flex-direction: column; align-items: center; gap: 4px; width: 100px;">`;
+        gridHTML +=
+            '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" style="width: 20px; height: 20px; color: #dc2626;"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 10.5L12 3m0 0l7.5 7.5M12 3v18" /></svg>';
+        gridHTML +=
+            '<img src="/images/gate.png" alt="Cổng vào" style="width: 32px; height: 32px; object-fit: contain;">';
+        gridHTML +=
+            '<div style="display: flex; align-items: center; gap: 4px; white-space: nowrap;"><span style="font-size: 12px; font-weight: 700; color: #dc2626; white-space: nowrap;">Cổng vào</span></div>';
         gridHTML += '</div>';
-        
+
         // Hàng rào bên phải
-        gridHTML += `<div style="position: absolute; top: 30px; right: 0; width: ${rightWidth}px; display: flex; align-items: center; gap: 2px;">`;
+        gridHTML +=
+            `<div style="position: absolute; top: 30px; right: 0; width: ${rightWidth}px; display: flex; align-items: center; gap: 2px;">`;
         for (let i = 0; i < fenceCount; i++) {
-            gridHTML += '<img src="/images/fence.png" alt="Hàng rào" style="width: 18px; height: 18px; object-fit: contain;">';
+            gridHTML +=
+                '<img src="/images/fence.png" alt="Hàng rào" style="width: 18px; height: 18px; object-fit: contain;">';
         }
         gridHTML += '</div>';
-        
+
         // Label Bên trái
         gridHTML += '<div style="position: absolute; top: 0; left: 0; display: flex; align-items: center; gap: 4px;">';
-        gridHTML += '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 16px; height: 16px; color: #16a34a;"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18" /></svg>';
+        gridHTML +=
+            '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 16px; height: 16px; color: #16a34a;"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18" /></svg>';
         gridHTML += '<span style="font-size: 12px; font-weight: 700; color: #16a34a;">Bên trái</span></div>';
-        
+
         // Label Bên phải
         gridHTML += '<div style="position: absolute; top: 0; right: 0; display: flex; align-items: center; gap: 4px;">';
         gridHTML += '<span style="font-size: 12px; font-weight: 700; color: #16a34a;">Bên phải</span>';
-        gridHTML += '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 16px; height: 16px; color: #16a34a;"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" /></svg>';
+        gridHTML +=
+            '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 16px; height: 16px; color: #16a34a;"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" /></svg>';
         gridHTML += '</div>';
-        
+
         gridHTML += '</div></div>';
 
         gridHTML += '</div>';
@@ -1754,8 +1800,9 @@
                 const isSelected = selectedPlotId && plot.id === selectedPlotId;
                 const color = isHighlighted ? '#3b82f6' : getPlotColor(plot.status);
                 const border = isHighlighted || isSelected ? '3px solid #1e40af' : '1px solid rgba(0,0,0,0.1)';
-                const shadow = isHighlighted || isSelected ? '0 4px 12px rgba(59, 130, 246, 0.5)' : '0 1px 2px rgba(0,0,0,0.1)';
-                
+                const shadow = isHighlighted || isSelected ? '0 4px 12px rgba(59, 130, 246, 0.5)' :
+                    '0 1px 2px rgba(0,0,0,0.1)';
+
                 plotElement.style.backgroundColor = color;
                 plotElement.style.border = border;
                 plotElement.style.boxShadow = shadow;
