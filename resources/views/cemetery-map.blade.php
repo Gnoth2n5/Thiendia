@@ -84,14 +84,14 @@
                                 
                                 // Tính toán chiều rộng và vị trí cho hàng rào và cổng
                                 $gridWidth = ($displayCols * 48) + (($displayCols - 1) * 4);
-                                $leftWidth = floor($gridWidth / 2) - 40;
-                                $rightWidth = $gridWidth - $leftWidth - 80;
+                                $leftWidth = floor($gridWidth / 2) - 50;
+                                $rightWidth = $gridWidth - $leftWidth - 100;
                                 $gatePosition = $leftWidth;
                                 $fenceCount = floor($leftWidth / 20);
                             @endphp
                             
-                            <!-- Entrance Line and Labels (hàng rào và cổng vào) -->
-                            <div style="display: flex; margin-bottom: 12px; margin-left: 40px; position: relative; min-height: 80px; overflow: visible;">
+                            <!-- Entrance Line and Labels (hàng rào và tượng đài) -->
+                            <div style="display: flex; margin-bottom: 12px; margin-left: 40px; position: relative; min-height: 100px; overflow: visible;">
                                 <div style="width: {{ $gridWidth }}px; position: relative; min-width: {{ $gridWidth }}px;">
                                     <!-- Hàng rào bên trái -->
                                     <div style="position: absolute; top: 30px; left: 0; width: {{ $leftWidth }}px; display: flex; align-items: center; gap: 2px;">
@@ -100,12 +100,12 @@
                                         @endfor
                                     </div>
                                     
-                                    <!-- Cổng vào (ở giữa) -->
-                                    <div style="position: absolute; top: 0; left: {{ $gatePosition }}px; display: flex; flex-direction: column; align-items: center; gap: 4px; width: 80px;">
-                                        <div style="display: flex; align-items: center; gap: 4px;">
-                                            <span style="font-size: 12px; font-weight: 700; color: #dc2626;">Cổng vào</span>
+                                    <!-- Tượng đài (ở giữa) -->
+                                    <div style="position: absolute; top: 0; left: {{ $gatePosition }}px; display: flex; flex-direction: column; align-items: center; gap: 4px; width: 100px;">
+                                        <div style="display: flex; align-items: center; gap: 4px; white-space: nowrap;">
+                                            <span style="font-size: 12px; font-weight: 700; color: #dc2626; white-space: nowrap;">Đài tưởng niệm</span>
                                         </div>
-                                        <img src="/images/gate.png" alt="Cổng vào" style="width: 32px; height: 32px; object-fit: contain;">
+                                        <img src="/images/rizal-park.png" alt="Tượng đài" style="width: 32px; height: 32px; object-fit: contain;">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" style="width: 20px; height: 20px; color: #dc2626;">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3" />
                                         </svg>
@@ -196,6 +196,52 @@
                                     @endfor
                                 </div>
                             @endfor
+                            
+                            <!-- Exit Line and Labels (hàng rào và cổng vào) - Đặt dưới lưới -->
+                            <div style="display: flex; margin-top: 12px; margin-left: 40px; position: relative; min-height: 100px; overflow: visible;">
+                                <div style="width: {{ $gridWidth }}px; position: relative; min-width: {{ $gridWidth }}px;">
+                                    <!-- Hàng rào bên trái -->
+                                    <div style="position: absolute; top: 30px; left: 0; width: {{ $leftWidth }}px; display: flex; align-items: center; gap: 2px;">
+                                        @for ($i = 0; $i < $fenceCount; $i++)
+                                            <img src="/images/fence.png" alt="Hàng rào" style="width: 18px; height: 18px; object-fit: contain;">
+                                        @endfor
+                                    </div>
+                                    
+                                    <!-- Cổng vào (ở giữa) -->
+                                    <div style="position: absolute; top: 0; left: {{ $gatePosition }}px; display: flex; flex-direction: column; align-items: center; gap: 4px; width: 100px;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" style="width: 20px; height: 20px; color: #dc2626;">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 10.5L12 3m0 0l7.5 7.5M12 3v18" />
+                                        </svg>
+                                        <img src="/images/gate.png" alt="Cổng vào" style="width: 32px; height: 32px; object-fit: contain;">
+                                        <div style="display: flex; align-items: center; gap: 4px; white-space: nowrap;">
+                                            <span style="font-size: 12px; font-weight: 700; color: #dc2626; white-space: nowrap;">Cổng vào</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Hàng rào bên phải -->
+                                    <div style="position: absolute; top: 30px; right: 0; width: {{ $rightWidth }}px; display: flex; align-items: center; gap: 2px;">
+                                        @for ($i = 0; $i < $fenceCount; $i++)
+                                            <img src="/images/fence.png" alt="Hàng rào" style="width: 18px; height: 18px; object-fit: contain;">
+                                        @endfor
+                                    </div>
+                                    
+                                    <!-- Label Bên trái -->
+                                    <div style="position: absolute; top: 0; left: 0; display: flex; align-items: center; gap: 4px;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 16px; height: 16px; color: #16a34a;">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18" />
+                                        </svg>
+                                        <span style="font-size: 12px; font-weight: 700; color: #16a34a;">Bên trái</span>
+                                    </div>
+                                    
+                                    <!-- Label Bên phải -->
+                                    <div style="position: absolute; top: 0; right: 0; display: flex; align-items: center; gap: 4px;">
+                                        <span style="font-size: 12px; font-weight: 700; color: #16a34a;">Bên phải</span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 16px; height: 16px; color: #16a34a;">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
