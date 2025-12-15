@@ -19,7 +19,7 @@
         <div class="max-w-6xl mx-auto">
             <div class="rounded-xl border p-8 md:p-12" style="background-color: #fafaf8; border-color: #d4d0c8;">
                 <h1 class="text-2xl md:text-4xl font-bold mb-6 text-center xl:mx-28" style="color: #2b2b2b;">
-                    HỆ THỐNG TRA CỨU THÔNG TIN LIỆT SĨ TỈNH NINH BÌNH TRỰC TUYẾN
+                    HỆ THỐNG TRA CỨU THÔNG TIN LIỆT SĨ XÃ LÝ NHÂN TRỰC TUYẾN
                 </h1>
                 <p class="text-xl text-gray-600 text-center mb-8">
                     Tra cứu thông tin liệt sĩ nhanh chóng, chính xác và tiện lợi

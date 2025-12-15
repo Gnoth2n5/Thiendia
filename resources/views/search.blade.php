@@ -1094,36 +1094,39 @@
                         </div>
                     </div>
 
-                    <!-- Legend -->
-                    <div class="flex items-center gap-4 text-sm p-3 rounded-lg"
-                        style="background-color: #ffffff; border: 1px solid #d4d0c8;">
-                        <div class="flex items-center gap-2">
-                            <div class="w-4 h-4 rounded" style="background-color: #3b82f6;"></div>
-                            <span style="color: #2b2b2b;">Lô này</span>
+                    <!-- Info + Legend Wrapper (Sticky) -->
+                    <div id="mapInfoWrapper" class="space-y-3 sticky top-0 z-50">
+                        <!-- Selected Plot Info -->
+                        <div id="mapHoverInfo" class="p-4 rounded-lg border-2 transition-all"
+                            style="background-color: #fafaf8; border-color: #d4d0c8; min-height: 100px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);">
+                            <div class="text-center flex items-center justify-center" style="min-height: 100px; color: #2b2b2b; opacity: 0.7;">
+                                Click vào các ô để xem thông tin
+                            </div>
                         </div>
-                        <div class="flex items-center gap-2">
-                            <div class="w-4 h-4 rounded" style="background-color: #22c55e;"></div>
-                            <span style="color: #2b2b2b;">Trống</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <div class="w-4 h-4 rounded" style="background-color: #6b7280;"></div>
-                            <span style="color: #2b2b2b;">Đã dùng</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <div class="w-4 h-4 rounded" style="background-color: #eab308;"></div>
-                            <span style="color: #2b2b2b;">Đặt trước</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <div class="w-4 h-4 rounded" style="background-color: #ef4444;"></div>
-                            <span style="color: #2b2b2b;">Không dùng</span>
-                        </div>
-                    </div>
 
-                    <!-- Selected Plot Info - Sticky -->
-                    <div id="mapHoverInfo" class="p-4 rounded-lg border-2 transition-all sticky top-0 z-50"
-                        style="background-color: #fafaf8; border-color: #d4d0c8; min-height: 100px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);">
-                        <div class="text-center flex items-center justify-center" style="min-height: 100px; color: #2b2b2b; opacity: 0.7;">
-                            Click vào các ô để xem thông tin
+                        <!-- Legend (Trạng thái lô) -->
+                        <div class="flex items-center gap-4 text-sm p-3 rounded-lg"
+                            style="background-color: #ffffff; border: 1px solid #d4d0c8;">
+                            <div class="flex items-center gap-2">
+                                <div class="w-4 h-4 rounded" style="background-color: #3b82f6;"></div>
+                                <span style="color: #2b2b2b;">Lô này</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <div class="w-4 h-4 rounded" style="background-color: #22c55e;"></div>
+                                <span style="color: #2b2b2b;">Trống</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <div class="w-4 h-4 rounded" style="background-color: #6b7280;"></div>
+                                <span style="color: #2b2b2b;">Đã dùng</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <div class="w-4 h-4 rounded" style="background-color: #eab308;"></div>
+                                <span style="color: #2b2b2b;">Đặt trước</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <div class="w-4 h-4 rounded" style="background-color: #ef4444;"></div>
+                                <span style="color: #2b2b2b;">Không dùng</span>
+                            </div>
                         </div>
                     </div>
 
