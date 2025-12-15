@@ -2,7 +2,8 @@
 
 @section('title', 'Giới thiệu - Hệ thống Tra cứu Thông tin Liệt sĩ Tỉnh Ninh Bình')
 
-@section('description', 'Giới thiệu về hệ thống tra cứu thông tin liệt sĩ tỉnh Ninh Bình trực tuyến. Tìm hiểu về tính năng, lợi ích và tầm nhìn của hệ thống.')
+@section('description', 'Giới thiệu về hệ thống tra cứu thông tin liệt sĩ tỉnh Ninh Bình trực tuyến. Tìm hiểu về tính
+    năng, lợi ích và tầm nhìn của hệ thống.')
 
 @section('content')
     <div class="container mx-auto px-4 py-8">
@@ -70,14 +71,14 @@
 
                     <h2 class="text-3xl font-bold mb-6" style="color: #3b82f6;">Liên hệ</h2>
                     <p class="text-lg leading-relaxed mb-6" style="color: #2b2b2b;">
-                        Nếu bạn là ban quản lý nghĩa trang, chính quyền địa phương hoặc người dân muốn sử dụng hệ thống, hãy
-                        liên hệ với chúng tôi để được tư vấn và hỗ trợ triển khai:
+                        Mọi thắc mắc về hệ thống, vui lòng liên hệ với chúng tôi qua thông tin dưới đây:
                     </p>
                     <ul class="list-disc list-inside text-lg leading-relaxed" style="color: #2b2b2b;">
-                        <li>📍 Địa chỉ: Ninh Bình, Việt Nam</li>
+                        <li>📍 Địa chỉ: xã Lý Nhân, Ninh Bình, Việt Nam</li>
                         <li>📞 Hotline: 0123 456 789</li>
-                        <li>🌐 Website: tenmiencuaban.vn</li>
-                        <li>✉️ Email: lienhe@tenmiencuaban.vn</li>
+                        <li>🌐 Website: <a class="btn btn-link" href="http://tracuuthongtinlietsy.poly-hna.com">Tra cứu thông tin liệt sỹ</a>
+                        </li>
+                        <li>✉️ Email: tracuuthongtinlietsy@poly-hna.com</li>
                     </ul>
                 </div>
             </div>
@@ -87,12 +88,10 @@
         <div class="mt-8 text-center">
             <a href="{{ route('home') }}" class="btn btn-outline">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                 </svg>
                 Quay lại trang chủ
             </a>
         </div>
     </div>
 @endsection
-
