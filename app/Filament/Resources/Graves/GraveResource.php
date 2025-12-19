@@ -32,6 +32,14 @@ class GraveResource extends Resource
     {
         $query = parent::getEloquentQuery();
 
+        // Eager load plot với cấu trúc mới nhất (giống ManageCemeteryGrid)
+        $query->with([
+            'plot' => function ($q) {
+                $q->select('id', 'plot_code', 'row', 'column', 'status', 'cemetery_id');
+            },
+            'cemetery:id,name,commune',
+        ]);
+
         // Nếu là cán bộ xã/phường, chỉ hiển thị lăng mộ của xã/phường mình
         /** @var User $user */
         $user = auth()->user();

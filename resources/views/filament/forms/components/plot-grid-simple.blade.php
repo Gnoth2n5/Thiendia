@@ -5,7 +5,6 @@
     
     $plots = [];
     $gridDimensions = ['rows' => 0, 'columns' => 0];
-    $plotMap = [];
     
     if ($cemeteryId) {
         $cemetery = \App\Models\Cemetery::find($cemeteryId);
@@ -17,6 +16,7 @@
                 ->orderBy('column')
                 ->get();
             
+            // Convert to array and ensure grave relationship is properly formatted
             $plots = $plotsCollection->map(function ($plot) {
                 return [
                     'id' => $plot->id,
@@ -30,11 +30,6 @@
                     ] : null,
                 ];
             })->toArray();
-            
-            // Pre-compute plot map for O(1) lookups
-            foreach ($plots as $plot) {
-                $plotMap["{$plot['row']}-{$plot['column']}"] = $plot;
-            }
         }
     }
     
@@ -47,10 +42,12 @@
     wire:key="plot-picker-{{ $renderKey }}"
     x-data="{
         plots: @js($plots),
-        plotMap: @js($plotMap),
+        plotMap: {},
         selectedPlotId: @js($selectedPlotId),
-        maxRow: @js($gridDimensions['rows']),
-        maxCol: @js($gridDimensions['columns']),
+        maxRow: @js($gridDimensions['rows'] ?? 0),
+        maxCol: @js($gridDimensions['columns'] ?? 0),
+        rowArray: [],
+        colArray: [],
         hoveredPlot: null,
         isRendering: false,
         renderError: null,
@@ -58,11 +55,25 @@
         init() {
             try {
                 console.log('[PlotGrid] Initialized with', this.plots.length, 'plots');
+                console.log('[PlotGrid] Grid dimensions:', 'rows:', this.maxRow, 'cols:', this.maxCol);
+                // Đảo 90 độ: số hàng hiển thị = số cột dữ liệu, số cột hiển thị = số hàng dữ liệu
+                this.rowArray = Array.from({ length: this.maxCol }, (_, i) => i + 1);
+                this.colArray = Array.from({ length: this.maxRow }, (_, i) => i + 1);
+                console.log('[PlotGrid] Display arrays:', 'rowArray length:', this.rowArray.length, 'colArray length:', this.colArray.length);
+                this.buildPlotMap();
                 this.setupLivewireListeners();
             } catch (error) {
                 console.error('[PlotGrid] Init error:', error);
                 this.renderError = error.message;
             }
+        },
+        
+        buildPlotMap() {
+            this.plotMap = {};
+            this.plots.forEach(plot => {
+                const key = `${plot.row}-${plot.column}`;
+                this.plotMap[key] = plot;
+            });
         },
         
         setupLivewireListeners() {
@@ -78,7 +89,7 @@
             this.isRendering = true;
             requestAnimationFrame(() => {
                 try {
-                    // Render will happen naturally through Alpine reactivity
+                    this.buildPlotMap();
                     this.isRendering = false;
                 } catch (error) {
                     console.error('[PlotGrid] Render error:', error);
@@ -88,31 +99,33 @@
             });
         },
         
-        getPlotByPosition(row, col) {
+        getPlotByPosition(col, row) {
             try {
-                const key = `${row}-${col}`;
-                return this.plotMap[key] || null;
+                // Đảo 90 độ: 
+                // - Hàng hiển thị (row) = Cột dữ liệu (column)
+                // - Cột hiển thị (col) = Hàng dữ liệu (row)
+                // Vậy khi hiển thị ở (row, col), cần tìm plot có (row dữ liệu = col, column dữ liệu = row)
+                const key = `${col}-${row}`;
+                const plot = this.plotMap[key] || null;
+                if (!plot) {
+                    console.debug(`[PlotGrid] No plot found at display position (row=${row}, col=${col}), key=${key}`);
+                }
+                return plot;
             } catch (error) {
                 console.error('[PlotGrid] Error getting plot:', error);
                 return null;
             }
         },
         
-        getPlotColor(plot) {
+        getPlotColor(status) {
             try {
-                if (!plot) return '#d1d5db';
-                
-                if (plot.id === this.selectedPlotId) {
-                    return '#3b82f6'; // blue-500 - đã chọn
-                }
-                
                 const colors = {
-                    'available': '#22c55e',
-                    'occupied': '#6b7280',
-                    'reserved': '#eab308',
-                    'unavailable': '#ef4444'
+                    'available': '#22c55e',  // green-500
+                    'occupied': '#6b7280',   // gray-500
+                    'reserved': '#eab308',   // yellow-500
+                    'unavailable': '#ef4444' // red-500
                 };
-                return colors[plot.status] || '#d1d5db';
+                return colors[status] || '#d1d5db'; // gray-300
             } catch (error) {
                 console.error('[PlotGrid] Error getting color:', error);
                 return '#d1d5db';
@@ -122,6 +135,7 @@
         canSelectPlot(plot) {
             try {
                 if (!plot) return false;
+                // Chỉ cho phép chọn lô available hoặc lô đã được chọn
                 return plot.status === 'available' || plot.id === this.selectedPlotId;
             } catch (error) {
                 console.error('[PlotGrid] Error checking selectability:', error);
@@ -137,36 +151,12 @@
                 
                 this.selectedPlotId = plot.id;
                 $wire.set('data.plot_id', plot.id);
-                
-                // Auto-fill location description
-                $wire.get('data.location_description').then(currentLocation => {
-                    if (!currentLocation || currentLocation === '') {
-                        $wire.set('data.location_description', 
-                            `Lô ${plot.plot_code} - Hàng ${plot.row}, Cột ${plot.column}`
-                        );
-                    }
-                }).catch(error => {
-                    console.error('[PlotGrid] Error setting location:', error);
-                });
             } catch (error) {
                 console.error('[PlotGrid] Error selecting plot:', error);
                 this.renderError = 'Không thể chọn lô. Vui lòng thử lại.';
             }
         },
         
-        getPlotInfo(plot) {
-            try {
-                if (!plot) return '';
-                let info = `Lô ${plot.plot_code} - Hàng ${plot.row}, Cột ${plot.column}`;
-                if (plot.grave) {
-                    info += `\\n👤 ${plot.grave.deceased_full_name}`;
-                }
-                return info;
-            } catch (error) {
-                console.error('[PlotGrid] Error getting plot info:', error);
-                return 'Lỗi hiển thị thông tin';
-            }
-        },
         
         getSelectedPlot() {
             try {
@@ -228,7 +218,7 @@
                         <div class="font-semibold text-blue-700 dark:text-blue-300 mb-2">✓ Lô đã chọn:</div>
                         <div class="text-lg font-bold" x-text="`Lô ${getSelectedPlot().plot_code}`"></div>
                         <div class="text-sm text-gray-600 dark:text-gray-400">
-                            Vị trí: Hàng <span x-text="getSelectedPlot().row"></span>, Cột <span x-text="getSelectedPlot().column"></span>
+                            Vị trí: Hàng <span x-text="getSelectedPlot().column"></span>, Cột <span x-text="getSelectedPlot().row"></span>
                         </div>
                         <div class="text-sm mt-1">
                             Trạng thái: 
@@ -252,7 +242,7 @@
                         <span x-text="'Lô ' + hoveredPlot.plot_code"></span>
                     </div>
                     <div class="text-sm">
-                        <div>Vị trí: Hàng <span x-text="hoveredPlot.row"></span>, Cột <span x-text="hoveredPlot.column"></span></div>
+                        <div>Vị trí: Hàng <span x-text="hoveredPlot.column"></span>, Cột <span x-text="hoveredPlot.row"></span></div>
                         <div class="mt-1">
                             Trạng thái: 
                             <span x-text="hoveredPlot.status === 'available' ? 'Còn trống' : 
@@ -274,31 +264,33 @@
             </template>
         </div>
 
-        <!-- Grid -->
-        <div class="overflow-x-auto p-4 bg-white dark:bg-gray-800 rounded-lg border-2 border-gray-200 dark:border-gray-700">
+        <!-- Grid with Row/Column Labels -->
+        <div class="overflow-x-auto p-4 bg-white dark:bg-gray-800 rounded-lg border-2 border-gray-200 dark:border-gray-700" x-show="plots.length > 0 && maxRow > 0 && maxCol > 0">
             <div class="inline-block">
-                <!-- Column Headers -->
-                <div style="display: flex; gap: 4px; margin-bottom: 4px; margin-left: 40px;">
-                    <template x-for="col in maxCol" :key="'col-' + col">
-                        <div style="width: 48px; text-align: center; font-weight: 600; color: #6b7280; font-size: 11px;">
-                            <span x-text="col"></span>
+                <!-- Column Headers (hiển thị chữ cái ở trên) -->
+                <div style="display: flex; gap: 4px; margin-bottom: 4px; margin-left: 48px;">
+                    <template x-for="col in colArray" :key="'col-header-' + col">
+                        <div style="width: 48px; text-align: center; font-weight: 600; color: #6b7280; font-size: 12px;">
+                            <span x-text="String.fromCharCode(64 + col)"></span>
                         </div>
                     </template>
                 </div>
 
-                <!-- Grid Rows -->
-                <template x-for="row in maxRow" :key="'row-' + row">
+                <!-- Grid Rows (hàng ngang với label số bên trái) -->
+                <template x-for="row in rowArray" :key="'row-' + row">
                     <div style="display: flex; gap: 4px; margin-bottom: 4px;">
-                        <!-- Row Label -->
-                        <div style="width: 36px; display: flex; align-items: center; justify-content: center; font-weight: 600; color: #6b7280; font-size: 13px;">
-                            <span x-text="String.fromCharCode(64 + row)"></span>
+                        <!-- Row Label (số) -->
+                        <div style="width: 48px; display: flex; align-items: center; justify-content: center; font-weight: 600; color: #6b7280; font-size: 14px;">
+                            <span x-text="row"></span>
                         </div>
 
-                        <!-- Plot Cells - Using plotMap for O(1) lookup instead of filter -->
-                        <template x-for="col in maxCol" :key="'cell-' + row + '-' + col">
+                        <!-- Plot Cells - Lặp qua các cột trong hàng này -->
+                        <template x-for="col in colArray" :key="'cell-' + row + '-' + col">
                             <div
-                                x-data="{ plot: getPlotByPosition(row, col) }"
-                                @click="plot && selectPlot(plot)"
+                                x-data="{ 
+                                    get plot() { return getPlotByPosition(col, row); }
+                                }"
+                                @click="plot && canSelectPlot(plot) && selectPlot(plot)"
                                 @mouseenter="plot && (hoveredPlot = plot)"
                                 @mouseleave="hoveredPlot = null"
                                 :style="plot ? {
@@ -312,7 +304,7 @@
                                     fontSize: '10px',
                                     fontWeight: 'bold',
                                     color: '#ffffff',
-                                    backgroundColor: getPlotColor(plot),
+                                    backgroundColor: plot.id === selectedPlotId ? '#3b82f6' : getPlotColor(plot.status),
                                     border: plot.id === selectedPlotId ? '3px solid #1e40af' : '1px solid rgba(0,0,0,0.1)',
                                     boxShadow: plot.id === selectedPlotId ? '0 4px 12px rgba(59, 130, 246, 0.4)' : '0 1px 2px rgba(0,0,0,0.1)',
                                     transition: 'all 0.15s',
@@ -322,9 +314,11 @@
                                     height: '48px',
                                     backgroundColor: 'transparent'
                                 }"
-                                :title="plot ? getPlotInfo(plot) : ''"
+                                :title="plot ? (plot.plot_code + ' - ' + (plot.status === 'available' ? 'Còn trống' : plot.status === 'occupied' ? 'Đã sử dụng' : plot.status === 'reserved' ? 'Đã đặt trước' : 'Không khả dụng') + (plot.grave ? ' (' + plot.grave.deceased_full_name + ')' : '')) : ''"
                             >
-                                <span x-show="plot" x-text="plot ? plot.plot_code : ''"></span>
+                                <template x-if="plot">
+                                    <span x-text="plot.plot_code"></span>
+                                </template>
                             </div>
                         </template>
                     </div>

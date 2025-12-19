@@ -57,6 +57,68 @@ class GravesTable
                     ->weight('bold')
                     ->placeholder('Chưa có thông tin'),
 
+                TextColumn::make('plot.plot_code')
+                    ->label('Lô mộ')
+                    ->formatStateUsing(function ($record) {
+                        if ($record->plot) {
+                            return $record->plot->plot_code;
+                        }
+
+                        return '—';
+                    })
+                    ->sortable(query: function ($query, string $direction): \Illuminate\Database\Eloquent\Builder {
+                        return $query->leftJoin('cemetery_plots', 'graves.plot_id', '=', 'cemetery_plots.id')
+                            ->orderBy('cemetery_plots.plot_code', $direction)
+                            ->select('graves.*');
+                    })
+                    ->searchable(query: function ($query, string $search): \Illuminate\Database\Eloquent\Builder {
+                        return $query->whereHas('plot', function ($q) use ($search) {
+                            $q->where('plot_code', 'like', "%{$search}%");
+                        });
+                    })
+                    ->alignCenter()
+                    ->badge()
+                    ->color(fn ($record) => $record->plot ? 'success' : 'gray')
+                    ->placeholder('—'),
+
+                TextColumn::make('plot.position')
+                    ->label('Vị trí')
+                    ->formatStateUsing(function ($record) {
+                        if ($record->plot) {
+                            return "Hàng {$record->plot->column}, Cột {$record->plot->row}";
+                        }
+
+                        return '—';
+                    })
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->placeholder('—'),
+
+                TextColumn::make('plot.status')
+                    ->label('Trạng thái lô')
+                    ->formatStateUsing(function ($record) {
+                        if ($record->plot) {
+                            return match ($record->plot->status) {
+                                'available' => 'Còn trống',
+                                'occupied' => 'Đã sử dụng',
+                                'reserved' => 'Đã đặt trước',
+                                'unavailable' => 'Không khả dụng',
+                                default => 'Không xác định',
+                            };
+                        }
+
+                        return '—';
+                    })
+                    ->badge()
+                    ->color(fn ($record) => match ($record->plot?->status) {
+                        'available' => 'success',
+                        'occupied' => 'gray',
+                        'reserved' => 'warning',
+                        'unavailable' => 'danger',
+                        default => 'gray',
+                    })
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->placeholder('—'),
+
                 TextColumn::make('deceased_death_date')
                     ->label('Ngày hy sinh')
                     ->date('d/m/Y')

@@ -47,9 +47,9 @@ class UserResource extends Resource
                         Forms\Components\TextInput::make('password')
                             ->label('Mật khẩu')
                             ->password()
-                            ->dehydrateStateUsing(fn ($state) => \Illuminate\Support\Facades\Hash::make($state))
-                            ->dehydrated(fn ($state) => filled($state))
-                            ->required(fn (string $context): bool => $context === 'create')
+                            ->dehydrateStateUsing(fn($state) => \Illuminate\Support\Facades\Hash::make($state))
+                            ->dehydrated(fn($state) => filled($state))
+                            ->required(fn(string $context): bool => $context === 'create')
                             ->maxLength(255)
                             ->helperText('Để trống nếu không muốn thay đổi mật khẩu'),
                     ])
@@ -86,7 +86,7 @@ class UserResource extends Resource
 
                                     return $options;
                                 } catch (\Exception $e) {
-                                    \Illuminate\Support\Facades\Log::error('Error loading wards in UserResource: '.$e->getMessage());
+                                    \Illuminate\Support\Facades\Log::error('Error loading wards in UserResource: ' . $e->getMessage());
 
                                     return [];
                                 }
@@ -94,8 +94,8 @@ class UserResource extends Resource
                             ->searchable()
                             ->placeholder('Chọn xã/phường')
                             ->helperText('Chỉ áp dụng cho vai trò Cán bộ xã/phường')
-                            ->visible(fn (callable $get) => $get('role') === 'commune_staff')
-                            ->required(fn (callable $get) => $get('role') === 'commune_staff'),
+                            ->visible(fn(callable $get) => $get('role') === 'commune_staff')
+                            ->required(fn(callable $get) => $get('role') === 'commune_staff'),
                     ])
                     ->columns(2),
             ]);
@@ -117,7 +117,7 @@ class UserResource extends Resource
 
                 Tables\Columns\BadgeColumn::make('role')
                     ->label('Vai trò')
-                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                    ->formatStateUsing(fn(string $state): string => match ($state) {
                         'admin', 'super_admin' => 'Quản trị viên',
                         'commune_staff' => 'Cán bộ xã/phường',
                         'viewer' => 'Người xem',
@@ -165,7 +165,7 @@ class UserResource extends Resource
 
                             return $options;
                         } catch (\Exception $e) {
-                            \Illuminate\Support\Facades\Log::error('Error loading wards in UserResource filter: '.$e->getMessage());
+                            \Illuminate\Support\Facades\Log::error('Error loading wards in UserResource filter: ' . $e->getMessage());
 
                             return [];
                         }
@@ -176,8 +176,8 @@ class UserResource extends Resource
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make()
                     ->visible(function (User $record) {
+                        /** @var \App\Models\User $currentUser */
                         $currentUser = auth()->user();
-
                         return $currentUser->isAdmin() && $record->id !== $currentUser->id;
                     }),
             ])
@@ -185,7 +185,9 @@ class UserResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make()
                         ->visible(function () {
-                            return auth()->user()->isAdmin();
+                            /** @var \App\Models\User $currentUser */
+                            $currentUser = auth()->user();
+                            return $currentUser->isAdmin();
                         }),
                 ]),
             ]);
@@ -207,10 +209,20 @@ class UserResource extends Resource
         ];
     }
 
-    public static function canViewAny(): bool
-    {
-        $currentUser = auth()->user();
+    // public static function canViewAny(): bool
+    // {
+    //     $currentUser = auth()->user();
 
-        return $currentUser && $currentUser->isAdmin();
+    //     return $currentUser && $currentUser->isAdmin();
+    // }
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        // /** @var \App\Models\User $user */
+        // $user = auth()->user();
+
+        // // Chỉ hiển thị menu cho admin
+        // return $user->isAdmin();
+        return false;
     }
 }
