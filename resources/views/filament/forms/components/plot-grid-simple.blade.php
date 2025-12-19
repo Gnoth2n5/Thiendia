@@ -48,7 +48,6 @@
         maxCol: @js($gridDimensions['columns'] ?? 0),
         rowArray: [],
         colArray: [],
-        hoveredPlot: null,
         isRendering: false,
         renderError: null,
         
@@ -205,13 +204,13 @@
             </div>
         </div>
 
-        <!-- Plot Info Panel - Combined Selected & Hovered -->
+        <!-- Plot Info Panel - Selected Plot Only -->
         <div 
             class="p-4 rounded-lg border-2 transition-all"
             style="min-height: 120px;"
-            :style="selectedPlotId || hoveredPlot ? 'background-color: #dbeafe; border-color: #3b82f6;' : 'background-color: #f3f4f6; border-color: #d1d5db;'"
+            :style="selectedPlotId ? 'background-color: #dbeafe; border-color: #3b82f6;' : 'background-color: #f3f4f6; border-color: #d1d5db;'"
         >
-            <!-- Selected Plot (Priority) -->
+            <!-- Selected Plot -->
             <template x-if="selectedPlotId && getSelectedPlot()">
                 <div>
                     <div>
@@ -231,33 +230,15 @@
                                          getSelectedPlot().status === 'occupied' ? 'Đã sử dụng' : 
                                          getSelectedPlot().status === 'reserved' ? 'Đã đặt trước' : 'Không khả dụng'"></span>
                         </div>
-                    </div>
-                </div>
-            </template>
-            
-            <!-- Hovered Plot (when no selection) -->
-            <template x-if="!selectedPlotId && hoveredPlot">
-                <div>
-                    <div class="font-bold text-sm mb-2" style="color: #1e40af;">
-                        <span x-text="'Lô ' + hoveredPlot.plot_code"></span>
-                    </div>
-                    <div class="text-sm">
-                        <div>Vị trí: Hàng <span x-text="hoveredPlot.column"></span>, Cột <span x-text="hoveredPlot.row"></span></div>
-                        <div class="mt-1">
-                            Trạng thái: 
-                            <span x-text="hoveredPlot.status === 'available' ? 'Còn trống' : 
-                                         hoveredPlot.status === 'occupied' ? 'Đã sử dụng' : 
-                                         hoveredPlot.status === 'reserved' ? 'Đã đặt trước' : 'Không khả dụng'"></span>
-                        </div>
-                        <template x-if="hoveredPlot.grave">
-                            <div class="mt-1 font-semibold">👤 <span x-text="hoveredPlot.grave.deceased_full_name"></span></div>
+                        <template x-if="getSelectedPlot().grave">
+                            <div class="text-sm mt-2 font-semibold">👤 <span x-text="getSelectedPlot().grave.deceased_full_name"></span></div>
                         </template>
                     </div>
                 </div>
             </template>
             
             <!-- Empty State -->
-            <template x-if="!selectedPlotId && !hoveredPlot">
+            <template x-if="!selectedPlotId">
                 <div class="text-center text-gray-500 dark:text-gray-400 flex items-center justify-center" style="min-height: 90px;">
                     <p>Click vào ô xanh lá để chọn lô mộ</p>
                 </div>
@@ -291,8 +272,6 @@
                                     get plot() { return getPlotByPosition(col, row); }
                                 }"
                                 @click="plot && canSelectPlot(plot) && selectPlot(plot)"
-                                @mouseenter="plot && (hoveredPlot = plot)"
-                                @mouseleave="hoveredPlot = null"
                                 :style="plot ? {
                                     width: '48px',
                                     height: '48px',
