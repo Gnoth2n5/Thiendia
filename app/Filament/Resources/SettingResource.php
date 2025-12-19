@@ -147,12 +147,9 @@ class SettingResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                //
             ])
             ->defaultSort('updated_at', 'desc');
     }
@@ -168,8 +165,17 @@ class SettingResource extends Resource
     {
         return [
             'index' => Pages\ListSettings::route('/'),
-            'create' => Pages\CreateSetting::route('/create'),
             'edit' => Pages\EditSetting::route('/{record}/edit'),
         ];
+    }
+
+    public static function canCreate(): bool
+    {
+        return false;
+    }
+
+    public static function canDelete($record): bool
+    {
+        return false;
     }
 }
